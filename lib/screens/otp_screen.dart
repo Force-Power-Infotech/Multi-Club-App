@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:multi_club_app/bases/themes.dart';
+import 'package:multi_club_app/screens/home_screen.dart'; // Import your themes file
 
 class OTPScreen extends StatefulWidget {
   const OTPScreen({super.key});
@@ -16,16 +18,17 @@ class _OTPScreenState extends State<OTPScreen> {
       appBar: AppBar(
         title: const Text(
           'OTP',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: AppThemes.brc_textcolor),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppThemes.brc_textcolor),
           onPressed: () {
             // Navigate to the previous screen
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: AppThemes
+            .brc_background, // Use custom primary color from light theme
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -63,16 +66,26 @@ class _OTPScreenState extends State<OTPScreen> {
             ElevatedButton(
               onPressed: () {
                 // check if the input is valid
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (_) => const HomeScreen(),
+                ));
 
                 // Navigate to the Home screen
               },
               style: ElevatedButton.styleFrom(
                 // circular shape
                 shape: const CircleBorder(),
+                backgroundColor: AppThemes
+                    .brc_background, // Use custom primary color from light theme
+
                 // fixed size
                 minimumSize: const Size(60, 60),
               ),
-              child: const Icon(Icons.arrow_forward, size: 30),
+              child: const Icon(
+                Icons.arrow_forward,
+                size: 30,
+                color: AppThemes.brc_textcolor, // Set the color of the icon
+              ),
             ),
           ],
         ),

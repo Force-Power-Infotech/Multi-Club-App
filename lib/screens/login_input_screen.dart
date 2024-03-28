@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_club_app/screens/otp_screen.dart';
+import 'package:multi_club_app/bases/themes.dart'; // Import your themes file
 
 class LoginInputScreen extends StatefulWidget {
   const LoginInputScreen({super.key});
@@ -19,9 +20,10 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
       appBar: AppBar(
         title: const Text(
           'Verify',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: AppThemes.brc_textcolor),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: AppThemes
+            .brc_background, // Use custom primary color from light theme
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -111,11 +113,19 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
               },
               style: ElevatedButton.styleFrom(
                 // circular shape
+                backgroundColor: AppThemes
+                    .brc_background, // Use custom primary color from light theme
+
+                // textStyle: Color.white,
                 shape: const CircleBorder(),
                 // fixed size
                 minimumSize: const Size(60, 60),
               ),
-              child: const Icon(Icons.arrow_forward, size: 30),
+              child: const Icon(
+                Icons.arrow_forward,
+                size: 30,
+                color: AppThemes.brc_textcolor, // Set the color of the icon
+              ),
             ),
           ],
         ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:multi_club_app/screens/home_screen.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
+import 'package:multi_club_app/screens/splash_screen.dart';
+import 'package:multi_club_app/screens/table_booking.dart';
 
 const String appNickname = 'Multi Club App';
 
@@ -17,11 +20,13 @@ class MyApp extends StatelessWidget {
       title: appNickname,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.black,
+          seedColor: Colors.white,
         ),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      // home: const TableBooking(),
+      home: const HomeScreen(),
+      // home: const SplashScreen(),
     );
   }
 }
