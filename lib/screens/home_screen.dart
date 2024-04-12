@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/screens/contact_us.dart';
 import 'package:multi_club_app/screens/notification_screen.dart';
+import 'package:multi_club_app/screens/profile_screen.dart';
 import 'package:multi_club_app/screens/rowing_booking.dart';
 import 'package:multi_club_app/screens/side_menu.dart';
 import 'package:multi_club_app/screens/sports_booking.dart';
@@ -411,22 +412,26 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeScreenBottomIcon(
                 asset: 'assets/images/home.png',
                 label: 'Home',
-                profileClicked: false,
+                wheretoGo: () =>
+                    const HomeScreen(), // Wrap ProfileScreen inside a function
               ),
               HomeScreenBottomIcon(
                 asset: 'assets/images/mybooking.png',
                 label: 'My Booking',
-                profileClicked: false,
+                wheretoGo: () =>
+                    ProfileScreen(), // Wrap ProfileScreen inside a function
               ),
               HomeScreenBottomIcon(
                 asset: 'assets/images/Frame.png',
                 label: 'Directory',
-                profileClicked: false,
+                wheretoGo: () =>
+                    const ProfileScreen(), // Wrap ProfileScreen inside a function
               ),
               HomeScreenBottomIcon(
                 asset: 'assets/images/profilelogo.png',
                 label: 'profile',
-                profileClicked: false,
+                wheretoGo: () =>
+                    ProfileScreen(), // Wrap ProfileScreen inside a function
               ),
             ],
           ),
@@ -439,14 +444,14 @@ class _HomeScreenState extends State<HomeScreen> {
 class HomeScreenBottomIcon extends StatelessWidget {
   final String asset;
   final String label;
+  final Widget Function() wheretoGo;
+
   const HomeScreenBottomIcon({
-    super.key,
-    required this.profileClicked,
+    Key? key, // Corrected key parameter
     required this.asset,
     required this.label,
-  });
-
-  final bool profileClicked;
+    required this.wheretoGo,
+  }) : super(key: key); // Corrected super call
 
   @override
   Widget build(BuildContext context) {
@@ -454,28 +459,24 @@ class HomeScreenBottomIcon extends StatelessWidget {
       icon: Column(
         children: [
           Image.asset(
-            asset, // Path to your PNG image
-            width: 20, // Adjust width as needed
-            height: 20, // Adjust height as needed
-            color: profileClicked
-                ? AppThemes.brc_background
-                : AppThemes.brc_bottom_icon,
+            asset,
+            width: 20,
+            height: 20,
+            color: AppThemes.brc_bottom_icon, // Used correct color property
           ),
           Text(
-            label, // Text content
+            label,
             style: TextStyle(
-              color: Colors.black, // Adjust color as needed
-              fontSize: 12, // Adjust font size as needed
+              color: Colors.black,
+              fontSize: 12,
             ),
           ),
         ],
       ),
       onPressed: () {
-        // setState(() {
-        //   profileClicked =
-        //       !profileClicked; // Toggle clicked state
-        // });
-        // Handle home icon press
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => wheretoGo(), // Corrected function call
+        ));
       },
     );
   }

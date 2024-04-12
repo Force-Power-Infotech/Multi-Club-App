@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_club_app/bases/user_login.dart';
 import 'package:multi_club_app/screens/otp_screen.dart';
 import 'package:multi_club_app/bases/themes.dart'; // Import your themes file
 
@@ -104,9 +105,17 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
             const Spacer(),
             // ElevatedButton: Icon: Arrow Right
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // check if the input is valid
-
+                UserLoginAPI user = await UserLoginAPI.login(input.text);
+                if (user.processStatus == "NO") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(user.processMessage
+                          .toString()), // Your snack bar message
+                    ),
+                  );
+                }
                 // Navigate to the OTP screen
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const OTPScreen()));

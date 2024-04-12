@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const TableBooking(),
-      home: const HomeScreen(),
-      // home: const SplashScreen(),
+      // home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }
