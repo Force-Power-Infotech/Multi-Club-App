@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/login_input_screen.dart';
 import 'package:multi_club_app/bases/themes.dart'; // Import your themes file
 
@@ -44,16 +45,18 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: SlideTransition(
-          position: _offsetAnimation,
-          child: const Text(
-            'Login/Register',
-            style: TextStyle(color: AppThemes.brc_textcolor),
+          title: SlideTransition(
+            position: _offsetAnimation,
+            child: const Text(
+              'Login/Register',
+              style: TextStyle(color: AppThemes.brc_textcolor),
+            ),
           ),
-        ),
-        backgroundColor: AppThemes
-            .brc_background, // Use custom primary color from light theme
-      ),
+          backgroundColor: Webservice.appNickname == 'forcempower'
+              ? AppThemes.brc_background
+              : AppThemes
+                  .getBackground() // Use custom primary color from light theme
+          ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -64,18 +67,30 @@ class _LoginScreenState extends State<LoginScreen>
             SlideTransition(
               position: _offsetAnimation,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30.0),
-                child: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/logomain.jpg'),
-                  radius: 100,
-                ),
+                padding: EdgeInsets.symmetric(vertical: 30.0),
+                child: Webservice.appNickname == 'forcempower'
+                    ? CircleAvatar(
+                        backgroundImage:
+                            AssetImage('assets/images/logomain.jpg'),
+                        radius: 100,
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(2),
+                        child: Image.asset(
+                          'assets/images/madhuwan.jpg',
+                          fit: BoxFit.cover,
+                          width: 240,
+                          height: 100,
+                        ),
+                      ),
               ),
             ),
+
             // Description
             SlideTransition(
               position: _offsetAnimation,
               child: const Text(
-                'Over the years, The Bengal Rowing Club has surged ahead as one of the premier social hubs in the city, offering an unmatched atmosphere that embraces modernity as effortlessly as it holds on to its traditions. With state of the art sporting and fitness facilities, a diverse and delectable culinary repertoire, carefully crafted cultural and musical evenings, carnivals and fiestas, the Bengal Rowing Club has set remarkable standards ensuring that its illustrious legacy only grows richer with every passing year.',
+                "Madhuwan Together Forever Club is a Guarantee and Association company, incorporated on 25 Sep, 2013. It's a public unlisted company .Madhuwan Together Forever Club is majorly in Community, personal & Social Services business from last 11 years and currently, company operations are active. Current board members & directors are TRIPTI GOYAL, ROHIT BIHANI, PRANAV AGARWAL, BHARAT KUMAR AGARWALLA and RESHMA BIYANI .",
               ),
             ),
             // Login Button
@@ -93,8 +108,10 @@ class _LoginScreenState extends State<LoginScreen>
                 },
                 style: ElevatedButton.styleFrom(
                   // infinite width
-                  backgroundColor: AppThemes
-                      .brc_background, // Use custom primary color from light theme
+                  backgroundColor: Webservice.appNickname == 'forcempower'
+                      ? AppThemes.brc_background
+                      : AppThemes
+                          .getBackground(), // Use custom primary color from light theme
                   // Use custom primary color from light theme
                   minimumSize: const Size(double.infinity, 50),
                   // rounded corners

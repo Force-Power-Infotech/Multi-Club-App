@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:multi_club_app/bases/user_login.dart';
+import 'package:multi_club_app/bases/api/user_login.dart';
+import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/otp_screen.dart';
 import 'package:multi_club_app/bases/themes.dart'; // Import your themes file
 
@@ -12,6 +13,7 @@ class LoginInputScreen extends StatefulWidget {
 
 class _LoginInputScreenState extends State<LoginInputScreen> {
   // isEmail: bool
+  bool isLoading = false;
   bool isEmail = false;
   // input: TextEditingController
   final input = TextEditingController();
@@ -23,8 +25,9 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
           'Verify',
           style: TextStyle(color: AppThemes.brc_textcolor),
         ),
-        backgroundColor: AppThemes
-            .brc_background, // Use custom primary color from light theme
+        backgroundColor: Webservice.appNickname == 'forcempower'
+            ? AppThemes.brc_background
+            : AppThemes.getBackground(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -107,34 +110,66 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
             ElevatedButton(
               onPressed: () async {
                 // check if the input is valid
+                setState(() {
+                  isLoading =
+                      true; // Set isLoading to true when button is pressed
+                });
                 UserLoginAPI user = await UserLoginAPI.login(input.text);
-                if (user.processStatus == "NO") {
+                setState(() {
+                  isLoading =
+                      false; // Set isLoading to false after data is fetched
+                });
+                if (user.processStatus == "YES") {
+                  // Navigate to the OTP screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OTPScreen(
+                              username: input.text,
+                            )),
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(user.processMessage
-                          .toString()), // Your snack bar message
+                      content: Text(
+                        '${user.processMessage}',
+                        style: const TextStyle(color: AppThemes.brc_textcolor),
+                      ),
+                      backgroundColor: AppThemes.brc_otp_success,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '${user.processMessage}',
+                        style: const TextStyle(color: AppThemes.brc_textcolor),
+                      ),
+                      backgroundColor: AppThemes.brc_otp_error,
+                      behavior: SnackBarBehavior.floating,
                     ),
                   );
                 }
-                // Navigate to the OTP screen
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const OTPScreen()));
               },
               style: ElevatedButton.styleFrom(
-                // circular shape
-                backgroundColor: AppThemes
-                    .brc_background, // Use custom primary color from light theme
-
-                // textStyle: Color.white,
+                backgroundColor: Webservice.appNickname == 'forcempower'
+                    ? AppThemes.brc_background
+                    : AppThemes.getBackground(),
                 shape: const CircleBorder(),
-                // fixed size
                 minimumSize: const Size(60, 60),
               ),
-              child: const Icon(
-                Icons.arrow_forward,
-                size: 30,
-                color: AppThemes.brc_textcolor, // Set the color of the icon
-              ),
+              child: isLoading
+                  ? const CircularProgressIndicator(
+                      // Show CircularProgressIndicator while loading
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppThemes.brc_textcolor,
+                      ),
+                    )
+                  : const Icon(
+                      Icons.arrow_forward,
+                      size: 30,
+                      color: AppThemes.brc_textcolor,
+                    ),
             ),
           ],
         ),

@@ -7,6 +7,7 @@ class UserLoginAPI {
   String? processStatus;
   String? processMessage;
   String? mlSts;
+  // String? phForOtp;
 
   UserLoginAPI({this.processStatus, this.processMessage, this.mlSts});
 
@@ -27,7 +28,13 @@ class UserLoginAPI {
   static Future<UserLoginAPI> login(String emailid) async {
     Uri url = Uri.parse(
         "${Webservice.rootURL}${Webservice.userLoginAPI}?nickname=${Webservice.appNickname}");
-    final request = http.Request('POST', url);
+    final request = http.MultipartRequest('POST', url);
+    request.fields.addAll({
+      'organization_id': 'CSC',
+      'user_name': emailid,
+      // 'phForOtp': emailid, // Add phForOtp here as a key-value pair
+    });
+
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
     print(responseString);

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:multi_club_app/bases/api/user_otp.dart';
 import 'package:multi_club_app/bases/themes.dart';
-import 'package:multi_club_app/screens/home_screen.dart'; // Import your themes file
+import 'package:multi_club_app/bases/webservice.dart';
+import 'package:multi_club_app/screens/home_screen%20_madhuwan.dart';
+import 'package:multi_club_app/screens/home_screen_BRC.dart'; // Import your themes file
 
 class OTPScreen extends StatefulWidget {
-  const OTPScreen({super.key});
+  final String username;
+  const OTPScreen({super.key, required this.username});
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -11,6 +16,10 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   // otp: TextEditingController
+  bool isLoading = false;
+//refrence the box
+  final _userData = Hive.box('UserData');
+
   final otp = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -27,8 +36,10 @@ class _OTPScreenState extends State<OTPScreen> {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: AppThemes
-            .brc_background, // Use custom primary color from light theme
+        backgroundColor: Webservice.appNickname == 'forcempower'
+            ? AppThemes.getBackground()
+            : AppThemes
+                .getBackground(), // Use custom primary color from light theme
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -64,28 +75,77 @@ class _OTPScreenState extends State<OTPScreen> {
             const Spacer(),
             // ElevatedButton: Icon: Arrow Right
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // check if the input is valid
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (_) => const HomeScreen(),
-                ));
+                setState(() {
+                  isLoading =
+                      true; // Set isLoading to true when button is pressed
+                });
+                UserOtpAPI user =
+                    await UserOtpAPI.login(widget.username, otp.text);
+                setState(() {
+                  isLoading =
+                      false; // Set isLoading to false after data is fetched
+                });
+                if (user.processStatus == "YES") {
+                  // Navigate to the Home screen
+                  // setUserData();
+                  if (Webservice.appNickname == 'forcempower') {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => const HomeScreen(),
+                    ));
+                  } else if (Webservice.appNickname == 'madhuban') {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => const HomeScreenMadhuwan(),
+                    ));
+                  }
 
-                // Navigate to the Home screen
+                  // _userData.put(1, user.memberid);
+                  print(_userData.get('user_data_key'));
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'WELCOME 🙏 ${user.firstname} ${user.lastname}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: AppThemes.brc_textcolor),
+                      ),
+                      backgroundColor: AppThemes.brc_otp_success,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '${user.processMessage}',
+                        style: TextStyle(color: AppThemes.brc_textcolor),
+                      ),
+                      backgroundColor: AppThemes.brc_otp_error,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
-                // circular shape
+                backgroundColor: Webservice.appNickname == 'forcempower'
+                    ? AppThemes.getBackground()
+                    : AppThemes.getBackground(),
                 shape: const CircleBorder(),
-                backgroundColor: AppThemes
-                    .brc_background, // Use custom primary color from light theme
-
-                // fixed size
                 minimumSize: const Size(60, 60),
               ),
-              child: const Icon(
-                Icons.arrow_forward,
-                size: 30,
-                color: AppThemes.brc_textcolor, // Set the color of the icon
-              ),
+              child: isLoading
+                  ? const CircularProgressIndicator(
+                      // Show CircularProgressIndicator while loading
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppThemes.brc_textcolor,
+                      ),
+                    )
+                  : const Icon(
+                      Icons.arrow_forward,
+                      size: 30,
+                      color: AppThemes.brc_textcolor,
+                    ),
             ),
           ],
         ),

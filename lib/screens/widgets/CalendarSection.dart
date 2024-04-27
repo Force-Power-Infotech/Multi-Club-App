@@ -3,6 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:multi_club_app/bases/themes.dart';
 
 class CalendarSection extends StatefulWidget {
+  final Function(DateTime)? onDateSelected;
+
+  const CalendarSection({Key? key, this.onDateSelected}) : super(key: key);
+
   @override
   _CalendarSectionState createState() => _CalendarSectionState();
 }
@@ -22,7 +26,7 @@ class _CalendarSectionState extends State<CalendarSection> {
               selectDate(context); // Call function to show date picker
             },
             child: Container(
-              margin: EdgeInsets.only(right: 8),
+              margin: const EdgeInsets.only(right: 8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
@@ -67,17 +71,17 @@ class _CalendarSectionState extends State<CalendarSection> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Selected Date:',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         _formatDate(_selectedDate),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: AppThemes.brc_background,
@@ -110,6 +114,8 @@ class _CalendarSectionState extends State<CalendarSection> {
       setState(() {
         _selectedDate = pickedDate;
       });
+      // Pass the selected date to the callback function
+      widget.onDateSelected?.call(_selectedDate);
     }
   }
 }

@@ -13,7 +13,7 @@ class _ContactUsState extends State<ContactUs> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppThemes.brc_background,
+        backgroundColor: AppThemes.getBackground(),
       ),
     );
   }

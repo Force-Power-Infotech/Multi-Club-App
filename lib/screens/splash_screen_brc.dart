@@ -1,25 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:multi_club_app/bases/api/user_otp.dart';
 import 'package:multi_club_app/bases/themes.dart';
+import 'package:multi_club_app/screens/home_screen_BRC.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class SplashScreenBRC extends StatefulWidget {
+  const SplashScreenBRC({Key? key}) : super(key: key);
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _SplashScreenBRCState createState() => _SplashScreenBRCState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenBRCState extends State<SplashScreenBRC>
     with SingleTickerProviderStateMixin {
+  String? meberID;
+  final _userData = Hive.box('UserData');
+
+  Future<void> accessMemberIdFromHive() async {
+    // Open the Hive box
+    var box = await Hive.openBox('UserData');
+
+    // Retrieve the user data from Hive
+    var userData = box.get('user_data_key');
+    var memberId;
+    // Access the memberid from the user data
+    if (userData != null) {
+      memberId = userData['firstname'];
+    }
+    // Check if memberId is not null before using it
+    if (memberId != null) {
+      meberID = memberId.toString();
+      print('Member ID in slsh Screen: $meberID');
+    } else {
+      print('Member ID is null');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    accessMemberIdFromHive();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (_) => const LoginScreen(),
-      ));
+    Future.delayed(const Duration(seconds: 2), () {
+      if (meberID != null) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) => const HomeScreen(),
+        ));
+      } else {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+        ));
+      }
     });
   }
 
@@ -38,8 +71,8 @@ class _SplashScreenState extends State<SplashScreen>
           Container(
             decoration: const BoxDecoration(color: AppThemes.brc_splashbg),
             alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 86.0),
+            child: const Padding(
+              padding: EdgeInsets.only(top: 86.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -47,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen>
                     backgroundImage: AssetImage('assets/images/logomain.jpg'),
                     radius: 80,
                   ),
-                  const SizedBox(
+                  SizedBox(
                       height: 20), // Add some space between the image and text
                   Text(
                     'The Bengal Rowing Club',
