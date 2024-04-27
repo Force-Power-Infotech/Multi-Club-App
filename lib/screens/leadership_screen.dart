@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_club_app/bases/api/council_members.dart';
 import 'package:multi_club_app/bases/themes.dart';
 
 class LeadershipScreen extends StatefulWidget {
@@ -26,9 +27,36 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 8),
-            child: departmentInfo(),
+            child: FutureBuilder<CouncilAPI>(
+              future: CouncilAPI.list(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  // Display UI components using the data from the API
+                  // Example: Text(snapshot.data?.processMessage ?? '');
+                  // Replace Text with your UI components
+                  final designations =
+                      snapshot.data?.contactDesignationArray ?? [];
+                  final names = snapshot.data?.contactNameArray ?? [];
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: designations.length,
+                    itemBuilder: (context, index) {
+                      return DepartmentInfo(
+                        designation: designations[index],
+                        name: names[index],
+                      );
+                    },
+                  );
+                }
+              },
+            ),
           ),
-          departmentInfo(),
+          // Add other departmentInfo widgets here as needed
           Padding(
             padding: EdgeInsets.only(top: 16),
             child: Container(
@@ -52,10 +80,15 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
   }
 }
 
-class departmentInfo extends StatelessWidget {
-  const departmentInfo({
-    super.key,
-  });
+class DepartmentInfo extends StatelessWidget {
+  const DepartmentInfo({
+    Key? key,
+    required this.designation,
+    required this.name,
+  }) : super(key: key);
+
+  final String designation;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -69,36 +102,39 @@ class departmentInfo extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              Expanded(
+                flex: 2,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Department Name',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: AppThemes.brc_spotsbooking_hint_text,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                    Text(
+                      designation,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppThemes.brc_spotsbooking_hint_text,
+                      ),
                     ),
                   ],
                 ),
               ),
-              // Add content for the body here
+              SizedBox(
+                  width: 16), // Add some space between designation and name
+              Expanded(
+                flex: 5,
+                child: Text(
+                  name,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppThemes.brc_spotsbooking_hint_text,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

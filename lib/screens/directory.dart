@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/api/directory.dart';
 import 'package:multi_club_app/bases/themes.dart';
 
+// Import your DirectoryAPI here if not imported already
+
 class Directory extends StatefulWidget {
   const Directory({Key? key}) : super(key: key);
 
@@ -12,7 +14,8 @@ class Directory extends StatefulWidget {
 class _DirectoryState extends State<Directory> {
   late TextEditingController _searchController; // Declare TextEditingController
 
-  List<Contact> contacts = []; // Initialize contacts list
+  List<String> contacts = []; // Initialize contacts list
+  List<String> memberImageUrlArray = []; // Initialize contacts list
 
   @override
   void initState() {
@@ -28,15 +31,18 @@ class _DirectoryState extends State<Directory> {
     super.dispose();
   }
 
-  // Method to fetch directory data
   void fetchDirectory() async {
     try {
       // Call the directory API to get the data
-      List<Contact> directoryData =
-          await DirectoryAPI.fetchContacts('eventid', 'attending_status');
-      // Update the contacts list with the fetched data
+      DirectoryAPI directoryData =
+          await DirectoryAPI.directory('eventid', 'attending_status');
+
+      // Update the contacts list with the fetched member names
       setState(() {
-        contacts = directoryData;
+        contacts = directoryData.memberNameArray ?? [];
+
+        // Update the memberImageUrlArray with the fetched image URLs
+        memberImageUrlArray = directoryData.memberImageUrlArray ?? [];
       });
     } catch (e) {
       print('Error fetching directory data: $e');
@@ -92,33 +98,26 @@ class _DirectoryState extends State<Directory> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: contacts.length,
             itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 4),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(contacts[index].imageUrl), // Load image from URL
-                          radius: 25,
-                        ),
-                        SizedBox(width: 16),
-                        Text(
-                          contacts[index].name,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(memberImageUrlArray[
+                          index]), // Use NetworkImage to load the image from URL
+                      radius: 25,
                     ),
-                  ),
-                  const Divider(
-                    color: Colors.grey,
-                    thickness: 1,
-                  ),
-                ],
+                    SizedBox(width: 16),
+                    Text(
+                      contacts[index],
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           ),
@@ -126,12 +125,4 @@ class _DirectoryState extends State<Directory> {
       ),
     );
   }
-}
-
-// Define a Contact class to hold contact information including image URL
-class Contact {
-  final String name;
-  final String imageUrl;
-
-  Contact({required this.name, required this.imageUrl});
 }

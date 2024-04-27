@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
+import 'package:multi_club_app/screens/home_screen%20_madhuwan.dart';
 import 'package:multi_club_app/screens/home_screen_BRC.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
 import 'package:multi_club_app/screens/splash_screen_brc.dart';
@@ -44,7 +45,7 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
         // home: const TableBooking(),
-        // home: const HomeScreen(),
+        // home: const HomeScreenMadhuwan());
         home: splashMap[Webservice.appNickname]);
   }
 }

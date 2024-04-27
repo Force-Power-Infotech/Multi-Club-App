@@ -10,7 +10,7 @@ class CouncilAPI {
   List<String>? contactNameArray;
   List<String>? contactPhoneArray;
   List<String>? contactEmailArray;
-  List<String>? deptNameArray;
+  List<String>? contactDesignationArray;
 
   CouncilAPI(
       {this.processStatus,
@@ -18,7 +18,7 @@ class CouncilAPI {
       this.contactNameArray,
       this.contactPhoneArray,
       this.contactEmailArray,
-      this.deptNameArray});
+      this.contactDesignationArray});
 
   CouncilAPI.fromJson(Map<String, dynamic> json) {
     processStatus = json['process_status'];
@@ -26,7 +26,7 @@ class CouncilAPI {
     contactNameArray = json['contact_name_array'].cast<String>();
     contactPhoneArray = json['contact_phone_array'].cast<String>();
     contactEmailArray = json['contact_email_array'].cast<String>();
-    deptNameArray = json['dept_name_array'].cast<String>();
+    contactDesignationArray = json['contact_designation_array'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -36,7 +36,7 @@ class CouncilAPI {
     data['contact_name_array'] = this.contactNameArray;
     data['contact_phone_array'] = this.contactPhoneArray;
     data['contact_email_array'] = this.contactEmailArray;
-    data['dept_name_array'] = this.deptNameArray;
+    data['contact_designation_array'] = this.contactDesignationArray;
     return data;
   }
 

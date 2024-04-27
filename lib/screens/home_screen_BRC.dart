@@ -414,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           label: 'Other Booking',
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => const ContactUs(),
+                              builder: (_) => const HelpdeskScreen(),
                             ));
                           },
                         ),

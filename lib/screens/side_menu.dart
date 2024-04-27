@@ -118,20 +118,23 @@ class SideMenu extends StatelessWidget {
                   if (Webservice.appNickname != 'madhuban')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  GestureDetector(
-                    onTap: () {
-                      // Update UI based on item selected from the drawer
-                    },
-                    child: Text(
-                      "Member's Directory",
-                      style: TextStyle(
-                        color: AppThemes.brc_bottom_icon,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                  if (Webservice.appNickname != 'madhuban')
+                    GestureDetector(
+                      onTap: () {
+                        // Update UI based on item selected from the drawer
+                      },
+                      child: Text(
+                        "Member's Directory",
+                        style: TextStyle(
+                          color: AppThemes.brc_bottom_icon,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
+                  if (Webservice.appNickname != 'madhuban')
+                    const Divider(
+                        color: AppThemes.brc_bottom_icon, thickness: 1),
                   if (Webservice.appNickname != 'madhuban')
                     GestureDetector(
                       onTap: () {
@@ -169,23 +172,26 @@ class SideMenu extends StatelessWidget {
                   if (Webservice.appNickname != 'madhuban')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  GestureDetector(
-                    onTap: () {
-                      // Update UI based on item selected from the drawer
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const EventsScreen(),
-                      ));
-                    },
-                    child: Text(
-                      'Club Events',
-                      style: TextStyle(
-                        color: AppThemes.brc_bottom_icon,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                  if (Webservice.appNickname != 'madhuban')
+                    GestureDetector(
+                      onTap: () {
+                        // Update UI based on item selected from the drawer
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const EventsScreen(),
+                        ));
+                      },
+                      child: Text(
+                        'Club Events',
+                        style: TextStyle(
+                          color: AppThemes.brc_bottom_icon,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
+                  if (Webservice.appNickname != 'madhuban')
+                    const Divider(
+                        color: AppThemes.brc_bottom_icon, thickness: 1),
                   GestureDetector(
                     onTap: () {
                       // Update UI based on item selected from the drawer
