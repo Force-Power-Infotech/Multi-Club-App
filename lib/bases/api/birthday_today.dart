@@ -50,7 +50,8 @@ class DobAPI {
       'association_code': 'CSC',
       'theaccesscode': 'BmP1',
       'user_type': 'club_member',
-      'birthday': formattedDate, // Set today's date
+      // 'birthday': formattedDate, // Set today's date
+      'birthday': '24-01-2024', // Set today's date
     });
 
     http.StreamedResponse response = await request.send();

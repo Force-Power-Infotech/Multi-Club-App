@@ -20,6 +20,22 @@ class UserDataRepository {
     }
   }
 
+  static Future<String?> getMemberID() async {
+    try {
+      var box = await Hive.openBox(_boxName);
+      var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
+      print(userDataMap);
+      if (userDataMap != null) {
+        return userDataMap['memberid'] as String?;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error retrieving access code: $e');
+      return null;
+    }
+  }
+
   static Future<String?> getMembername() async {
     try {
       var box = await Hive.openBox(_boxName);

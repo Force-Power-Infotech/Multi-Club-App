@@ -3,7 +3,6 @@ import 'package:multi_club_app/bases/webservice.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
 class PriviledgeAPI {
   String? processStatus;
   String? processMessage;
@@ -43,7 +42,8 @@ class PriviledgeAPI {
     data['description_array'] = this.descriptionArray;
     return data;
   }
-    static Future<PriviledgeAPI> details() async {
+
+  static Future<PriviledgeAPI> details() async {
     Uri url = Uri.parse(
         "${Webservice.rootURL}${Webservice.privilege}?nickname=${Webservice.appNickname}");
     final request = http.MultipartRequest('POST', url);
@@ -61,6 +61,4 @@ class PriviledgeAPI {
     // print('in dobapi code ${responseString}');
     return PriviledgeAPI.fromJson(jsonDecode(responseString));
   }
-
 }
-

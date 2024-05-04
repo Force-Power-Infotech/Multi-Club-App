@@ -35,7 +35,7 @@ dependencies:
   hive_flutter: 1.1.0
   path_provider: ^2.0.5  # Use the latest version available
   autocomplete_textfield: ^2.0.1
-  url_launcher: ^6.2.6
+  url_launcher: ^6.0.6
   # webview_flutter: ^3.0.0
 
   # The following adds the Cupertino Icons font to your application.

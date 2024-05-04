@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/api/birthday_today.dart';
 import 'package:multi_club_app/bases/api/event_details.dart';
+import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
@@ -27,6 +28,8 @@ class HomeScreenMadhuwan extends StatefulWidget {
 }
 
 class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
+  late Future<ProfieviewAPI> _profileData;
+
   // Define a global variable to store the username
   String? globalUsername;
   String? globalImg;
@@ -59,6 +62,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
   void initState() {
     super.initState();
     accessMemberIdFromHive(); // Call the method here
+    _profileData = ProfieviewAPI.list(); // Fetch profile data from API
   }
 
   bool homeClicked = false;
@@ -66,6 +70,21 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
   bool directoryClicked = false;
   bool profileClicked = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  void launchWhatsApp(
+      BuildContext context, String phoneNumber, String message) async {
+    final String whatsappUrl =
+        "whatsapp://send?phone=$phoneNumber&text=${Uri.encodeFull(message)}";
+    if (await canLaunch(whatsappUrl)) {
+      await launch(whatsappUrl);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not launch WhatsApp'),
+          duration: Duration(seconds: 3), // Adjust as needed
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -310,7 +329,8 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                       ),
                                       ElevatedButton(
                                         onPressed: () {
-                                          launchWhatsApp();
+                                          launchWhatsApp(context, "1234567890",
+                                              "Hello, this is a test message!");
                                         },
                                         style: ButtonStyle(
                                           padding: MaterialStateProperty.all(
@@ -499,22 +519,6 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
         ),
       ),
     );
-  }
-}
-
-void launchWhatsApp() async {
-  String message = 'Happy Birthday!';
-  String phone = '1234567890'; // Replace with the actual phone number
-  String url = 'https://wa.me/$phone/?text=${Uri.encodeFull(message)}';
-
-  try {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch WhatsApp';
-    }
-  } catch (e) {
-    print('Error launching WhatsApp: $e');
   }
 }
 

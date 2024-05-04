@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen>
             SlideTransition(
               position: _offsetAnimation,
               child: const Text(
-                "Madhuwan Together Forever Club is a Guarantee and Association company, incorporated on 25 Sep, 2013. It's a public unlisted company .Madhuwan Together Forever Club is majorly in Community, personal & Social Services business from last 11 years and currently, company operations are active. Current board members & directors are TRIPTI GOYAL, ROHIT BIHANI, PRANAV AGARWAL, BHARAT KUMAR AGARWALLA and RESHMA BIYANI .",
+                "Madhuwan Club was seeded by friends in 1980 with an aim to procreate togetherness, forging unforgettable friendships.Staying true to it's core, Madhuwan subsists as a unique socio-cultural organisation inclusive of like-minded people. The club fosters fellowship in society wielding entertainment as a catalyst.Entertainment that is created by the organising & performing talent of the member families.Tested over 40 years, the vision of Madhuwan remains the same.",
               ),
             ),
             // Login Button

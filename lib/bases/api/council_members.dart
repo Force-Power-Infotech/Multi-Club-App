@@ -55,7 +55,7 @@ class CouncilAPI {
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
-    print(responseString);
+    // print(responseString);
     return CouncilAPI.fromJson(jsonDecode(responseString));
   }
 }

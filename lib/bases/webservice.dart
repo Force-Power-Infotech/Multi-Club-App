@@ -23,5 +23,6 @@ class Webservice {
   static const String update_event_attaing_status_v3 =
       "update_event_attaing_status_v3.php";
   static const String directory = "ws_member_directory_list.php";
-  static const String privilege= "priviledge_api.php";
+  static const String privilege = "priviledge_api.php";
+  static const String profileView = "ws_member_profile_update.php";
 }
