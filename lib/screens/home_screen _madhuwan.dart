@@ -18,6 +18,7 @@ import 'package:multi_club_app/screens/side_menu.dart';
 import 'package:multi_club_app/screens/sports_booking.dart';
 import 'package:multi_club_app/screens/table_booking.dart';
 import 'package:multi_club_app/screens/widgets/CarouselWidget.dart';
+import 'package:multi_club_app/screens/widgets/SponsorSlider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreenMadhuwan extends StatefulWidget {
@@ -40,7 +41,9 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     if (username != null) {
       print('Access Code: $username');
       // Set the value of the globalUsername variable
-      globalUsername = username;
+      setState(() {
+        globalUsername = username;
+      });
     } else {
       print('Access code not found');
     }
@@ -61,7 +64,8 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
   @override
   void initState() {
     super.initState();
-    accessMemberIdFromHive(); // Call the method here
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => accessMemberIdFromHive()); // Call the method here
     _profileData = ProfieviewAPI.list(); // Fetch profile data from API
   }
 
@@ -91,70 +95,101 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     return Scaffold(
       key: _scaffoldKey,
 
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
-          },
-          icon: const Icon(
-            Icons.menu,
-            color: AppThemes.brc_textcolor,
-          ),
-          color: Colors.white, // Set the color to white
-        ),
-        backgroundColor: AppThemes.getBackground(),
-        title: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppThemes.brc_bottom_icon.withOpacity(0.2),
-                spreadRadius: 4,
-                blurRadius: 3,
-                offset: const Offset(0, 2),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight +
+            44), // Add extra height for the red bar and padding
+        child: Column(
+          children: [
+            AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  _scaffoldKey.currentState?.openDrawer(); // Open the drawer
+                },
+                icon: const Icon(
+                  Icons.menu,
+                  color: AppThemes.brc_textcolor,
+                ),
+                color: Colors.white, // Set the color to white
               ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(2),
-            child: Image.asset(
-              'assets/images/madhuwan.jpg',
-              fit: BoxFit.cover,
-              width: 70,
-              height: 30,
+              backgroundColor: AppThemes.getBackground(),
+              title: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppThemes.brc_bottom_icon.withOpacity(0.2),
+                      spreadRadius: 4,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: Image.asset(
+                    'assets/images/madhuwan.jpg',
+                    fit: BoxFit.cover,
+                    width: 70,
+                    height: 30,
+                  ),
+                ),
+              ),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.notifications,
+                    color: AppThemes.brc_textcolor,
+                  ),
+                  onPressed: () {
+                    // Add onPressed action for the notifications icon
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const NotificationScreen(),
+                    ));
+                  },
+                ),
+                IconButton(
+                  icon: Image.asset(
+                    'assets/images/helpdesk.png',
+                    width: 20,
+                    height: 20,
+                    color: AppThemes.brc_textcolor,
+                  ),
+                  onPressed: () {
+                    // Add onPressed action for the helpdesk icon
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const HelpdeskScreen(),
+                    ));
+                  },
+                ),
+              ],
             ),
-          ),
+            Container(
+              padding: const EdgeInsets.only(
+                  left: 40.0, right: 40, bottom: 4), // Add padding from sides
+              decoration: BoxDecoration(
+                color: AppThemes.getBackground(), // Set the background color
+              ),
+              child: Container(
+                height: 40, // Height of the red bar
+                decoration: BoxDecoration(
+                  color: AppThemes
+                      .madhuwan_home_birthday_card, // Red color for the bar
+                  // color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(5), // Round edges
+                  image: const DecorationImage(
+                    image: AssetImage(
+                        'assets/images/demo-logo.png'), // Path to your image asset
+                    fit: BoxFit
+                        .contain, // Fit the entire image inside the container
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.notifications,
-              color: AppThemes.brc_textcolor,
-            ),
-            onPressed: () {
-              // Add onPressed action for the notifications icon
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const NotificationScreen(),
-              ));
-            },
-          ),
-          IconButton(
-            icon: Image.asset(
-              'assets/images/helpdesk.png',
-              width: 20,
-              height: 20,
-              color: AppThemes.brc_textcolor,
-            ),
-            onPressed: () {
-              // Add onPressed action for the helpdesk icon
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const HelpdeskScreen(),
-              ));
-            },
-          ),
-        ],
       ),
+
       drawer: const SideMenu(),
 
       // Body and other widgets
@@ -187,7 +222,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                   ),
                   // Image
                   Positioned(
-                    top: 10,
+                    top: 15,
                     left: 0,
                     right: 0, // Align image horizontally to the center
                     child: Align(
@@ -471,51 +506,75 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
         ],
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: AppThemes.brc_bottom_icon.withOpacity(0.2),
-              spreadRadius: 0,
-              blurRadius: 10,
-              offset: const Offset(0, -3),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Padding(
+            //   padding: const EdgeInsets.only(bottom: 8.0),
+            //   child: Container(
+            //     height: 30, // Height of the red bar
+            //     decoration: BoxDecoration(
+            //       color: Colors.transparent, // Red color for the bar
+            //       borderRadius: BorderRadius.circular(5), // Round edges
+            //       image: DecorationImage(
+            //         image: AssetImage(
+            //             'assets/images/demo-logo.png'), // Path to your image asset
+            //         fit: BoxFit
+            //             .contain, // Cover the entire container with the image
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            SlideshowWidget(),
+            Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: AppThemes.brc_bottom_icon.withOpacity(0.2),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: const Offset(0, -3),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(
+                      20), // Adjust the top left corner radius as needed
+                  topRight: Radius.circular(
+                      20), // Adjust the top right corner radius as needed
+                ),
+                child: BottomAppBar(
+                  color: AppThemes.brc_textcolor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      HomeScreenBottomIcon(
+                        asset: 'assets/images/home.png',
+                        label: 'Home',
+                        wheretoGo: () => const HomeScreenMadhuwan(),
+                      ),
+                      HomeScreenBottomIcon(
+                        asset: 'assets/images/mybooking.png',
+                        label: 'Events',
+                        wheretoGo: () => const EventsScreen(),
+                      ),
+                      HomeScreenBottomIcon(
+                        asset: 'assets/images/Frame.png',
+                        label: 'Directory',
+                        wheretoGo: () => const Directory(),
+                      ),
+                      HomeScreenBottomIcon(
+                        asset: 'assets/images/profilelogo.png',
+                        label: 'Profile',
+                        wheretoGo: () => const ProfileScreen(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(
-                20), // Adjust the top left corner radius as needed
-            topRight: Radius.circular(
-                20), // Adjust the top right corner radius as needed
-          ),
-          child: BottomAppBar(
-            color: AppThemes.brc_textcolor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                HomeScreenBottomIcon(
-                  asset: 'assets/images/home.png',
-                  label: 'Home',
-                  wheretoGo: () => const HomeScreenMadhuwan(),
-                ),
-                HomeScreenBottomIcon(
-                  asset: 'assets/images/mybooking.png',
-                  label: 'Events',
-                  wheretoGo: () => const EventsScreen(),
-                ),
-                HomeScreenBottomIcon(
-                  asset: 'assets/images/Frame.png',
-                  label: 'Directory',
-                  wheretoGo: () => const Directory(),
-                ),
-                HomeScreenBottomIcon(
-                  asset: 'assets/images/profilelogo.png',
-                  label: 'Profile',
-                  wheretoGo: () => const ProfileScreen(),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

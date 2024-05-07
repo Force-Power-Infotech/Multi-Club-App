@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_club_app/bases/api/profile_edit.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
@@ -134,12 +135,25 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         ],
                                       ),
                                       child: ClipOval(
-                                        child: Image.network(
-                                          imageUrl,
-                                          fit: BoxFit.cover,
-                                          width: 100,
-                                          height: 100,
-                                        ),
+                                        child: imageUrl != null &&
+                                                imageUrl.isNotEmpty
+                                            ? Image.network(
+                                                imageUrl,
+                                                fit: BoxFit.cover,
+                                                width: 100,
+                                                height: 100,
+                                              )
+                                            : Container(
+                                                color: Colors
+                                                    .grey, // Grey color for the circle
+                                                width: 100,
+                                                height: 100,
+                                                child: Icon(
+                                                  Icons.person,
+                                                  color: Colors.white,
+                                                  size: 50,
+                                                ),
+                                              ),
                                       ),
                                     ),
                                   ),
@@ -212,7 +226,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'First Name',
+                                        'Name',
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
@@ -220,14 +234,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                               .brc_tablebooking_dark_text,
                                         ),
                                       ),
-                                      TextField(
-                                        controller: _nameController,
-                                        decoration: InputDecoration(
-                                          hintText: 'Enter your name',
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none,
-                                        ),
+                                      Text(
+                                        '${snapshot.data!.memberName}', // Replace with actual phone number
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
@@ -309,34 +317,26 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                           SizedBox(
                                               width:
                                                   12.0), // Add some space between text and text field
-                                          Expanded(
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
-                                                      vertical: 0.0),
-                                              decoration: BoxDecoration(
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0,
+                                                vertical:
+                                                    4.0), // Adjust padding as needed
+                                            decoration: BoxDecoration(
+                                              // Background color
+                                              color: AppThemes
+                                                  .brc_not_available_bg,
+                                              borderRadius: BorderRadius.circular(
+                                                  4.0), // Adjust border radius as needed
+                                            ),
+                                            child: Text(
+                                              '${snapshot.data!.memberId}', // Replace with actual date
+                                              style: TextStyle(
+                                                fontSize:
+                                                    16, // Increase font size for highlighted text
+                                                fontWeight: FontWeight.w400,
                                                 color: AppThemes
-                                                    .brc_not_available_bg,
-                                                borderRadius:
-                                                    BorderRadius.circular(4.0),
-                                              ),
-                                              child: TextField(
-                                                controller:
-                                                    _membershipController,
-                                                decoration: InputDecoration(
-                                                  hintText:
-                                                      'AK10RU', // Set the placeholder to 'AK10RU'
-                                                  hintStyle: TextStyle(
-                                                      color: Colors.grey),
-                                                  border: InputBorder.none,
-                                                ),
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppThemes
-                                                      .brc_tablebooking_dark_text,
-                                                ),
+                                                    .brc_tablebooking_dark_text,
                                               ),
                                             ),
                                           ),
@@ -368,35 +368,27 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                           ),
                                           SizedBox(
                                               width:
-                                                  8.0), // Add some space between text and text field
-                                          Expanded(
-                                            child: Container(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 8.0,
-                                                  vertical:
-                                                      .0), // Adjust vertical padding here
-                                              decoration: BoxDecoration(
+                                                  12.0), // Add some space between text and text field
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0,
+                                                vertical:
+                                                    4.0), // Adjust padding as needed
+                                            decoration: BoxDecoration(
+                                              // Background color
+                                              color: AppThemes
+                                                  .brc_not_available_bg,
+                                              borderRadius: BorderRadius.circular(
+                                                  4.0), // Adjust border radius as needed
+                                            ),
+                                            child: Text(
+                                              '${snapshot.data!.memberDob}', // Replace with actual date
+                                              style: TextStyle(
+                                                fontSize:
+                                                    16, // Increase font size for highlighted text
+                                                fontWeight: FontWeight.w400,
                                                 color: AppThemes
-                                                    .brc_not_available_bg,
-                                                borderRadius:
-                                                    BorderRadius.circular(4.0),
-                                              ),
-                                              child: TextField(
-                                                controller: _dobController,
-                                                decoration: InputDecoration(
-                                                  hintText:
-                                                      'January 1, 1990', // Set the placeholder to 'January 1, 1990'
-                                                  hintStyle: TextStyle(
-                                                      color: Colors.grey),
-                                                  border: InputBorder.none,
-                                                ),
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppThemes
-                                                      .brc_tablebooking_dark_text,
-                                                ),
+                                                    .brc_tablebooking_dark_text,
                                               ),
                                             ),
                                           ),
@@ -409,7 +401,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                 const Divider(),
                                 // Phone Number
                                 Padding(
-                                  padding: const EdgeInsets.all(6.0),
+                                  padding: EdgeInsets.all(6.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -423,14 +415,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                               .brc_tablebooking_dark_text,
                                         ),
                                       ),
-                                      TextField(
-                                        controller: _phoneController,
-                                        decoration: InputDecoration(
-                                          hintText: 'Enter phone number',
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none,
-                                        ),
+                                      Text(
+                                        '${snapshot.data!.memberPhone}', // Replace with actual phone number
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
@@ -537,7 +523,44 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   padding: const EdgeInsets.only(
                       bottom: 64.0, left: 32, right: 32, top: 32),
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      // Retrieve text from controllers
+                      String email = _emailController.text;
+                      String address = _addressController.text;
+
+                      // Call the API to post data
+                      try {
+                        ProfileEditAPI response =
+                            await ProfileEditAPI.details(email, address);
+                        // Handle the response here if needed
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${response.processMessage}',
+                              style: const TextStyle(
+                                  color: AppThemes.brc_textcolor),
+                            ),
+                            backgroundColor: AppThemes.brc_otp_success,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                        print('API response: $response');
+                      } catch (e) {
+                        // Handle any errors
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${e}',
+                              style: const TextStyle(
+                                  color: AppThemes.brc_textcolor),
+                            ),
+                            backgroundColor: AppThemes.brc_otp_error,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                        print('Error posting data: $e');
+                      }
+
                       // Add your update logic here
                     },
                     style: ElevatedButton.styleFrom(

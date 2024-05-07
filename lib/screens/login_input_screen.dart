@@ -3,6 +3,7 @@ import 'package:multi_club_app/bases/api/user_login.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/otp_screen.dart';
 import 'package:multi_club_app/bases/themes.dart'; // Import your themes file
+import 'package:flutter/services.dart';
 
 class LoginInputScreen extends StatefulWidget {
   const LoginInputScreen({super.key});
@@ -82,6 +83,13 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
               ),
               keyboardType:
                   isEmail ? TextInputType.emailAddress : TextInputType.phone,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(isEmail
+                    ? null
+                    : 10), // Limit to 10 characters for phone number
+                FilteringTextInputFormatter.allow(
+                    RegExp(r'[0-9]')), // Allow only digits
+              ],
             ),
             // TextButton: Can't Login? Click Here
             Container(

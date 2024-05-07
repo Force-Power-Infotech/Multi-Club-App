@@ -1,23 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/themes.dart';
+import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/profile_edit_screen.dart';
+import 'package:flutter/services.dart'; // Import flutter services
+
+import 'dart:ui' as ui;
+
+import 'package:multi_club_app/screens/widgets/CopiedSnackBar.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String? memberId;
+
+  const ProfileScreen({Key? key, this.memberId}) : super(key: key);
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late Future<ProfieviewAPI> _profileData;
+  String? memberIDFromHive; // Member ID fetched from Hive
 
   @override
   void initState() {
     super.initState();
-    _profileData = ProfieviewAPI.list(); // Fetch profile data from API
+    _profileData = ProfieviewAPI.list(
+        memberId: widget.memberId); // Fetch profile data from API
+  }
+
+// Function to copy the text to clipboard
+  void _copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    // Show a SnackBar to indicate successful copy
+    // Show the custom Snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      CopiedSnackBar(message: 'Phone number copied'),
+    );
+  }
+
+// Function to fetch member ID from Hive
+  void _fetchMemberIDFromHive() async {
+    final memberIDfromhive = await UserDataRepository.getMemberID();
+    memberIDFromHive = memberIDfromhive;
+    setState(() {}); // Update the UI after fetching member ID
   }
 
   @override
@@ -44,26 +71,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         // centerTitle: true,
         actions: [
-          IconButton(
-            icon: Image.asset(
-              'assets/images/edit_profile.png',
-              width: 18,
-              height: 18,
+          if (widget.memberId == memberIDFromHive) // Check if member ID matches
+            IconButton(
+              icon: Image.asset(
+                'assets/images/edit_profile.png',
+                width: 18,
+                height: 18,
+              ),
+              onPressed: () {
+                // Add onPressed action for the edit profile icon
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => const ProfileEditScreen(),
+                ));
+              },
             ),
-            onPressed: () {
-              // Add onPressed action for the helpdesk icon
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const ProfileEditScreen(),
-              ));
-            },
-          ),
         ],
       ),
       body: FutureBuilder<ProfieviewAPI>(
         future: _profileData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
@@ -121,12 +149,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ],
                                   ),
                                   child: ClipOval(
-                                    child: Image.network(
-                                      imageUrl,
-                                      fit: BoxFit.cover,
-                                      width: 100,
-                                      height: 100,
-                                    ),
+                                    child:
+                                        imageUrl != null && imageUrl.isNotEmpty
+                                            ? Image.network(
+                                                imageUrl,
+                                                fit: BoxFit.cover,
+                                                width: 100,
+                                                height: 100,
+                                              )
+                                            : Container(
+                                                color: Colors
+                                                    .grey, // Grey color for the circle
+                                                width: 100,
+                                                height: 100,
+                                                child: const Icon(
+                                                  Icons.person,
+                                                  color: Colors.white,
+                                                  size: 50,
+                                                ),
+                                              ),
                                   ),
                                 ),
                               ),
@@ -136,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     horizontal: 0, vertical: 0),
                                 child: Text(
                                   '${snapshot.data!.memberName}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 24,
                                       color: AppThemes
@@ -176,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 top: 8), // Adjust padding as needed
                             child: Text(
                               '${snapshot.data!.memberId}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
                                 color: AppThemes.brc_spotsbooking_hint_text,
@@ -189,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             decoration: BoxDecoration(
                               color: AppThemes.getBackground(),
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(4),
                                 bottomRight: Radius.circular(4),
                               ),
@@ -225,7 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             decoration: BoxDecoration(
                               color: AppThemes
                                   .getBackground(), // Color for the header
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(12),
                                 topRight: Radius.circular(12),
                               ),
@@ -258,7 +299,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.grey.withOpacity(0.5),
                                   spreadRadius: 1,
                                   blurRadius: 2,
-                                  offset: Offset(0, 3),
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
                             ),
@@ -347,7 +388,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .getBackground() // Color for the header
                                 : AppThemes
                                     .getBackground(), // Transparent color if appNickname is 'madhuban'
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(12),
                               topRight: Radius.circular(12),
                             ),
@@ -419,7 +460,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                             child: Text(
                                               '${snapshot.data!.memberDob}', // Replace with actual date
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize:
                                                     16, // Increase font size for highlighted text
                                                 fontWeight: FontWeight.w400,
@@ -435,40 +476,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 const Divider(),
                                 Padding(
-                                  padding: EdgeInsets.all(6.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Phone Number',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppThemes
-                                              .brc_tablebooking_dark_text,
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: GestureDetector(
+                                    onLongPress: () {
+                                      _copyToClipboard(
+                                          '${snapshot.data!.memberPhone}');
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Phone Number',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppThemes
+                                                .brc_tablebooking_dark_text,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        '${snapshot.data!.memberPhone}', // Replace with actual phone number
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppThemes
-                                              .brc_tablebooking_dark_text,
+                                        Text(
+                                          '${snapshot.data!.memberPhone}', // Replace with actual phone number
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppThemes
+                                                .brc_tablebooking_dark_text,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 const Divider(),
                                 Padding(
-                                  padding: EdgeInsets.all(6.0),
+                                  padding: const EdgeInsets.all(6.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Email',
                                         style: TextStyle(
                                           fontSize: 14,
@@ -479,7 +526,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                       Text(
                                         '${snapshot.data!.memberEmail}', // Replace with actual email
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
                                           color: AppThemes
@@ -491,12 +538,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 const Divider(),
                                 Padding(
-                                  padding: EdgeInsets.all(6.0),
+                                  padding: const EdgeInsets.all(6.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Address',
                                         style: TextStyle(
                                           fontSize: 14,
@@ -507,7 +554,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                       Text(
                                         '${snapshot.data!.address}', // Replace with actual address
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
                                           color: AppThemes
@@ -527,7 +574,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           decoration: BoxDecoration(
                             color: AppThemes.getBackground(),
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(12),
                               bottomRight: Radius.circular(12),
                             ), // Color for the header

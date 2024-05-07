@@ -6,11 +6,12 @@ class UserDataRepository {
 
   static Future<String?> getAccessCode() async {
     try {
-      var box = await Hive.openBox(_boxName);
-      var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
-      print(userDataMap);
+      // var box = await Hive.openBox(_boxName);
+      // var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
+      // print(userDataMap);
+      final userDataMap = await getUserData();
       if (userDataMap != null) {
-        return userDataMap['theaccesscode'] as String?;
+        return userDataMap.theaccesscode;
       } else {
         return null;
       }
@@ -22,11 +23,12 @@ class UserDataRepository {
 
   static Future<String?> getMemberID() async {
     try {
-      var box = await Hive.openBox(_boxName);
-      var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
-      print(userDataMap);
+      // var box = await Hive.openBox(_boxName);
+      // var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
+      // print(userDataMap);
+      final userDataMap = await getUserData();
       if (userDataMap != null) {
-        return userDataMap['memberid'] as String?;
+        return userDataMap.memberid;
       } else {
         return null;
       }
@@ -38,11 +40,14 @@ class UserDataRepository {
 
   static Future<String?> getMembername() async {
     try {
-      var box = await Hive.openBox(_boxName);
-      var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
-      print(userDataMap);
+      // var box = await Hive.openBox(_boxName);
+      // var userData = jsonDecode(box.get('user_data_key'));
+      // final userDataMap = UserOtpAPI.fromJson((userData));
+      // print(userDataMap);
+      final userDataMap = await getUserData();
+
       if (userDataMap != null) {
-        return userDataMap['firstname'] as String?;
+        return userDataMap.firstname;
       } else {
         return null;
       }
@@ -80,7 +85,8 @@ class UserDataRepository {
   static Future<UserOtpAPI?> getUserData() async {
     try {
       var box = await Hive.openBox(_boxName);
-      var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
+      var userData = Map<String, dynamic>.from(box.get('user_data_key'));
+      final userDataMap = (userData);
       if (userDataMap != null) {
         return UserOtpAPI.fromJson(userDataMap);
       } else {

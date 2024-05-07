@@ -56,19 +56,25 @@ class ProfieviewAPI {
     return data;
   }
 
-  static Future<ProfieviewAPI> list() async {
+  static Future<ProfieviewAPI> list({String? memberId}) async {
     Uri url = Uri.parse(
         "${Webservice.rootURL}${Webservice.profileView}?nickname=${Webservice.appNickname}");
     final request = http.MultipartRequest('POST', url);
-    String? memberID = await UserDataRepository.getMemberID();
-    if (memberID != null) {
-      print('Access Code: $memberID');
-    } else {
-      print('Access code not found');
-    }
-    request.fields
-        .addAll({'erp_member_id': '${memberID}', 'organization_id': 'CSC'});
 
+    if (memberId != null) {
+      request.fields
+          .addAll({'erp_member_id': memberId, 'organization_id': 'CSC'});
+    } else {
+      String? localMemberID = await UserDataRepository.getMemberID();
+      if (localMemberID != null) {
+        request.fields
+            .addAll({'erp_member_id': localMemberID, 'organization_id': 'CSC'});
+      } else {
+        print('Access code not found');
+        // Handle the case where local member ID is not available
+      }
+    }
+    print(request.fields);
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
     print(responseString);

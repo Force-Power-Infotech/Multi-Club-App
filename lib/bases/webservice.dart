@@ -25,4 +25,5 @@ class Webservice {
   static const String directory = "ws_member_directory_list.php";
   static const String privilege = "priviledge_api.php";
   static const String profileView = "ws_member_profile_update.php";
+  static const String profileEdit = "particular_member_profile.php";
 }
