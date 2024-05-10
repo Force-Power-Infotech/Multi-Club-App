@@ -102,38 +102,47 @@ class _DirectoryState extends State<Directory> {
             child: ListView.builder(
               itemCount: filteredContacts.length,
               itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    // Add onPressed action for the helpdesk icon
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => ProfileScreen(
-                        memberId: memberIdArray[index],
-                      ),
-                    ));
-                    print(memberIdArray[index]);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 4),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(memberImageUrlArray[index]),
-                          radius: 25,
+                // Get the index from the filtered list
+                int originalIndex = contacts.indexOf(filteredContacts[index]);
+                // Ensure the index is valid
+                if (originalIndex >= 0 &&
+                    originalIndex < memberImageUrlArray.length) {
+                  return GestureDetector(
+                    onTap: () {
+                      // Open the profile screen with the correct memberId
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => ProfileScreen(
+                          memberId: memberIdArray[originalIndex],
                         ),
-                        const SizedBox(width: 16),
-                        Text(
-                          filteredContacts[index],
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                      ));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 4),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              memberImageUrlArray[originalIndex],
+                            ),
+                            radius: 25,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 16),
+                          Text(
+                            filteredContacts[index],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  // Return an empty widget if index is out of bounds
+                  return SizedBox.shrink();
+                }
               },
             ),
           ),

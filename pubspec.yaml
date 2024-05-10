@@ -36,6 +36,7 @@ dependencies:
   path_provider: ^2.0.5  # Use the latest version available
   autocomplete_textfield: ^2.0.1
   url_launcher: ^6.0.6
+  rename: ^3.0.2
   # webview_flutter: ^3.0.0
 
   # The following adds the Cupertino Icons font to your application.
@@ -54,6 +55,13 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+icons_launcher:
+  image_path: "assets/images/madhuwan.jpg"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -49,22 +49,22 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
                 ),
                 const SizedBox(height: 20.0),
                 // TextButton: Use Email ID/Phone Number
-                TextButton(
-                  onPressed: () {
-                    // setState: isEmail
-                    setState(() {
-                      isEmail = !isEmail;
-                    });
-                  },
-                  child: Text(
-                    'Use ${isEmail ? 'Mobile Number' : 'Email ID'}',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      // underline
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
+                // TextButton(
+                //   onPressed: () {
+                //     // setState: isEmail
+                //     setState(() {
+                //       isEmail = !isEmail;
+                //     });
+                //   },
+                //   child: Text(
+                //     'Use ${isEmail ? 'Mobile Number' : 'Email ID'}',
+                //     style: const TextStyle(
+                //       color: Colors.black,
+                //       // underline
+                //       decoration: TextDecoration.underline,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             // Input Text Field: Mobile Number/Email ID
@@ -92,26 +92,26 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
               ],
             ),
             // TextButton: Can't Login? Click Here
-            Container(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: () {
-                  // Navigate to the forgot screen
-                },
-                style: TextButton.styleFrom(
-                  // no padding
-                  padding: EdgeInsets.zero,
-                ),
-                child: const Text(
-                  'Can\'t Login? Click Here',
-                  style: TextStyle(
-                    color: Colors.black,
-                    // underline
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   alignment: Alignment.centerLeft,
+            //   child: TextButton(
+            //     onPressed: () {
+            //       // Navigate to the forgot screen
+            //     },
+            //     style: TextButton.styleFrom(
+            //       // no padding
+            //       padding: EdgeInsets.zero,
+            //     ),
+            //     child: const Text(
+            //       'Can\'t Login? Click Here',
+            //       style: TextStyle(
+            //         color: Colors.black,
+            //         // underline
+            //         decoration: TextDecoration.underline,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             // Spacer
             const Spacer(),
             // ElevatedButton: Icon: Arrow Right
@@ -129,7 +129,7 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
                 });
                 if (user.processStatus == "YES") {
                   // Navigate to the OTP screen
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => OTPScreen(

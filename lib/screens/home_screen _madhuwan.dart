@@ -97,7 +97,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
 
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight +
-            44), // Add extra height for the red bar and padding
+            55), // Add extra height for the red bar and padding
         child: Column(
           children: [
             AppBar(
@@ -166,12 +166,13 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
             ),
             Container(
               padding: const EdgeInsets.only(
-                  left: 40.0, right: 40, bottom: 4), // Add padding from sides
+                  left: 40.0, right: 40, bottom: 5), // Add padding from sides
               decoration: BoxDecoration(
                 color: AppThemes.getBackground(), // Set the background color
               ),
               child: Container(
-                height: 40, // Height of the red bar
+                height: 50,
+                // width: 400, // Height of the red bar
                 decoration: BoxDecoration(
                   color: AppThemes
                       .madhuwan_home_birthday_card, // Red color for the bar
@@ -194,316 +195,359 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
 
       // Body and other widgets
 
-      body: ListView(
-        children: [
-          Column(
-            children: [
-              // First rectangle section
+      body: FutureBuilder<ProfieviewAPI>(
+        future: _profileData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            String imageUrl = snapshot.data!.memberImageUrl ?? '';
+            print(imageUrl);
+            return ListView(
+              children: [
+                Column(
+                  children: [
+                    // First rectangle section
 
-              Stack(
-                children: [
-                  // Second rectangle section
-                  Container(
-                    height: 140, // Set the height as needed
-                    color: AppThemes.brc_textcolor, // Change color as needed
-                  ),
-                  Container(
-                    height: 50, // Set the height as needed
-
-                    decoration: BoxDecoration(
-                      color: AppThemes.getBackground(),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(
-                            10), // Adjust the top left corner radius as needed
-                        bottomRight: Radius.circular(
-                            10), // Adjust the top right corner radius as needed
-                      ),
-                    ), // Change color as needed
-                  ),
-                  // Image
-                  Positioned(
-                    top: 15,
-                    left: 0,
-                    right: 0, // Align image horizontally to the center
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => ProfileScreen(),
-                              ));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppThemes.brc_bottom_icon
-                                        .withOpacity(0.5),
-                                    spreadRadius: 2,
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 7),
-                                  ),
-                                ],
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: Image.asset(
-                                  'assets/images/profile_imgfull.jpg',
-                                  fit: BoxFit
-                                      .cover, // Ensure the image covers the oval shape
-                                  width: 76, // Set the width as needed
-                                  height: 75, // Set the height as needed
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 10),
-                          // Add space between the profile image and the text
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 5),
-                            child: Text(
-                              'Hi ${globalUsername ?? ''}!', // Use the meberID variable, if it's null, display an empty string
-                              style: TextStyle(
-                                fontWeight:
-                                    FontWeight.w600, // Make the text bold
-                                fontSize: 18, // Adjust the font size as needed
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 0, bottom: 10), // Add padding only at the top
-            child: Container(
-              color: AppThemes.brc_textcolor,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                      height: 15), // Add space above the first line of text
-                  const Padding(
-                    padding: EdgeInsets.only(
-                        left: 16.0), // Adjust left padding as needed
-                    child: Text(
-                      'Recent Birthdays ', // Text above the boxes
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ), // Adjust font size as needed
-                    ),
-                  ),
-                  // Add space between the lines of text
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppThemes.brc_textcolor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      height:
-                          190, // Adjust the height of the container as needed
-                      child: FutureBuilder<DobAPI>(
-                        future:
-                            DobAPI.details(), // Calling the asynchronous method
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            // Show loading indicator while waiting for data
-                            return Center(child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            // Show error message if there's an error
-                            return Center(
-                                child: Text('Error: ${snapshot.error}'));
-                          } else {
-                            // Once data is loaded, display the ListView
-                            final memberNames = snapshot.data?.memberName ?? [];
-                            return ListView.builder(
-                              itemCount: memberNames.length,
-                              itemBuilder: (context, index) {
-                                final name = memberNames[index];
-                                return Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            name,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: AppThemes
-                                                  .brc_helpdesk_text_color,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Member ID: efve',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: AppThemes
-                                                  .brc_helpdesk_text_color,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          launchWhatsApp(context, "1234567890",
-                                              "Hello, this is a test message!");
-                                        },
-                                        style: ButtonStyle(
-                                          padding: MaterialStateProperty.all(
-                                            EdgeInsets.zero,
-                                          ), // Remove padding
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                            Colors.transparent,
-                                          ), // Transparent background
-                                          elevation: MaterialStateProperty.all(
-                                            0,
-                                          ), // Remove shadow
-                                        ),
-                                        child: Ink(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: AppThemes
-                                                .madhuwan_home_birthday_card,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(Icons
-                                                    .message), // Icon for WhatsApp
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Stack(
                       children: [
-                        Text(
-                          'Upcoming Events', // Text above the boxes
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ), // Adjust font size as needed
+                        // Second rectangle section
+                        Container(
+                          height: 140, // Set the height as needed
+                          color:
+                              AppThemes.brc_textcolor, // Change color as needed
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      EventsScreen()), // Replace EventScreen() with your actual screen
-                            );
-                          },
-                          child: Text(
-                            'Show more', // Text above the boxes
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppThemes
-                                    .getBackground()), // Adjust font size as needed
+                        Container(
+                          height: 50, // Set the height as needed
+
+                          decoration: BoxDecoration(
+                            color: AppThemes.getBackground(),
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(
+                                  10), // Adjust the top left corner radius as needed
+                              bottomRight: Radius.circular(
+                                  10), // Adjust the top right corner radius as needed
+                            ),
+                          ), // Change color as needed
+                        ),
+                        // Image
+                        Positioned(
+                          top: 15,
+                          left: 0,
+                          right: 0, // Align image horizontally to the center
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (_) => ProfileScreen(),
+                                    ));
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppThemes.brc_bottom_icon
+                                              .withOpacity(0.5),
+                                          spreadRadius: 2,
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 7),
+                                        ),
+                                      ],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        child: imageUrl != null &&
+                                                imageUrl.isNotEmpty
+                                            ? Image.network(
+                                                imageUrl,
+                                                fit: BoxFit.cover,
+                                                width: 76,
+                                                height: 75,
+                                              )
+                                            : Container(
+                                                color: Colors
+                                                    .grey, // Grey color for the circle
+                                                width: 76,
+                                                height: 75,
+                                                child: const Icon(
+                                                  Icons.person,
+                                                  color: Colors.white,
+                                                  size: 50,
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+                                // Add space between the profile image and the text
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 5),
+                                  child: Text(
+                                    'Hi ${globalUsername ?? ''}!', // Use the meberID variable, if it's null, display an empty string
+                                    style: const TextStyle(
+                                      fontWeight:
+                                          FontWeight.w600, // Make the text bold
+                                      fontSize:
+                                          18, // Adjust the font size as needed
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  FutureBuilder<EventAPI>(
-                    future: EventAPI.details(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child:
-                              CircularProgressIndicator(), // Show loading indicator while fetching data
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 0, bottom: 10), // Add padding only at the top
+                  child: Container(
+                    color: AppThemes.brc_textcolor,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                            height:
+                                15), // Add space above the first line of text
+                        const Padding(
+                          padding: EdgeInsets.only(
+                              left: 16.0), // Adjust left padding as needed
                           child: Text(
-                              'Error: ${snapshot.error}'), // Show error message if fetching data fails
-                        );
-                      } else {
-                        // Data has been successfully fetched
-                        final eventAPI = snapshot.data;
-                        // Check if eventAPI or eventAPI.eventDetails is null before accessing it
-                        if (eventAPI != null && eventAPI.eventDetails != null) {
-                          // Use the event data to populate the home_event_card widgets
-                          List<EventDetails> firstThreeEvents =
-                              eventAPI.eventDetails!.take(3).toList();
-                          return Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Column(
-                              children: firstThreeEvents.map((event) {
-                                return home_event_card(event: event);
-                              }).toList(),
+                            'Recent Birthdays ', // Text above the boxes
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ), // Adjust font size as needed
+                          ),
+                        ),
+                        // Add space between the lines of text
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppThemes.brc_textcolor,
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          );
-                        } else {
-                          // Handle case where eventAPI or eventAPI.eventDetails is null
-                          return Center(
-                            child: Text('No events available'),
-                          );
-                        }
-                      }
-                    },
-                  ),
+                            height:
+                                190, // Adjust the height of the container as needed
+                            child: FutureBuilder<DobAPI>(
+                              future: DobAPI
+                                  .details(), // Calling the asynchronous method
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  // Show loading indicator while waiting for data
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  // Show error message if there's an error
+                                  return Center(
+                                      child: Text('Error: ${snapshot.error}'));
+                                } else {
+                                  // Once data is loaded, display the ListView
+                                  final memberNames =
+                                      snapshot.data?.memberName ?? [];
+                                  return ListView.builder(
+                                    itemCount: memberNames.length,
+                                    itemBuilder: (context, index) {
+                                      final name = memberNames[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  name,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppThemes
+                                                        .brc_helpdesk_text_color,
+                                                  ),
+                                                ),
+                                                const Text(
+                                                  'Member ID: efve',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: AppThemes
+                                                        .brc_helpdesk_text_color,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                launchWhatsApp(
+                                                    context,
+                                                    "1234567890",
+                                                    "Hello, this is a test message!");
+                                              },
+                                              style: ButtonStyle(
+                                                padding:
+                                                    MaterialStateProperty.all(
+                                                  EdgeInsets.zero,
+                                                ), // Remove padding
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                  Colors.transparent,
+                                                ), // Transparent background
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                  0,
+                                                ), // Remove shadow
+                                              ),
+                                              child: Ink(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  color: AppThemes
+                                                      .madhuwan_home_birthday_card,
+                                                ),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Icon(Icons
+                                                          .message), // Icon for WhatsApp
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
 
-                  const SizedBox(
-                      height: 15), // Add space above the first line of text
-                  const Padding(
-                    padding: EdgeInsets.only(
-                        left: 16.0), // Adjust left padding as needed
-                    child: Text(
-                      'Privilege', // Text above the boxes
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ), // Adjust font size as needed
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Upcoming Events', // Text above the boxes
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ), // Adjust font size as needed
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            EventsScreen()), // Replace EventScreen() with your actual screen
+                                  );
+                                },
+                                child: Text(
+                                  'Show more', // Text above the boxes
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppThemes
+                                          .getBackground()), // Adjust font size as needed
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        FutureBuilder<EventAPI>(
+                          future: EventAPI.details(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child:
+                                    CircularProgressIndicator(), // Show loading indicator while fetching data
+                              );
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                child: Text(
+                                    'Error: ${snapshot.error}'), // Show error message if fetching data fails
+                              );
+                            } else {
+                              // Data has been successfully fetched
+                              final eventAPI = snapshot.data;
+                              // Check if eventAPI or eventAPI.eventDetails is null before accessing it
+                              if (eventAPI != null &&
+                                  eventAPI.eventDetails != null) {
+                                // Use the event data to populate the home_event_card widgets
+                                List<EventDetails> firstThreeEvents =
+                                    eventAPI.eventDetails!.take(3).toList();
+                                return Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Column(
+                                    children: firstThreeEvents.map((event) {
+                                      return home_event_card(event: event);
+                                    }).toList(),
+                                  ),
+                                );
+                              } else {
+                                // Handle case where eventAPI or eventAPI.eventDetails is null
+                                return Center(
+                                  child: Text('No events available'),
+                                );
+                              }
+                            }
+                          },
+                        ),
+
+                        const SizedBox(
+                            height:
+                                15), // Add space above the first line of text
+                        const Padding(
+                          padding: EdgeInsets.only(
+                              left: 16.0), // Adjust left padding as needed
+                          child: Text(
+                            'Privilege', // Text above the boxes
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ), // Adjust font size as needed
+                          ),
+                        ),
+                        CarouselWidget()
+
+                        // Add space between the lines of text
+                      ],
                     ),
                   ),
-                  CarouselWidget()
-
-                  // Add space between the lines of text
-                ],
-              ),
-            ),
-          ),
-        ],
+                ),
+              ],
+            );
+          }
+        },
       ),
       bottomNavigationBar: Container(
         child: Column(

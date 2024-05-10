@@ -18,23 +18,7 @@ class _SlideshowWidgetState extends State<SlideshowWidget> {
   @override
   void initState() {
     super.initState();
-    // Start the slideshow
     startSlideshow();
-  }
-
-  void startSlideshow() {
-    Timer.periodic(Duration(seconds: 2), (Timer timer) {
-      if (_currentPageIndex < _imagePaths.length - 1) {
-        _currentPageIndex++;
-      } else {
-        _currentPageIndex = 0;
-      }
-      _pageController.animateToPage(
-        _currentPageIndex,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    });
   }
 
   @override
@@ -43,29 +27,37 @@ class _SlideshowWidgetState extends State<SlideshowWidget> {
     super.dispose();
   }
 
+  void startSlideshow() {
+    Timer.periodic(Duration(seconds: 2), (Timer timer) {
+      if (_pageController.hasClients &&
+          _pageController.position.maxScrollExtent > 0) {
+        if (_currentPageIndex < _imagePaths.length - 1) {
+          _currentPageIndex++;
+        } else {
+          _currentPageIndex = 0;
+        }
+        _pageController.animateToPage(
+          _currentPageIndex,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Container(
         height: 30, // Height of the container
-        color: Colors.transparent,
         child: PageView.builder(
           controller: _pageController,
           itemCount: _imagePaths.length,
           itemBuilder: (context, index) {
-            return Container(
-              height: 30, // Height of the red bar
-              decoration: BoxDecoration(
-                color: Colors.transparent, // Red color for the bar
-                borderRadius: BorderRadius.circular(5), // Round edges
-                image: DecorationImage(
-                  image: AssetImage(
-                      'assets/images/demo-logo.png'), // Path to your image asset
-                  fit: BoxFit
-                      .contain, // Cover the entire container with the image
-                ),
-              ),
+            return Image.asset(
+              _imagePaths[index], // Load image from image path list
+              fit: BoxFit.contain,
             );
           },
           onPageChanged: (index) {
