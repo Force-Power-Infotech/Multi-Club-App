@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:multi_club_app/bases/api/sponsor.dart';
 
 class SlideshowWidget extends StatefulWidget {
   @override
@@ -9,15 +10,12 @@ class SlideshowWidget extends StatefulWidget {
 class _SlideshowWidgetState extends State<SlideshowWidget> {
   final PageController _pageController = PageController();
   int _currentPageIndex = 0;
-  final List<String> _imagePaths = [
-    'assets/images/demologo.png',
-    'assets/images/demo-logo.png',
-    'assets/images/sponsordemo1.png',
-  ];
+  List<String> _imagePaths = []; // Use dynamic list for image paths
 
   @override
   void initState() {
     super.initState();
+    fetchImagePaths(); // Fetch image paths from SponsorAPI
     startSlideshow();
   }
 
@@ -25,6 +23,16 @@ class _SlideshowWidgetState extends State<SlideshowWidget> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  void fetchImagePaths() async {
+    // Fetch image paths from SponsorAPI
+    SponsorAPI sponsorData = await SponsorAPI.details();
+    setState(() {
+      _imagePaths =
+          List.from(sponsorData.images as Iterable); // Copy image paths
+      _imagePaths.removeAt(0); // Exclude the first image path
+    });
   }
 
   void startSlideshow() {
@@ -55,7 +63,7 @@ class _SlideshowWidgetState extends State<SlideshowWidget> {
           controller: _pageController,
           itemCount: _imagePaths.length,
           itemBuilder: (context, index) {
-            return Image.asset(
+            return Image.network(
               _imagePaths[index], // Load image from image path list
               fit: BoxFit.contain,
             );

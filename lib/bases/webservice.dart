@@ -26,4 +26,5 @@ class Webservice {
   static const String privilege = "priviledge_api.php";
   static const String profileView = "ws_member_profile_update.php";
   static const String profileEdit = "particular_member_profile.php";
+  static const String sponsor = "sponsor_api.php";
 }

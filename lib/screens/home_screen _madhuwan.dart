@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/api/birthday_today.dart';
 import 'package:multi_club_app/bases/api/event_details.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
+import 'package:multi_club_app/bases/api/sponsor.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
@@ -165,26 +166,37 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
               ],
             ),
             Container(
-              padding: const EdgeInsets.only(
-                  left: 40.0, right: 40, bottom: 5), // Add padding from sides
+              padding: const EdgeInsets.only(left: 40.0, right: 40, bottom: 5),
               decoration: BoxDecoration(
-                color: AppThemes.getBackground(), // Set the background color
+                color: AppThemes.getBackground(),
               ),
-              child: Container(
-                height: 50,
-                // width: 400, // Height of the red bar
-                decoration: BoxDecoration(
-                  color: AppThemes
-                      .madhuwan_home_birthday_card, // Red color for the bar
-                  // color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(5), // Round edges
-                  image: const DecorationImage(
-                    image: AssetImage(
-                        'assets/images/demo-logo.png'), // Path to your image asset
-                    fit: BoxFit
-                        .contain, // Fit the entire image inside the container
-                  ),
-                ),
+              child: FutureBuilder<SponsorAPI>(
+                future: SponsorAPI.details(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    List<String> imageUrls = snapshot.data?.images ?? [];
+                    String firstImageUrl = imageUrls.isNotEmpty
+                        ? imageUrls.first
+                        : ''; // Get the first image URL
+                    return Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: AppThemes.madhuwan_home_birthday_card,
+                        borderRadius: BorderRadius.circular(5),
+                        image: firstImageUrl.isNotEmpty
+                            ? DecorationImage(
+                                image: NetworkImage(firstImageUrl),
+                                fit: BoxFit.contain,
+                              )
+                            : null, // Use DecorationImage only if first image URL is available
+                      ),
+                    );
+                  }
+                },
               ),
             ),
           ],
