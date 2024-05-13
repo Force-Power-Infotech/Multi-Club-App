@@ -182,17 +182,30 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                     String firstImageUrl = imageUrls.isNotEmpty
                         ? imageUrls.first
                         : ''; // Get the first image URL
-                    return Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: AppThemes.madhuwan_home_birthday_card,
-                        borderRadius: BorderRadius.circular(5),
-                        image: firstImageUrl.isNotEmpty
-                            ? DecorationImage(
-                                image: NetworkImage(firstImageUrl),
-                                fit: BoxFit.contain,
-                              )
-                            : null, // Use DecorationImage only if first image URL is available
+                    List<String> hyperlinks = snapshot.data?.hyperlinks ?? [];
+                    String firstHyperlink = hyperlinks.isNotEmpty
+                        ? hyperlinks.first
+                        : ''; // Get the first hyperlink
+                    return GestureDetector(
+                      onTap: () {
+                        // Redirect to the first hyperlink when tapped
+                        if (firstHyperlink.isNotEmpty) {
+                          // Add logic here to handle redirection
+                          launch(firstHyperlink);
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: AppThemes.madhuwan_home_birthday_card,
+                          borderRadius: BorderRadius.circular(5),
+                          image: firstImageUrl.isNotEmpty
+                              ? DecorationImage(
+                                  image: NetworkImage(firstImageUrl),
+                                  fit: BoxFit.contain,
+                                )
+                              : null, // Use DecorationImage only if first image URL is available
+                        ),
                       ),
                     );
                   }

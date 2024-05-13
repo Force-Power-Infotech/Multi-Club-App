@@ -1,5 +1,5 @@
 class Webservice {
-  static const String rootURL = "http://club.forcempower.com/";
+  static const String rootURL = "https://club.forcempower.com/";
   // static const String appNickname = "forcempower";
   static const String appNickname = "madhuban";
   static const String userLoginAPI = "ws_member_login_v1.php";
