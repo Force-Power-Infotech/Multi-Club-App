@@ -30,7 +30,7 @@ class UserLoginAPI {
         "${Webservice.rootURL}${Webservice.userLoginAPI}?nickname=${Webservice.appNickname}");
     final request = http.MultipartRequest('POST', url);
     request.fields.addAll({
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       'user_name': emailid,
       // 'phForOtp': emailid, // Add phForOtp here as a key-value pair
     });

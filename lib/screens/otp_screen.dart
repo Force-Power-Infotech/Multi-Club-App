@@ -4,6 +4,7 @@ import 'package:multi_club_app/bases/api/user_otp.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/home_screen%20_madhuwan.dart';
+import 'package:multi_club_app/screens/home_screen%20_millenniummams.dart';
 import 'package:multi_club_app/screens/home_screen_BRC.dart'; // Import your themes file
 
 class OTPScreen extends StatefulWidget {
@@ -97,6 +98,10 @@ class _OTPScreenState extends State<OTPScreen> {
                   } else if (Webservice.appNickname == 'madhuban') {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (_) => const HomeScreenMadhuwan(),
+                    ));
+                  } else if (Webservice.appNickname == 'milleniumMams') {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => const HomeScreenMillenniumMams(),
                     ));
                   }
 

@@ -50,8 +50,10 @@ class CouncilAPI {
     } else {
       print('Access code not found');
     }
-    request.fields
-        .addAll({'organization_id': 'csc', 'theaccesscode': '${accessCode}'});
+    request.fields.addAll({
+      'organization_id': Webservice.appNickname,
+      'theaccesscode': '${accessCode}'
+    });
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();

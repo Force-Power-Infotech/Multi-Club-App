@@ -73,7 +73,7 @@ class SportsBookingAPI {
         Uri.parse(
             'http://club.forcempower.com/make_sports_booking_v1.php?nickname=forcempower'));
     request.body = json.encode({
-      "organization_id": "CSC",
+      "organization_id": Webservice.appNickname,
       "theaccesscode": "BmP1",
       "booking_full_date": "2024-04-29",
       "time_slot_twenty_four_hour_format": "19:30",

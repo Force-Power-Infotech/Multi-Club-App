@@ -69,7 +69,7 @@ class TimeSlotTableBooking {
       'booking_location': '13',
       'member_id': 'test001',
       'selected_date': bookingtime,
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       'theaccesscode': '${accessCode}'
     });
 

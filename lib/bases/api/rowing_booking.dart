@@ -66,7 +66,7 @@ class RowingBookingAPI {
       'number_of_people': '3',
       'facility_type_id': '5',
       'member_id': 'test001',
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       'theaccesscode': '${accessCode}'
     });
 

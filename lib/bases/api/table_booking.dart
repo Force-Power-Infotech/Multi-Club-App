@@ -67,7 +67,7 @@ class TableBookingAPI {
       'meal_type': mealtype,
       'facility_type_id': '3',
       'member_id': 'test001',
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       'theaccesscode': '${accessCode}'
     });
     print('in the api setting the getting location${bookinglocation}');

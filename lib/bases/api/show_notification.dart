@@ -45,7 +45,7 @@ class ShowNotifications {
       print('Access code not found');
     }
     request.fields.addAll({
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       'theaccesscode': '${accessCode}',
       'member_id': 'test001'
     });

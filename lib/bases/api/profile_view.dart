@@ -62,13 +62,17 @@ class ProfieviewAPI {
     final request = http.MultipartRequest('POST', url);
 
     if (memberId != null) {
-      request.fields
-          .addAll({'erp_member_id': memberId, 'organization_id': 'CSC'});
+      request.fields.addAll({
+        'erp_member_id': memberId,
+        'organization_id': Webservice.appNickname
+      });
     } else {
       String? localMemberID = await UserDataRepository.getMemberID();
       if (localMemberID != null) {
-        request.fields
-            .addAll({'erp_member_id': localMemberID, 'organization_id': 'CSC'});
+        request.fields.addAll({
+          'erp_member_id': localMemberID,
+          'organization_id': Webservice.appNickname
+        });
       } else {
         print('Access code not found');
         // Handle the case where local member ID is not available

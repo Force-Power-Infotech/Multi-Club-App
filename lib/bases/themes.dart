@@ -37,6 +37,10 @@ class AppThemes {
   static const Color csc_background = Color(0xFFAF1412);
   static const Color csc_textcolor = Color(0xFFFFFFF);
 
+  // Constants for CSC theme
+  static const Color mm_background = Color(0xFFdc2228);
+  static const Color mm_light_card = Color(0xFFd47476);
+
   // Constants for Madhuwan theme
   static const Color madhuwan_background = Color(0xFF2d2d92);
   static const Color madhuwan_home_birthday_card =
@@ -48,6 +52,8 @@ class AppThemes {
       return brc_background;
     } else if (Webservice.appNickname == 'madhuban') {
       return madhuwan_background;
+    } else if (Webservice.appNickname == 'millenniumMams') {
+      return mm_background;
     } else {
       return csc_background;
     }

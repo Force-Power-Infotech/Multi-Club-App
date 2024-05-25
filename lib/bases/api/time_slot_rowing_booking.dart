@@ -68,7 +68,7 @@ class TimeSlotRowingBookingAPI {
     }
     request.fields.addAll({
       'theaccesscode': '${accessCode}',
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       'booking_location': '17',
       'member_id': '1',
       'selected_date': bookingtime

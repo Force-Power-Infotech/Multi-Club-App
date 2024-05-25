@@ -37,9 +37,7 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
           color: Colors.white, // Set the color to white
         ),
-        backgroundColor: Webservice.appNickname == 'forcempower'
-            ? AppThemes.getBackground()
-            : AppThemes.madhuwan_background,
+        backgroundColor: AppThemes.getBackground(),
         title: const Text(
           'Events',
           style: TextStyle(
@@ -67,7 +65,8 @@ class _EventsScreenState extends State<EventsScreen> {
             // Once data is fetched successfully, display the events
             return ListView(
               children: [
-                if (Webservice.appNickname != 'madhuban')
+                if (Webservice.appNickname != 'madhuban' &&
+                    Webservice.appNickname != 'milleniumMams')
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 32),

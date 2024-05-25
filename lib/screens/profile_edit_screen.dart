@@ -148,7 +148,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                     .grey, // Grey color for the circle
                                                 width: 100,
                                                 height: 100,
-                                                child: Icon(
+                                                child: const Icon(
                                                   Icons.person,
                                                   color: Colors.white,
                                                   size: 50,
@@ -179,7 +179,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: AppThemes.getBackground(),
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(12),
                               topRight: Radius.circular(12),
                             ),
@@ -225,7 +225,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Name',
                                         style: TextStyle(
                                           fontSize: 14,
@@ -236,7 +236,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                       ),
                                       Text(
                                         '${snapshot.data!.memberName}', // Replace with actual phone number
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
                                           color: AppThemes
@@ -303,7 +303,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                     children: [
                                       Row(
                                         children: [
-                                          Expanded(
+                                          const Expanded(
                                             child: Text(
                                               'MemberShip Number',
                                               style: TextStyle(
@@ -314,7 +314,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                               ),
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                               width:
                                                   12.0), // Add some space between text and text field
                                           Container(
@@ -564,7 +564,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       // Add your update logic here
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppThemes.madhuwan_home_birthday_card,
+                      backgroundColor: AppThemes.mm_light_card,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             8.0), // Adjust the border radius as needed
@@ -573,7 +573,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           'UPDATE',
                           style: TextStyle(

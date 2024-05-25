@@ -3,10 +3,12 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/home_screen%20_madhuwan.dart';
+import 'package:multi_club_app/screens/home_screen%20_millenniummams.dart';
 import 'package:multi_club_app/screens/home_screen_BRC.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
 import 'package:multi_club_app/screens/splash_screen_brc.dart';
 import 'package:multi_club_app/screens/splash_screen_madhuban.dart';
+import 'package:multi_club_app/screens/splash_screen_millenniumMams.dart';
 import 'package:multi_club_app/screens/table_booking.dart';
 
 const String appNickname = 'Multi Club App';
@@ -31,6 +33,7 @@ class _MyAppState extends State<MyApp> {
     'BRC': const SplashScreenBRC(),
     'stardb': const SplashScreenMadhuban(),
     'madhuban': const SplashScreenMadhuban(),
+    'milleniumMams': const SplashScreenmillenniumMams(),
   };
 
   // This widget is the root of your application.
@@ -45,7 +48,7 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
         // home: const TableBooking(),
-        // home: const HomeScreenMadhuwan());
+        // home: const HomeScreenMillenniumMams());
         home: splashMap[Webservice.appNickname]);
   }
 }

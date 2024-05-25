@@ -49,7 +49,7 @@ class LocationTableBooking {
     }
     request.fields.addAll({
       'page_no': '1',
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       'theaccesscode': '${accessCode}'
     });
 

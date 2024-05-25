@@ -24,10 +24,14 @@ class SideMenu extends StatelessWidget {
                 AppThemes.madhuwan_home_birthday_card, // Top color
               if (Webservice.appNickname == 'madhuban')
                 AppThemes.madhuwan_background, // Bottom color
-              if (Webservice.appNickname != 'madhuban')
+              if (Webservice.appNickname == 'forcempower')
                 AppThemes.brc_gradient_light_color,
-              if (Webservice.appNickname != 'madhuban')
+              if (Webservice.appNickname == 'forcempower')
                 AppThemes.brc_gradient_dark_color,
+              if (Webservice.appNickname == 'milleniumMams')
+                AppThemes.mm_light_card,
+              if (Webservice.appNickname == 'milleniumMams')
+                AppThemes.mm_background,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

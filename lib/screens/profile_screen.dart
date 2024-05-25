@@ -259,7 +259,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        if (Webservice.appNickname != 'madhuban')
+                        if (Webservice.appNickname != 'madhuban' &&
+                            Webservice.appNickname != 'milleniumMams')
                           Container(
                             width: double.infinity, // Adjust width as needed
 
@@ -286,7 +287,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           ),
-                        if (Webservice.appNickname != 'madhuban')
+                        if (Webservice.appNickname != 'madhuban' &&
+                            Webservice.appNickname != 'milleniumMams')
                           Container(
                             decoration: BoxDecoration(
                               color: AppThemes.brc_profilecard_color,

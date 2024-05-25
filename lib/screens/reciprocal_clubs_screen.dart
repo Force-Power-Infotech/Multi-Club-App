@@ -13,7 +13,7 @@ class _ReciprocalClubsScreenState extends State<ReciprocalClubsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppThemes.brc_background,
+        backgroundColor: AppThemes.getBackground(),
         title: const Text(
           'Reciprocal Clubs',
           style: TextStyle(
@@ -122,7 +122,7 @@ class reciprocalClubCard extends StatelessWidget {
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: AppThemes.brc_background,
+                                color: AppThemes.getBackground(),
                                 borderRadius: BorderRadius.circular(2),
                               ),
                               width: 77,
@@ -140,7 +140,7 @@ class reciprocalClubCard extends StatelessWidget {
                             SizedBox(width: 5),
                             Container(
                               decoration: BoxDecoration(
-                                color: AppThemes.brc_background,
+                                color: AppThemes.getBackground(),
                                 borderRadius: BorderRadius.circular(2),
                               ),
                               width: 58,
@@ -160,7 +160,7 @@ class reciprocalClubCard extends StatelessWidget {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          color: AppThemes.brc_background,
+                          color: AppThemes.getBackground(),
                           borderRadius: BorderRadius.circular(2),
                         ),
                         width: 140,

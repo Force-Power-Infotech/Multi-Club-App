@@ -47,7 +47,7 @@ class DirectoryAPI {
     final request = http.MultipartRequest('POST', url);
 
     request.fields.addAll({
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
     });
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();

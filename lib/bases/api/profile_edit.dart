@@ -32,7 +32,7 @@ class ProfileEditAPI {
       print('Member ID not found');
     }
     request.fields.addAll({
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       'member_id': '${memberID}',
       'email': "${email}",
       'address': '${address}'

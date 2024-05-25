@@ -43,7 +43,7 @@ class EventAPI {
       print('Access code not found');
     }
     request.fields.addAll({
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       // 'theaccesscode': "${accessCode}",
       'theaccesscode': "BmP1",
       'the_event_type': 'SPORTS',

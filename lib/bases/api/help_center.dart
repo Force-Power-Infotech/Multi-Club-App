@@ -59,7 +59,7 @@ class HelpCenterAPI {
     Uri url = Uri.parse(
         "${Webservice.rootURL}${Webservice.helpcenter}?nickname=${Webservice.appNickname}");
     final request = http.MultipartRequest('POST', url);
-    request.fields.addAll({'organization_id': 'CSC'});
+    request.fields.addAll({'organization_id': Webservice.appNickname});
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();

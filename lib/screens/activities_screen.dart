@@ -13,7 +13,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppThemes.brc_background,
+        backgroundColor: AppThemes.getBackground(),
         title: const Text(
           'Sports Booking',
           style: TextStyle(

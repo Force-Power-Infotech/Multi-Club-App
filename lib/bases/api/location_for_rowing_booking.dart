@@ -46,7 +46,7 @@ class LocationRowingBookingAPI {
     }
     request.fields.addAll({
       'theaccesscode': '${accessCode}',
-      'organization_id': 'CSC',
+      'organization_id': Webservice.appNickname,
       'page_no': '39'
     });
 
