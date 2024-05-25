@@ -45,18 +45,18 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: SlideTransition(
-            position: _offsetAnimation,
-            child: const Text(
-              'Login/Register',
-              style: TextStyle(color: AppThemes.brc_textcolor),
-            ),
+        title: SlideTransition(
+          position: _offsetAnimation,
+          child: const Text(
+            'Login/Register',
+            style: TextStyle(color: AppThemes.brc_textcolor),
           ),
-          backgroundColor: Webservice.appNickname == 'forcempower'
-              ? AppThemes.brc_background
-              : AppThemes
-                  .getBackground() // Use custom primary color from light theme
-          ),
+        ),
+        backgroundColor: Webservice.appNickname == 'forcempower'
+            ? AppThemes.brc_background
+            : AppThemes
+                .getBackground(), // Use custom primary color from light theme
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -67,9 +67,9 @@ class _LoginScreenState extends State<LoginScreen>
             SlideTransition(
               position: _offsetAnimation,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 30.0),
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: Webservice.appNickname == 'forcempower'
-                    ? CircleAvatar(
+                    ? const CircleAvatar(
                         backgroundImage:
                             AssetImage('assets/images/logomain.jpg'),
                         radius: 100,
@@ -99,18 +99,22 @@ class _LoginScreenState extends State<LoginScreen>
             ),
 
             // Description
-            SlideTransition(
-              position: _offsetAnimation,
-              child: Text(
-                Webservice.appNickname == 'milleniumMams'
-                    ? "Millennium Mams’ is a Kolkata based Non Profit Organisation founded in 1993 by two visionaries – Mr. Bishnu Dhanuka and Mr. Sanjay Bhuwania, with the sole motive of creating financial awareness and literacy amongst women. The organisation has since multiplied manifold and has touched the lives of over 10,000 women, giving them an opportunity to build financial acumen.\n\nThe curriculum imparts financial knowledge through the study of current affairs and business dailies, analysis of balance sheets, AGM participation, tracking of global economic trends and plant visits. Since its inception, several enterprising women have become successful entrepreneurs and long–term investors with robust portfolios."
-                    : Webservice.appNickname == 'brc'
-                        ? "Madhuwan Club was seeded by friends in 1980 with an aim to procreate togetherness, forging unforgettable friendships. Staying true to its core, Madhuwan subsists as a unique socio-cultural organisation inclusive of like-minded people. The club fosters fellowship in society wielding entertainment as a catalyst. Entertainment that is created by the organising & performing talent of the member families. Tested over 40 years, the vision of Madhuwan remains the same."
-                        : Webservice.appNickname == 'madhuban'
+            Expanded(
+              child: SlideTransition(
+                position: _offsetAnimation,
+                child: SingleChildScrollView(
+                  child: const Text(
+                    Webservice.appNickname == 'milleniumMams'
+                        ? "Founded in 1993 by Mr. Bishnu Dhanuka and Mr. Sanjay Bhuwania, Millennium Mams has been a trailblazer in empowering women through financial literacy. With chapters in Kolkata, Bangalore, and Mumbai, and a presence in over 22 countries and 40 cities, the organization has a global reach. Millennium Mams is dedicated to enhancing women's financial acumen through comprehensive educational programs, adhering to Warren Buffett's timeless investment principles, and teaching the art of long-term investing and financial planning. Till date, Millennium Mams has empowered over 10,000 women worldwide. The organization offers offline classes in Kolkata and online classes for members in all other locations. The curriculum imparts financial knowledge through various methods, including studying current affairs and business dailies, analyzing balance sheets, participating in annual general meetings (AGMs), tracking global economic trends, and conducting plant visits. These programs aim to build a community of financially independent women who can take charge of their financial futures. Many enterprising women have become successful entrepreneurs and long-term investors with robust portfolios. A significant milestone was the delegation's participation in the Berkshire Hathaway Annual General Meeting in Omaha, Nebraska, highlighting Millennium Mams as India's largest group of women investors and earning recognition in The Sunday Times Magazine, London. Millennium Mams continues to inspire and educate thousands of women globally, promoting financial independence and fostering a community of empowered women worldwide."
+                        : Webservice.appNickname == 'brc'
                             ? "Madhuwan Club was seeded by friends in 1980 with an aim to procreate togetherness, forging unforgettable friendships. Staying true to its core, Madhuwan subsists as a unique socio-cultural organisation inclusive of like-minded people. The club fosters fellowship in society wielding entertainment as a catalyst. Entertainment that is created by the organising & performing talent of the member families. Tested over 40 years, the vision of Madhuwan remains the same."
-                            : '',
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
+                            : Webservice.appNickname == 'madhuban'
+                                ? "Madhuwan Club was seeded by friends in 1980 with an aim to procreate togetherness, forging unforgettable friendships. Staying true to its core, Madhuwan subsists as a unique socio-cultural organisation inclusive of like-minded people. The club fosters fellowship in society wielding entertainment as a catalyst. Entertainment that is created by the organising & performing talent of the member families. Tested over 40 years, the vision of Madhuwan remains the same."
+                                : '',
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -128,14 +132,11 @@ class _LoginScreenState extends State<LoginScreen>
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  // infinite width
                   backgroundColor: Webservice.appNickname == 'forcempower'
                       ? AppThemes.brc_background
                       : AppThemes
                           .getBackground(), // Use custom primary color from light theme
-                  // Use custom primary color from light theme
                   minimumSize: const Size(double.infinity, 50),
-                  // rounded corners
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

@@ -102,7 +102,8 @@ class SideMenu extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -119,10 +120,12 @@ class SideMenu extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -136,10 +139,12 @@ class SideMenu extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -156,10 +161,12 @@ class SideMenu extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -173,10 +180,12 @@ class SideMenu extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -193,7 +202,8 @@ class SideMenu extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   GestureDetector(
@@ -210,7 +220,8 @@ class SideMenu extends StatelessWidget {
                     ),
                   ),
                   const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -224,18 +235,63 @@ class SideMenu extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (Webservice.appNickname != 'madhuban')
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
+                    const Divider(
+                        color: AppThemes.brc_bottom_icon, thickness: 1),
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
+                    GestureDetector(
+                      onTap: () {
+                        // Update UI based on item selected from the drawer
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const HelpdeskScreen(),
+                        ));
+                      },
+                      child: Text(
+                        'Contact us',
+                        style: TextStyle(
+                          color: AppThemes.brc_bottom_icon,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleniumMams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   GestureDetector(
                     onTap: () {
-                      // Update UI based on item selected from the drawer
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const HelpdeskScreen(),
-                      ));
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Contact Us'),
+                            content:
+                                Text('How would you like to provide feedback?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  // Handle phone option
+                                },
+                                child: Text('Phone'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  // Handle mail option
+                                },
+                                child: Text('Mail'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: Text(
-                      'Contact us',
+                      'Feedback',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
                         fontSize: 18,
