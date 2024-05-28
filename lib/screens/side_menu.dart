@@ -4,14 +4,31 @@ import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/activities_screen.dart';
 import 'package:multi_club_app/screens/events_screen.dart';
+import 'package:multi_club_app/screens/gallery_screen.dart';
 import 'package:multi_club_app/screens/helpdesk_screen.dart';
 import 'package:multi_club_app/screens/leadership_screen.dart';
 import 'package:multi_club_app/screens/login_input_screen.dart';
 import 'package:multi_club_app/screens/reciprocal_clubs_screen.dart';
 import 'package:multi_club_app/screens/setting_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({Key? key}) : super(key: key);
+  void _launchURL(BuildContext context, String url) async {
+    try {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to launch URL: $e'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,6 +226,9 @@ class SideMenu extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       // Update UI based on item selected from the drawer
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const GalleryScreen(),
+                      ));
                     },
                     child: Text(
                       'Gallery',
@@ -261,45 +281,50 @@ class SideMenu extends StatelessWidget {
                       Webservice.appNickname != 'milleniumMams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Contact Us'),
-                            content:
-                                Text('How would you like to provide feedback?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  // Handle phone option
-                                },
-                                child: Text('Phone'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  // Handle mail option
-                                },
-                                child: Text('Mail'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    child: Text(
-                      'Feedback',
-                      style: TextStyle(
-                        color: AppThemes.brc_bottom_icon,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                  if (Webservice.appNickname == 'milleniumMams')
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Contact Us'),
+                              content: Text(
+                                  'How would you like to provide feedback?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    _launchURL(context,
+                                        'tel:+91 86177 83048'); // Replace with the phone number you want to call
+                                  },
+                                  child: Text('Phone'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    _launchURL(context,
+                                        'mailto:millenniummams@gmail.com?subject=I have a doubt regarding...&body=I have a doubt regarding...'); // Replace with the email address you want to send to
+                                  },
+                                  child: Text('Mail'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Text(
+                        'Feedback',
+                        style: TextStyle(
+                          color: AppThemes.brc_bottom_icon,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
+                  if (Webservice.appNickname == 'milleniumMams')
+                    const Divider(
+                        color: AppThemes.brc_bottom_icon, thickness: 1),
                   GestureDetector(
                     onTap: () {
                       // Update UI based on item selected from the drawer

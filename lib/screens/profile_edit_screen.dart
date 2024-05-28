@@ -564,7 +564,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       // Add your update logic here
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppThemes.mm_light_card,
+                      backgroundColor: AppThemes.getLightColor(),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             8.0), // Adjust the border radius as needed

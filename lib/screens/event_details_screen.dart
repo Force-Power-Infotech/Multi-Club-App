@@ -4,6 +4,7 @@ import 'package:multi_club_app/bases/api/event_update.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/widgets/GoogleMap.dart';
+import 'package:multi_club_app/screens/widgets/MapWidget.dart';
 
 class EventDetailsScreen extends StatelessWidget {
   final EventDetails event;
@@ -85,7 +86,7 @@ class EventDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${event.date}",
+                        "${event.dateForHeading}",
                         style: TextStyle(
                           color: AppThemes.brc_spotsbooking_hint_text,
                           fontSize: 14,
@@ -131,7 +132,7 @@ class EventDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${event.dateForHeading}",
+                        "${event.locationName}",
                         style: TextStyle(
                           color: AppThemes.brc_spotsbooking_hint_text,
                           fontSize: 14,
@@ -321,7 +322,7 @@ class EventDetailsScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 16),
+                                  const SizedBox(height: 16),
                                   // Demo Google Map
                                   Container(
                                     height: 200,
@@ -329,11 +330,11 @@ class EventDetailsScreen extends StatelessWidget {
                                       border: Border.all(color: Colors.grey),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: Placeholder(),
+                                    child: MapWidget(),
                                   ),
-                                  SizedBox(height: 16),
+                                  const SizedBox(height: 16),
                                   // Text "Going to attend the event"
-                                  Align(
+                                  const Align(
                                     alignment: Alignment.center,
                                     child: Text(
                                       'Going to attend the event ?',
@@ -342,7 +343,7 @@ class EventDetailsScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 16),
+                                  const SizedBox(height: 16),
                                   // Options Row
                                   Row(
                                     mainAxisAlignment:
@@ -359,7 +360,7 @@ class EventDetailsScreen extends StatelessWidget {
                                           padding: MaterialStateProperty.all(
                                               EdgeInsets.zero),
                                           textStyle: MaterialStateProperty.all(
-                                              TextStyle(
+                                              const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                           )),
@@ -376,7 +377,7 @@ class EventDetailsScreen extends StatelessWidget {
                                               content: Text(
                                                 '${apiResponse.processMessage} on ${apiResponse.eventname}',
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: AppThemes
                                                         .brc_textcolor),
                                               ),
@@ -388,7 +389,7 @@ class EventDetailsScreen extends StatelessWidget {
                                           );
                                           Navigator.pop(context);
                                         },
-                                        child: Text(
+                                        child: const Text(
                                           'YES',
                                           style: TextStyle(
                                               color: AppThemes.brc_textcolor),
@@ -401,11 +402,11 @@ class EventDetailsScreen extends StatelessWidget {
                                                   AppThemes.getBackground()),
                                           minimumSize:
                                               MaterialStateProperty.all(
-                                                  Size(100, 40)),
+                                                  const Size(100, 40)),
                                           padding: MaterialStateProperty.all(
                                               EdgeInsets.zero),
                                           textStyle: MaterialStateProperty.all(
-                                              TextStyle(
+                                              const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                           )),
@@ -503,14 +504,13 @@ class EventDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
                     child: Center(
                       child: Row(
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
                               'Know More',
                               style: TextStyle(
@@ -558,7 +558,7 @@ Widget _buildPlaceholderImage() {
   return Container(
     height: 300,
     color: AppThemes.madhuwan_home_birthday_card, // Grey color for the block
-    child: Center(
+    child: const Center(
       child: Text('No Image'),
     ),
   );

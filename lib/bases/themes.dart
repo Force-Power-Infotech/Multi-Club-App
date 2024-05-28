@@ -58,4 +58,16 @@ class AppThemes {
       return csc_background;
     }
   }
+
+  static Color getLightColor() {
+    if (Webservice.appNickname == 'forcempower') {
+      return brc_background;
+    } else if (Webservice.appNickname == 'madhuban') {
+      return madhuwan_home_birthday_card;
+    } else if (Webservice.appNickname == 'millenniumMams') {
+      return mm_light_card;
+    } else {
+      return csc_background;
+    }
+  }
 }
