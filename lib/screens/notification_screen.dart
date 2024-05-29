@@ -11,13 +11,14 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  String selectedOption = 'Booking Alerts'; // Default selected option
+  String selectedOption = 'DEFAULT'; // Default selected option
   List<NotificationData> notifications = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    selectedOption = 'DEFAULT'; // Set selectedOption as DEFAULT
     // Fetch notifications when the screen initializes
     fetchNotifications();
   }
@@ -33,7 +34,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         List<NotificationData> clubAlerts = [];
 
         showNotifications.notificationData?.forEach((notification) {
-          if (notification.category == 'Booking Alerts') {
+          if (notification.category == 'DEFAULT') {
             bookingAlerts.add(notification);
           } else if (notification.category == 'Club Alerts') {
             clubAlerts.add(notification);
@@ -42,7 +43,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
         setState(() {
           notifications =
-              selectedOption == 'Booking Alerts' ? bookingAlerts : clubAlerts;
+              selectedOption == 'DEFAULT' ? bookingAlerts : clubAlerts;
           isLoading = false; // Set loading to false when data is fetched
         });
         print('SUCCES fetching notifications: $notifications');
@@ -98,7 +99,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             TextButton(
                               onPressed: () async {
                                 setState(() {
-                                  selectedOption = 'Booking Alerts';
+                                  selectedOption = 'DEFAULT';
                                   isLoading = true;
                                 });
 
@@ -110,18 +111,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 });
                               },
                               child: Text(
-                                'Booking Alerts',
+                                'DEFAULT',
                                 style: TextStyle(
                                   color: AppThemes.brc_spotsbooking_hint_text,
                                   fontSize: 15,
-                                  fontWeight: selectedOption == 'Booking Alerts'
+                                  fontWeight: selectedOption == 'DEFAULT'
                                       ? FontWeight.w600
                                       : FontWeight.w500,
                                 ),
                               ),
                             ),
                             Container(
-                              height: selectedOption == 'Booking Alerts'
+                              height: selectedOption == 'DEFAULT'
                                   ? 3
                                   : 0.5, // Adjust the height of the divider based on the selected option
                               color: AppThemes
@@ -152,7 +153,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 style: TextStyle(
                                   color: AppThemes.brc_spotsbooking_hint_text,
                                   fontSize: 15,
-                                  fontWeight: selectedOption == 'Booking Alerts'
+                                  fontWeight: selectedOption == 'DEFAULT'
                                       ? FontWeight.w500
                                       : FontWeight.w600,
                                 ),
@@ -171,7 +172,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ],
                   ),
                 ),
-              selectedOption == 'Booking Alerts'
+              selectedOption == 'DEFAULT'
                   ? BookingAlertsBody(notifications: notifications)
                   : ClubAlertsBody(notifications: notifications),
             ],
@@ -193,9 +194,9 @@ class BookingAlertsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Filter notifications with category 'Booking Alerts'
+    // Filter notifications with category 'DEFAULT'
     List<NotificationData> bookingAlerts = notifications
-        .where((notification) => notification.category == 'Booking Alerts')
+        .where((notification) => notification.category == 'DEFAULT')
         .toList();
 
     return Column(

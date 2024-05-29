@@ -41,7 +41,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
   Future<void> accessMemberIdFromHive() async {
     String? username = await UserDataRepository.getMembername();
     if (username != null) {
-      print('Access Code: $username');
+      // print('Access Code: $username');
       // Set the value of the globalUsername variable
       setState(() {
         globalUsername = username;
