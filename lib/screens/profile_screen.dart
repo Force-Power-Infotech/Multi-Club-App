@@ -439,6 +439,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         children: [
                                           const Expanded(
                                             child: Text(
+                                              'Date of Joining',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppThemes
+                                                    .brc_tablebooking_dark_text,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0,
+                                                vertical:
+                                                    4.0), // Adjust padding as needed
+                                            decoration: BoxDecoration(
+                                              // Background color
+                                              color: AppThemes
+                                                  .brc_not_available_bg,
+                                              borderRadius: BorderRadius.circular(
+                                                  4.0), // Adjust border radius as needed
+                                            ),
+                                            child: Text(
+                                              '${snapshot.data!.memberDoj}', // Replace with actual date
+                                              style: const TextStyle(
+                                                fontSize:
+                                                    16, // Increase font size for highlighted text
+                                                fontWeight: FontWeight.w400,
+                                                color: AppThemes
+                                                    .brc_tablebooking_dark_text,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Divider(),
+                                Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Expanded(
+                                            child: Text(
                                               'Date of Birth',
                                               style: TextStyle(
                                                 fontSize: 14,

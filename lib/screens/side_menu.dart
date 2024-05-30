@@ -10,6 +10,7 @@ import 'package:multi_club_app/screens/leadership_screen.dart';
 import 'package:multi_club_app/screens/login_input_screen.dart';
 import 'package:multi_club_app/screens/reciprocal_clubs_screen.dart';
 import 'package:multi_club_app/screens/setting_screen.dart';
+import 'package:multi_club_app/screens/termAndCondition.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SideMenu extends StatelessWidget {
@@ -57,68 +58,88 @@ class SideMenu extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.only(top: 64),
           children: [
-            Container(
-              padding: EdgeInsets.zero,
-              child: Theme(
-                data: ThemeData(
-                  dividerColor: Colors.transparent,
-                ),
-                child: ExpansionTile(
-                  title: Text(
-                    'Home',
-                    style: TextStyle(
-                      color: AppThemes.brc_bottom_icon,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
+            if (Webservice.appNickname != 'madhuban' &&
+                Webservice.appNickname != 'milleniumMams')
+              Container(
+                padding: EdgeInsets.zero,
+                child: Theme(
+                  data: ThemeData(
+                    dividerColor: Colors.transparent,
                   ),
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'About',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: AppThemes.brc_bottom_icon.withOpacity(0.8),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            // Update UI based on item selected from the drawer
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => const LeadershipScreen(),
-                            ));
-                          },
-                          child: Text(
-                            'Leadership',
+                  child: ExpansionTile(
+                    title: Text(
+                      'Home',
+                      style: TextStyle(
+                        color: AppThemes.brc_bottom_icon,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'About',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: AppThemes.brc_bottom_icon.withOpacity(0.8),
                             ),
                           ),
-                        ),
-                        Text(
-                          'Information',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: AppThemes.brc_bottom_icon.withOpacity(0.8),
+                          GestureDetector(
+                            onTap: () {
+                              // Update UI based on item selected from the drawer
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => const LeadershipScreen(),
+                              ));
+                            },
+                            child: Text(
+                              'Leadership',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color:
+                                    AppThemes.brc_bottom_icon.withOpacity(0.8),
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          Text(
+                            'Information',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: AppThemes.brc_bottom_icon.withOpacity(0.8),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      // Update UI based on item selected from the drawer
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const LeadershipScreen(),
+                      ));
+                    },
+                    child: Text(
+                      'LeaderShip',
+                      style: TextStyle(
+                        color: AppThemes.brc_bottom_icon,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
                   if (Webservice.appNickname != 'madhuban' &&
                       Webservice.appNickname != 'milleniumMams')
                     GestureDetector(
@@ -345,6 +366,9 @@ class SideMenu extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       // Update UI based on item selected from the drawer
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const TermAndCondition(),
+                      ));
                     },
                     child: Text(
                       'Term & Conditions',

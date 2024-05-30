@@ -7,6 +7,8 @@ import 'package:multi_club_app/bases/api/sponsor.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
+import 'package:multi_club_app/screens/BirthdayAnniversaryScreen.dart';
+import 'package:multi_club_app/screens/PrivilegeListScreen.dart';
 import 'package:multi_club_app/screens/contact_us.dart';
 import 'package:multi_club_app/screens/directory.dart';
 import 'package:multi_club_app/screens/event_details_screen.dart';
@@ -18,7 +20,9 @@ import 'package:multi_club_app/screens/rowing_booking.dart';
 import 'package:multi_club_app/screens/side_menu.dart';
 import 'package:multi_club_app/screens/sports_booking.dart';
 import 'package:multi_club_app/screens/table_booking.dart';
+import 'package:multi_club_app/screens/widgets/CaroselSponsor.dart';
 import 'package:multi_club_app/screens/widgets/CarouselWidget.dart';
+import 'package:multi_club_app/screens/widgets/PulsatingButton.dart';
 import 'package:multi_club_app/screens/widgets/SponsorSlider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -149,20 +153,20 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                     ));
                   },
                 ),
-                IconButton(
-                  icon: Image.asset(
-                    'assets/images/helpdesk.png',
-                    width: 20,
-                    height: 20,
-                    color: AppThemes.brc_textcolor,
-                  ),
-                  onPressed: () {
-                    // Add onPressed action for the helpdesk icon
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const HelpdeskScreen(),
-                    ));
-                  },
-                ),
+                // IconButton(
+                //   icon: Image.asset(
+                //     'assets/images/helpdesk.png',
+                //     width: 20,
+                //     height: 20,
+                //     color: AppThemes.brc_textcolor,
+                //   ),
+                //   onPressed: () {
+                //     // Add onPressed action for the helpdesk icon
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //       builder: (_) => const HelpdeskScreen(),
+                //     ));
+                //   },
+                // ),
               ],
             ),
             Container(
@@ -346,134 +350,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                            height:
-                                15), // Add space above the first line of text
-                        const Padding(
-                          padding: EdgeInsets.only(
-                              left: 16.0), // Adjust left padding as needed
-                          child: Text(
-                            'Recent Birthdays ', // Text above the boxes
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ), // Adjust font size as needed
-                          ),
-                        ),
-                        // Add space between the lines of text
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppThemes.brc_textcolor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            height:
-                                190, // Adjust the height of the container as needed
-                            child: FutureBuilder<DobAPI>(
-                              future: DobAPI
-                                  .details(), // Calling the asynchronous method
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  // Show loading indicator while waiting for data
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                } else if (snapshot.hasError) {
-                                  // Show error message if there's an error
-                                  return Center(
-                                      child: Text('Error: ${snapshot.error}'));
-                                } else {
-                                  // Once data is loaded, display the ListView
-                                  final memberNames =
-                                      snapshot.data?.memberName ?? [];
-                                  return ListView.builder(
-                                    itemCount: memberNames.length,
-                                    itemBuilder: (context, index) {
-                                      final name = memberNames[index];
-                                      return Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  name,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: AppThemes
-                                                        .brc_helpdesk_text_color,
-                                                  ),
-                                                ),
-                                                const Text(
-                                                  'Member ID: efve',
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: AppThemes
-                                                        .brc_helpdesk_text_color,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                launchWhatsApp(
-                                                    context,
-                                                    "1234567890",
-                                                    "Hello, this is a test message!");
-                                              },
-                                              style: ButtonStyle(
-                                                padding:
-                                                    MaterialStateProperty.all(
-                                                  EdgeInsets.zero,
-                                                ), // Remove padding
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                  Colors.transparent,
-                                                ), // Transparent background
-                                                elevation:
-                                                    MaterialStateProperty.all(
-                                                  0,
-                                                ), // Remove shadow
-                                              ),
-                                              child: Ink(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  color: AppThemes
-                                                      .madhuwan_home_birthday_card,
-                                                ),
-                                                child: const Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Icon(Icons
-                                                          .message), // Icon for WhatsApp
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Row(
@@ -512,7 +389,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Center(
+                              return const Center(
                                 child:
                                     CircularProgressIndicator(), // Show loading indicator while fetching data
                               );
@@ -546,8 +423,191 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                               }
                             }
                           },
+                        ), // Add space above the first line of text
+                        const SizedBox(height: 20),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Recent Birthdays ', // Text above the boxes
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ), // Adjust font size as needed
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BirthdayAnniversaryScreen()), // Replace EventScreen() with your actual screen
+                                  );
+                                },
+                                child: Text(
+                                  'Show more', // Text above the boxes
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppThemes
+                                          .getBackground()), // Adjust font size as needed
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Add space between the lines of text
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppThemes.brc_textcolor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            height: 190,
+                            child: FutureBuilder<DobAPI>(
+                              future: DobAPI.details(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                      child: Text('Error: ${snapshot.error}'));
+                                } else {
+                                  final memberNames =
+                                      snapshot.data?.memberName ?? [];
+                                  final memberDobs =
+                                      snapshot.data?.memberDob ?? [];
+                                  final memberContacts =
+                                      snapshot.data?.memberContact ?? [];
+
+                                  if (memberNames.isEmpty &&
+                                      memberDobs.isEmpty &&
+                                      memberContacts.isEmpty) {
+                                    return Center(
+                                      child: Text(
+                                        'Nothing to Show',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              AppThemes.brc_helpdesk_text_color,
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                    itemCount: memberNames.length,
+                                    itemBuilder: (context, index) {
+                                      final name = memberNames[index];
+                                      final date = memberDobs[index];
+                                      final contact =
+                                          memberContacts[index] ?? '';
+
+                                      return Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  name,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppThemes
+                                                        .brc_helpdesk_text_color,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  date,
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: AppThemes
+                                                        .brc_helpdesk_text_color,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            PulsatingButton(
+                                              onPressed: () {
+                                                if (contact.isEmpty) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'No contact number available'),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  launchWhatsApp(
+                                                    context,
+                                                    contact,
+                                                    "Happy birthday!!",
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          ),
                         ),
 
+                        const SizedBox(height: 20),
+
+                        const SizedBox(
+                            height:
+                                15), // Add space above the first line of text
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Privilege', // Text above the boxes
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ), // Adjust font size as needed
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PrivilegeListScreen()), // Replace EventScreen() with your actual screen
+                                  );
+                                },
+                                child: Text(
+                                  'Show more', // Text above the boxes
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppThemes
+                                          .getBackground()), // Adjust font size as needed
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        CarouselWidget(),
                         const SizedBox(
                             height:
                                 15), // Add space above the first line of text
@@ -555,14 +615,14 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                           padding: EdgeInsets.only(
                               left: 16.0), // Adjust left padding as needed
                           child: Text(
-                            'Privilege', // Text above the boxes
+                            'Sponsors', // Text above the boxes
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ), // Adjust font size as needed
                           ),
                         ),
-                        CarouselWidget()
+                        CarouselSponsor()
 
                         // Add space between the lines of text
                       ],
@@ -594,7 +654,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
             //     ),
             //   ),
             // ),
-            SlideshowWidget(),
+            // SlideshowWidget(),
             Container(
               decoration: BoxDecoration(
                 boxShadow: [

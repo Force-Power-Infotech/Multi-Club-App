@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
-import 'package:multi_club_app/bases/api/user_otp.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/screens/home_screen%20_madhuwan.dart';
-import 'package:multi_club_app/screens/home_screen_BRC.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
 
 class SplashScreenMadhuban extends StatefulWidget {
@@ -18,6 +16,8 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
     with SingleTickerProviderStateMixin {
   String? meberID;
   final _userData = Hive.box('UserData');
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   Future<void> accessMemberIdFromHive() async {
     // Open the Hive box
@@ -33,7 +33,7 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
     // Check if memberId is not null before using it
     if (memberId != null) {
       meberID = memberId.toString();
-      print('Member ID in slsh Screen: $meberID');
+      print('Member ID in splash Screen: $meberID');
     } else {
       print('Member ID is null');
     }
@@ -44,7 +44,20 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
     super.initState();
     accessMemberIdFromHive();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    Future.delayed(const Duration(seconds: 2), () {
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+
+    _animation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    _controller.repeat();
+
+    Future.delayed(const Duration(seconds: 3), () {
       if (meberID != null) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (_) => const HomeScreenMadhuwan(),
@@ -59,6 +72,7 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
 
   @override
   void dispose() {
+    _controller.dispose();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
     super.dispose();
@@ -73,7 +87,7 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
             decoration: const BoxDecoration(color: AppThemes.brc_splashbg),
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(top: 86.0),
+              padding: const EdgeInsets.only(top: 86.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -83,9 +97,9 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
                     width: 240,
                     height: 100,
                   ),
-                  SizedBox(
+                  const SizedBox(
                       height: 20), // Add some space between the image and text
-                  Text(
+                  const Text(
                     'The Madhuban Club',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -94,7 +108,7 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
                           .brc_splashtextcolor, // Set the color of the divider
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Established on 25 September 2013',
                     style: TextStyle(
                       fontSize: 16,
@@ -109,9 +123,20 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
             bottom: 0,
             left: 0,
             right: 0,
-            child: Image.asset(
-              'assets/images/madhuwan_demo.png',
-              fit: BoxFit.cover,
+            child: AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.rotationY(
+                      _animation.value * 3.14159 * 8), // Faster spin
+                  child: child,
+                );
+              },
+              child: Image.asset(
+                'assets/images/madhuwan_logo_main.png',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ],

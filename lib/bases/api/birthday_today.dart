@@ -9,6 +9,7 @@ class DobAPI {
   List<String>? memberDob;
   List<String>? memberContact;
   List<String>? memberMail;
+  List<String>? memberID;
 
   DobAPI(
       {this.processStatus,
@@ -16,6 +17,7 @@ class DobAPI {
       this.memberName,
       this.memberDob,
       this.memberContact,
+      this.memberID,
       this.memberMail});
 
   DobAPI.fromJson(Map<String, dynamic> json) {
@@ -25,16 +27,18 @@ class DobAPI {
     memberDob = json['member_dob'].cast<String>();
     memberContact = json['member_contact'].cast<String>();
     memberMail = json['member_mail'].cast<String>();
+    memberID = json['member_id'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    data['member_name'] = this.memberName;
-    data['member_dob'] = this.memberDob;
-    data['member_contact'] = this.memberContact;
-    data['member_mail'] = this.memberMail;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    data['member_name'] = memberName;
+    data['member_dob'] = memberDob;
+    data['member_contact'] = memberContact;
+    data['member_mail'] = memberMail;
+    data['member_id'] = memberID;
     return data;
   }
 
@@ -50,7 +54,7 @@ class DobAPI {
       'association_code': 'CSC',
       'theaccesscode': 'BmP1',
       'user_type': 'club_member',
-      'birthday': formattedDate, // Set today's date
+      // 'birthday': formattedDate, // Set today's date
       // 'birthday': '24-01-2024', // Set today's date
     });
 

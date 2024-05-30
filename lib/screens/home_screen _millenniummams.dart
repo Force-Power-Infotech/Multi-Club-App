@@ -162,20 +162,20 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                     ));
                   },
                 ),
-                IconButton(
-                  icon: Image.asset(
-                    'assets/images/helpdesk.png',
-                    width: 20,
-                    height: 20,
-                    color: AppThemes.brc_textcolor,
-                  ),
-                  onPressed: () {
-                    // Add onPressed action for the helpdesk icon
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const HelpdeskScreen(),
-                    ));
-                  },
-                ),
+                // IconButton(
+                //   icon: Image.asset(
+                //     'assets/images/helpdesk.png',
+                //     width: 20,
+                //     height: 20,
+                //     color: AppThemes.brc_textcolor,
+                //   ),
+                //   onPressed: () {
+                //     // Add onPressed action for the helpdesk icon
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //       builder: (_) => const HelpdeskScreen(),
+                //     ));
+                //   },
+                // ),
               ],
             ),
             if (Webservice.appNickname != 'milleniumMams')
