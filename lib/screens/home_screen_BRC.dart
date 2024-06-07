@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/contact_us.dart';
+import 'package:multi_club_app/screens/directory.dart';
 import 'package:multi_club_app/screens/helpdesk_screen.dart';
 import 'package:multi_club_app/screens/notification_screen.dart';
 import 'package:multi_club_app/screens/profile_screen.dart';
@@ -456,19 +457,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 asset: 'assets/images/mybooking.png',
                 label: 'My Booking',
                 wheretoGo: () =>
-                    const ProfileScreen(), // Wrap ProfileScreen inside a function
+                    const TableBooking(), // Wrap ProfileScreen inside a function
               ),
               HomeScreenBottomIcon(
                 asset: 'assets/images/Frame.png',
                 label: 'Directory',
                 wheretoGo: () =>
-                    const ProfileScreen(), // Wrap ProfileScreen inside a function
+                    const Directory(), // Wrap ProfileScreen inside a function
               ),
               HomeScreenBottomIcon(
                 asset: 'assets/images/profilelogo.png',
                 label: 'profile',
-                wheretoGo: () =>
-                    const ProfileScreen(), // Wrap ProfileScreen inside a function
+                wheretoGo: () => ProfileScreen(memberId: '', gender: 'male'),
               ),
             ],
           ),

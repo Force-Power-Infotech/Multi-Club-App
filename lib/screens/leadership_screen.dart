@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:multi_club_app/bases/api/council_members.dart';
+import 'package:multi_club_app/bases/api/council_members.dart'; // Ensure the path is correct
 import 'package:multi_club_app/bases/themes.dart';
+import 'package:multi_club_app/bases/webservice.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LeadershipScreen extends StatefulWidget {
@@ -11,6 +12,10 @@ class LeadershipScreen extends StatefulWidget {
 }
 
 class _LeadershipScreenState extends State<LeadershipScreen> {
+  String selectedCategory = 'Executive Committee';
+  String selectedCity = 'Kolkata'; // Default city
+  final List<String> cities = ['Kolkata', 'Mumbai', 'Bangalore'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,63 +29,93 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
               color: AppThemes.brc_textcolor),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
+      body: Column(
+        children: [
+          if (Webservice.appNickname == 'madhuban')
             Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: FutureBuilder<CouncilAPI>(
-                future: CouncilAPI.list(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    // Display UI components using the data from the API
-                    final designations =
-                        snapshot.data?.contactDesignationArray ?? [];
-                    final names = snapshot.data?.contactNameArray ?? [];
-                    final phones = snapshot.data?.contactPhoneArray ?? [];
-                    final mails = snapshot.data?.contactEmailArray ?? [];
-
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: designations.length,
-                      itemBuilder: (context, index) {
-                        return DepartmentInfo(
-                          designation: designations[index],
-                          name: names[index],
-                          phone: phones[index],
-                          mail: mails[index],
-                        );
-                      },
-                    );
-                  }
+              padding: const EdgeInsets.all(8.0),
+              child: DropdownButton<String>(
+                value: selectedCategory,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedCategory = newValue!;
+                  });
                 },
+                items: <String>[
+                  'Executive Committee',
+                  'General Committee',
+                  'Special Invitee',
+                  'Advisory Committee'
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
             ),
-            // Add other departmentInfo widgets here as needed
-            // Padding(
-            //   padding: EdgeInsets.only(top: 16),
-            //   child: Container(
-            //     width: double.infinity,
-            //     color: AppThemes.brc_leadership_sepreator,
-            //     child: Padding(
-            //       padding: EdgeInsets.only(top: 8, left: 32, bottom: 8),
-            //       child: Text(
-            //         'SUBCOMMITTES',
-            //         style: TextStyle(
-            //             color: AppThemes.brc_helpdesk_text_color,
-            //             fontSize: 12,
-            //             fontWeight: FontWeight.w600),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-          ],
-        ),
+          if (Webservice.appNickname == 'milleniumMams')
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DropdownButton<String>(
+                value: selectedCity,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedCity = newValue!;
+                  });
+                },
+                items: cities.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+          Expanded(
+            child: FutureBuilder<CouncilAPI>(
+              future: CouncilAPI.list(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.data!.isEmpty) {
+                  return Center(child: Text('No data available'));
+                } else {
+                  final allMembers = snapshot.data!.data!;
+                  final filteredMembers = Webservice.appNickname == 'madhuban'
+                      ? allMembers
+                          .where(
+                              (member) => member.category == selectedCategory)
+                          .toList()
+                      : Webservice.appNickname == 'milleniumMams'
+                          ? allMembers
+                              .where((member) => member.city == selectedCity)
+                              .toList()
+                          : allMembers;
+
+                  if (filteredMembers.isEmpty) {
+                    return Center(child: Text('No members in this category'));
+                  }
+
+                  return ListView.builder(
+                    itemCount: filteredMembers.length,
+                    itemBuilder: (context, index) {
+                      final member = filteredMembers[index];
+                      return DepartmentInfo(
+                        designation: member.designation ?? '',
+                        name: member.name ?? '',
+                        phone: member.memberId ?? '',
+                        mail: member.city ?? '',
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -120,7 +155,13 @@ class DepartmentInfo extends StatelessWidget {
               CircleAvatar(
                 backgroundColor: AppThemes.getLightColor(),
                 radius: 24,
-                backgroundImage: NetworkImage(name),
+                child: Text(
+                  name.isNotEmpty ? name[0].toUpperCase() : '',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               const SizedBox(
                   width: 16), // Add some space between avatar and text
@@ -157,10 +198,9 @@ class DepartmentInfo extends StatelessWidget {
                 icon: Icon(Icons.call),
                 color: AppThemes.getBackground(),
                 onPressed: () async {
-                  final String? phoneNumber = phone?.trim();
-                  if (phoneNumber != null && phoneNumber.isNotEmpty) {
+                  final String phoneNumber = phone.trim();
+                  if (phoneNumber.isNotEmpty) {
                     final Uri url = Uri.parse('tel:$phoneNumber');
-                    print(url);
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url);
                     } else {
@@ -170,7 +210,6 @@ class DepartmentInfo extends StatelessWidget {
                           content: Text('Cannot launch phone dialer'),
                         ),
                       );
-                      print("Failed to launch URL: $url"); // Debug print
                     }
                   } else {
                     // Inform the user that there is no phone number available
@@ -186,26 +225,24 @@ class DepartmentInfo extends StatelessWidget {
                 icon: Icon(Icons.mail),
                 color: AppThemes.getBackground(),
                 onPressed: () async {
-                  final String? email = mail?.trim();
-                  if (email != null && email.isNotEmpty) {
+                  final String email = mail.trim();
+                  if (email.isNotEmpty) {
                     final Uri url = Uri.parse('mailto:$email');
-                    print(url);
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url);
                     } else {
-                      // Error handling if the phone app can't be launched
+                      // Error handling if the mail app can't be launched
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Cannot launch mail'),
                         ),
                       );
-                      print("Failed to launch URL: $url"); // Debug print
                     }
                   } else {
-                    // Inform the user that there is no phone number available
+                    // Inform the user that there is no email available
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('No MAIL available'),
+                        content: Text('No email available'),
                       ),
                     );
                   }

@@ -51,7 +51,7 @@ class PriviledgeAPI {
     if (accessCode != null) {
       print('Access Code: $accessCode');
     } else {
-      print('Access code not found');
+      print('Access code in priviledge not found');
     }
     request.fields.addAll({
       'organization_id': Webservice.appNickname,

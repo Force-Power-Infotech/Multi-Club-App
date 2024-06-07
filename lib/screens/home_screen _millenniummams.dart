@@ -36,6 +36,19 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
   // Define a global variable to store the username
   String? globalUsername;
   String? globalImg;
+  String? globalmemberID;
+  Future<void> memberID() async {
+    String? memberID = await UserDataRepository.getMemberID();
+    if (memberID != null) {
+      print('memberID atmm: $memberID');
+      // Set the value of the globalUsername variable
+      setState(() {
+        globalmemberID = memberID;
+      });
+    } else {
+      print('memberID not found');
+    }
+  }
 
 // In your accessMemberIdFromHive method
   Future<void> accessMemberIdFromHive() async {
@@ -66,6 +79,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
   @override
   void initState() {
     super.initState();
+    memberID();
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => accessMemberIdFromHive()); // Call the method here
     _profileData = ProfieviewAPI.list(); // Fetch profile data from API
@@ -250,8 +264,15 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            String imageUrl = snapshot.data!.memberImageUrl ?? '';
+          } else if (snapshot.hasData) {
+            final profileData = snapshot.data!.data?.first;
+            if (profileData == null) {
+              return Center(child: Text('No profile data available'));
+            }
+
+            String imageUrl = profileData.maleImageURL ??
+                ''; // Placeholder, replace with actual logic
+
             print(imageUrl);
             return ListView(
               children: [
@@ -293,7 +314,9 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                                   onTap: () {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
-                                      builder: (_) => ProfileScreen(),
+                                      builder: (_) => ProfileScreen(
+                                          memberId: '$globalmemberID',
+                                          gender: 'male'),
                                     ));
                                   },
                                   child: Container(
@@ -596,6 +619,8 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                 ),
               ],
             );
+          } else {
+            return Center(child: Text('No profile data found'));
           }
         },
       ),
@@ -662,7 +687,8 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                       HomeScreenBottomIcon(
                         asset: 'assets/images/profilelogo.png',
                         label: 'Profile',
-                        wheretoGo: () => const ProfileScreen(),
+                        wheretoGo: () => ProfileScreen(
+                            memberId: '${globalmemberID}', gender: 'male'),
                       ),
                     ],
                   ),

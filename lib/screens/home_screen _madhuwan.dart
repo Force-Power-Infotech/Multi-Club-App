@@ -39,6 +39,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
   // Define a global variable to store the username
   String? globalUsername;
   String? globalImg;
+  String? globalmemberID;
 
 // In your accessMemberIdFromHive method
   Future<void> accessMemberIdFromHive() async {
@@ -51,6 +52,19 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
       });
     } else {
       print('Access code not found');
+    }
+  }
+
+  Future<void> memberID() async {
+    String? memberID = await UserDataRepository.getMemberID();
+    if (memberID != null) {
+      print('memberID: $memberID');
+      // Set the value of the globalUsername variable
+      setState(() {
+        globalmemberID = memberID;
+      });
+    } else {
+      print('memberID not found');
     }
   }
 
@@ -72,6 +86,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => accessMemberIdFromHive()); // Call the method here
     _profileData = ProfieviewAPI.list(); // Fetch profile data from API
+    memberID();
   }
 
   bool homeClicked = false;
@@ -231,8 +246,14 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            String imageUrl = snapshot.data!.memberImageUrl ?? '';
+          } else if (snapshot.hasData) {
+            final profileData = snapshot.data!.data?.first;
+            if (profileData == null) {
+              return Center(child: Text('No profile data available'));
+            }
+
+            String imageUrl = profileData.maleImageURL ??
+                ''; // Placeholder, replace with actual logic
             print(imageUrl);
             return ListView(
               children: [
@@ -274,7 +295,9 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                   onTap: () {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
-                                      builder: (_) => ProfileScreen(),
+                                      builder: (_) => ProfileScreen(
+                                          memberId: '${globalmemberID}',
+                                          gender: 'male'),
                                     ));
                                   },
                                   child: Container(
@@ -463,110 +486,136 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Container(
-                            decoration: BoxDecoration(
-                              color: AppThemes.brc_textcolor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            height: 190,
-                            child: FutureBuilder<DobAPI>(
-                              future: DobAPI.details(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                } else if (snapshot.hasError) {
-                                  return Center(
-                                      child: Text('Error: ${snapshot.error}'));
-                                } else {
-                                  final memberNames =
-                                      snapshot.data?.memberName ?? [];
-                                  final memberDobs =
-                                      snapshot.data?.memberDob ?? [];
-                                  final memberContacts =
-                                      snapshot.data?.memberContact ?? [];
-
-                                  if (memberNames.isEmpty &&
-                                      memberDobs.isEmpty &&
-                                      memberContacts.isEmpty) {
+                              decoration: BoxDecoration(
+                                color: AppThemes.brc_textcolor,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              height: 190,
+                              child: FutureBuilder<DobAPI>(
+                                future: DobAPI.details(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    return Center(
+                                        child:
+                                            Text('Error: ${snapshot.error}'));
+                                  } else if (!snapshot.hasData ||
+                                      snapshot.data!.data == null ||
+                                      snapshot.data!.data!.isEmpty) {
                                     return Center(
                                       child: Text(
-                                        'Nothing to Show',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color:
-                                              AppThemes.brc_helpdesk_text_color,
-                                        ),
+                                        'Nothing to show',
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    );
+                                  } else {
+                                    final dataList = snapshot.data!.data!;
+
+                                    return Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: ListView.builder(
+                                        itemCount: dataList.length,
+                                        itemBuilder: (context, index) {
+                                          final member = dataList[index];
+                                          final name = member.memberName ?? '';
+                                          final date = member.memberDob ?? '';
+                                          final contact =
+                                              member.memberContact ?? '';
+                                          final id = member.memberId ?? '';
+
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                print('${id}');
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                  builder: (_) => ProfileScreen(
+                                                      memberId: '${id}',
+                                                      gender: 'male'),
+                                                ));
+                                              },
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.blue,
+                                                    radius: 24,
+                                                    child: Text(
+                                                      name.isNotEmpty
+                                                          ? name[0]
+                                                              .toUpperCase()
+                                                          : '',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 16),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          name,
+                                                          style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 4),
+                                                        Text(
+                                                          (date),
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 16),
+                                                  PulsatingButton(
+                                                    onPressed: () {
+                                                      if (contact.isEmpty) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                            content: Text(
+                                                                'No contact number available'),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        launchWhatsApp(
+                                                          context,
+                                                          contact,
+                                                          "Happy birthday!!",
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
                                     );
                                   }
-
-                                  return ListView.builder(
-                                    itemCount: memberNames.length,
-                                    itemBuilder: (context, index) {
-                                      final name = memberNames[index];
-                                      final date = memberDobs[index];
-                                      final contact =
-                                          memberContacts[index] ?? '';
-
-                                      return Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  name,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: AppThemes
-                                                        .brc_helpdesk_text_color,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  date,
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: AppThemes
-                                                        .brc_helpdesk_text_color,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            PulsatingButton(
-                                              onPressed: () {
-                                                if (contact.isEmpty) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    const SnackBar(
-                                                      content: Text(
-                                                          'No contact number available'),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  launchWhatsApp(
-                                                    context,
-                                                    contact,
-                                                    "Happy birthday!!",
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                }
-                              },
-                            ),
-                          ),
+                                },
+                              )),
                         ),
 
                         const SizedBox(height: 20),
@@ -631,6 +680,8 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                 ),
               ],
             );
+          } else {
+            return Center(child: Text('No profile data found'));
           }
         },
       ),
@@ -696,7 +747,8 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                       HomeScreenBottomIcon(
                         asset: 'assets/images/profilelogo.png',
                         label: 'Profile',
-                        wheretoGo: () => const ProfileScreen(),
+                        wheretoGo: () => ProfileScreen(
+                            memberId: '${globalmemberID}', gender: 'male'),
                       ),
                     ],
                   ),

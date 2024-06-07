@@ -86,7 +86,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
           // Check if snapshot has data
           if (snapshot.hasData) {
             return Container(
-              height: 190, // Adjust the height of the carousel as needed
+              height: 194, // Adjust the height of the carousel as needed
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: snapshot.data!.imageUrlArray?.length ?? 0,
@@ -139,28 +139,38 @@ class _CarouselWidgetState extends State<CarouselWidget> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            snapshot.data!.nameArray![index],
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              snapshot.data!.nameArray![index],
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            snapshot
-                                                .data!.descriptionArray![index],
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
+                                            SizedBox(height: 4),
+                                            Text(
+                                              snapshot.data!
+                                                  .descriptionArray![index],
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white,
+                                              ),
+                                              maxLines:
+                                                  1, // Limit to a maximum of 2 lines
+                                              overflow: TextOverflow
+                                                  .ellipsis, // Handle overflow with ellipsis (...)
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
+                                      SizedBox(
+                                          width:
+                                              8), // Add some space between the text and the container
                                       Container(
                                         width: 40,
                                         height: 40,

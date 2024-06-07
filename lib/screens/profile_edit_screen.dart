@@ -3,6 +3,8 @@ import 'package:multi_club_app/bases/api/profile_edit.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class ProfileEditScreen extends StatefulWidget {
   const ProfileEditScreen({Key? key}) : super(key: key);
@@ -20,20 +22,53 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
   late TextEditingController _addressController;
+  late TextEditingController _imageController;
+  File? _image;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _profileData = ProfieviewAPI.list(); // Fetch profile data from API
 
+    // Initialize controllers
+    _nameController = TextEditingController();
+    _membershipController = TextEditingController();
+    _dobController = TextEditingController();
+    _phoneController = TextEditingController();
+    _emailController = TextEditingController();
+    _addressController = TextEditingController();
+    _imageController = TextEditingController();
+
+    // Fetch profile data from API and update controllers
+    _profileData = ProfieviewAPI.list();
     _profileData.then((snapshot) {
-      _nameController = TextEditingController(text: '${snapshot.memberName}');
-      _membershipController =
-          TextEditingController(text: '${snapshot.memberId}');
-      _dobController = TextEditingController(text: '${snapshot.memberDob}');
-      _phoneController = TextEditingController(text: '${snapshot.memberPhone}');
-      _emailController = TextEditingController(text: '${snapshot.memberEmail}');
-      _addressController = TextEditingController(text: '${snapshot.address}');
+      final profile = snapshot.data?.first;
+      if (profile != null) {
+        setState(() {
+          _nameController.text = profile.memberNameMale ?? '';
+          _membershipController.text = profile.membershipCode ?? '';
+          _dobController.text = profile.memberMaleDob ?? '';
+          _phoneController.text = profile.memberMalePhone ?? '';
+          _imageController.text = profile.maleImageURL ?? '';
+          _emailController.text = profile.memberMalePhone ??
+              ''; // Assuming this is the correct field
+          _addressController.text =
+              profile.officeAddress ?? ''; // Assuming this is the correct field
+        });
+      }
+    }).catchError((error) {
+      print('Error fetching profile data: $error');
+      // Handle the error accordingly
     });
   }
 
@@ -45,6 +80,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _phoneController.dispose();
     _emailController.dispose();
     _addressController.dispose();
+    _imageController.dispose();
     super.dispose();
   }
 
@@ -76,11 +112,23 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         future: _profileData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            String imageUrl = snapshot.data!.memberImageUrl ?? '';
+          } else if (snapshot.hasData &&
+              snapshot.data!.data != null &&
+              snapshot.data!.data!.isNotEmpty) {
+            final profile = snapshot.data!.data!.first;
+
+            _nameController.text = profile.memberNameMale ?? '';
+            _membershipController.text = profile.membershipCode ?? '';
+            _dobController.text = profile.memberMaleDob ?? '';
+            _phoneController.text = profile.memberMalePhone ?? '';
+            _emailController.text =
+                ''; // Placeholder, update with actual email if available
+            _addressController.text =
+                ''; // Placeholder, update with actual address if available
+            _imageController.text = profile.maleImageURL ?? '';
 
             return ListView(
               children: [
@@ -115,7 +163,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: AppThemes.getBackground(),
-                                        // Set the color of the border
                                         width: 8, // Set the width of the border
                                       ),
                                       borderRadius:
@@ -135,25 +182,83 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         ],
                                       ),
                                       child: ClipOval(
-                                        child: imageUrl != null &&
-                                                imageUrl.isNotEmpty
-                                            ? Image.network(
-                                                imageUrl,
-                                                fit: BoxFit.cover,
-                                                width: 100,
-                                                height: 100,
-                                              )
-                                            : Container(
-                                                color: Colors
-                                                    .grey, // Grey color for the circle
-                                                width: 100,
-                                                height: 100,
-                                                child: const Icon(
-                                                  Icons.person,
+                                        child: Stack(
+                                          children: [
+                                            _image != null
+                                                ? Image.file(
+                                                    _image!,
+                                                    fit: BoxFit.cover,
+                                                    width: 100,
+                                                    height: 100,
+                                                  )
+                                                : ClipOval(
+                                                    child: Image.network(
+                                                      "${profile.maleImageURL}",
+                                                      fit: BoxFit.cover,
+                                                      width: 100,
+                                                      height: 100,
+                                                      loadingBuilder: (BuildContext
+                                                              context,
+                                                          Widget child,
+                                                          ImageChunkEvent?
+                                                              loadingProgress) {
+                                                        if (loadingProgress ==
+                                                            null) {
+                                                          return child;
+                                                        } else {
+                                                          return Container(
+                                                            color: Colors.grey,
+                                                            width: 100,
+                                                            height: 100,
+                                                            child: const Icon(
+                                                              Icons.person,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 50,
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
+                                                      errorBuilder:
+                                                          (BuildContext context,
+                                                              Object error,
+                                                              StackTrace?
+                                                                  stackTrace) {
+                                                        return Container(
+                                                          color: Colors.grey,
+                                                          width: 100,
+                                                          height: 100,
+                                                          child: const Icon(
+                                                            Icons.person,
+                                                            color: Colors.white,
+                                                            size: 50,
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                            Container(
+                                              width: 100,
+                                              height: 100,
+                                              color:
+                                                  Colors.black.withOpacity(0.3),
+                                            ),
+                                            Positioned(
+                                              top: 0,
+                                              bottom: 0,
+                                              left: 0,
+                                              right: 0,
+                                              child: IconButton(
+                                                onPressed: _pickImage,
+                                                icon: const Icon(
+                                                  Icons.camera_alt,
                                                   color: Colors.white,
-                                                  size: 50,
+                                                  size: 30,
                                                 ),
                                               ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -235,7 +340,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '${snapshot.data!.memberName}', // Replace with actual phone number
+                                        '${profile.memberNameMale}', // Replace with actual phone number
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
@@ -330,7 +435,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                   4.0), // Adjust border radius as needed
                                             ),
                                             child: Text(
-                                              '${snapshot.data!.memberId}', // Replace with actual date
+                                              '${profile.membershipCode}', // Replace with actual date
                                               style: TextStyle(
                                                 fontSize:
                                                     16, // Increase font size for highlighted text
@@ -382,7 +487,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                   4.0), // Adjust border radius as needed
                                             ),
                                             child: Text(
-                                              '${snapshot.data!.memberDob}', // Replace with actual date
+                                              '${profile.memberMaleDob}', // Replace with actual date
                                               style: TextStyle(
                                                 fontSize:
                                                     16, // Increase font size for highlighted text
@@ -416,7 +521,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '${snapshot.data!.memberPhone}', // Replace with actual phone number
+                                        '${profile.memberMalePhone}', // Replace with actual phone number
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
@@ -428,41 +533,44 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                   ),
                                 ),
                                 const Divider(),
-                                // Email
-                                Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Email',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppThemes
-                                              .brc_tablebooking_dark_text,
+                                if (Webservice.appNickname != 'madhuban')
+
+                                  // Email
+                                  Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Email',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppThemes
+                                                .brc_tablebooking_dark_text,
+                                          ),
                                         ),
-                                      ),
-                                      TextField(
-                                        controller: _emailController,
-                                        decoration: InputDecoration(
-                                          hintText: 'Enter email',
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none,
+                                        TextField(
+                                          controller: _emailController,
+                                          decoration: InputDecoration(
+                                            hintText: '${profile.email}',
+                                            hintStyle:
+                                                TextStyle(color: Colors.grey),
+                                            border: InputBorder.none,
+                                          ),
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppThemes
+                                                .brc_tablebooking_dark_text,
+                                          ),
                                         ),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppThemes
-                                              .brc_tablebooking_dark_text,
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                const Divider(),
+                                if (Webservice.appNickname != 'madhuban')
+                                  const Divider(),
                                 // Address
                                 Padding(
                                   padding: const EdgeInsets.all(6.0),
@@ -482,7 +590,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                       TextField(
                                         controller: _addressController,
                                         decoration: InputDecoration(
-                                          hintText: 'Enter address',
+                                          hintText: '${profile.officeAddress}',
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none,
@@ -525,13 +633,17 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       // Retrieve text from controllers
-                      String email = _emailController.text;
-                      String address = _addressController.text;
-
+                      // String email = _emailController.text;
+                      String address = _addressController.text.isNotEmpty
+                          ? _addressController.text
+                          : (profile.officeAddress ?? '');
+                      String email = _emailController.text.isNotEmpty
+                          ? _emailController.text
+                          : (profile.email ?? '');
                       // Call the API to post data
                       try {
-                        ProfileEditAPI response =
-                            await ProfileEditAPI.details(email, address);
+                        ProfileEditAPI response = await ProfileEditAPI.details(
+                            email, address, _image);
                         // Handle the response here if needed
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -544,13 +656,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                             behavior: SnackBarBehavior.floating,
                           ),
                         );
-                        print('API response: $response');
+                        print('API response: ${response}');
                       } catch (e) {
                         // Handle any errors
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              '${e}',
+                              '$e',
                               style: const TextStyle(
                                   color: AppThemes.brc_textcolor),
                             ),
@@ -582,9 +694,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             );
+          } else {
+            return const Center(child: Text('No profile data found'));
           }
         },
       ),

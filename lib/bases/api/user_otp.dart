@@ -142,6 +142,7 @@ class UserOtpAPI {
     String responseString = await response.stream.bytesToString();
     UserOtpAPI userOtp = UserOtpAPI.fromJson(jsonDecode(responseString));
     await UserDataRepository.saveUserData(userOtp);
+    // print(UserDataRepository.getMemberID());
     return userOtp;
   }
 
