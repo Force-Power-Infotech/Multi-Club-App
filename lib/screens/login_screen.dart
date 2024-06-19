@@ -102,8 +102,8 @@ class _LoginScreenState extends State<LoginScreen>
             Expanded(
               child: SlideTransition(
                 position: _offsetAnimation,
-                child: SingleChildScrollView(
-                  child: const Text(
+                child: const SingleChildScrollView(
+                  child: Text(
                     Webservice.appNickname == 'milleniumMams'
                         ? "Founded in 1993 by Mr. Bishnu Dhanuka and Mr. Sanjay Bhuwania, Millennium Mams has been a trailblazer in empowering women through financial literacy. With chapters in Kolkata, Bangalore, and Mumbai, and a presence in over 22 countries and 40 cities, the organization has a global reach. Millennium Mams is dedicated to enhancing women's financial acumen through comprehensive educational programs, adhering to Warren Buffett's timeless investment principles, and teaching the art of long-term investing and financial planning. Till date, Millennium Mams has empowered over 10,000 women worldwide. The organization offers offline classes in Kolkata and online classes for members in all other locations. The curriculum imparts financial knowledge through various methods, including studying current affairs and business dailies, analyzing balance sheets, participating in annual general meetings (AGMs), tracking global economic trends, and conducting plant visits. These programs aim to build a community of financially independent women who can take charge of their financial futures. Many enterprising women have become successful entrepreneurs and long-term investors with robust portfolios. A significant milestone was the delegation's participation in the Berkshire Hathaway Annual General Meeting in Omaha, Nebraska, highlighting Millennium Mams as India's largest group of women investors and earning recognition in The Sunday Times Magazine, London. Millennium Mams continues to inspire and educate thousands of women globally, promoting financial independence and fostering a community of empowered women worldwide."
                         : Webservice.appNickname == 'brc'

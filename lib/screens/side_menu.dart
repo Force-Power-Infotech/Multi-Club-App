@@ -370,7 +370,7 @@ class SideMenu extends StatelessWidget {
                         builder: (_) => const TermAndCondition(),
                       ));
                     },
-                    child: Text(
+                    child: const Text(
                       'Term & Conditions',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
@@ -391,7 +391,7 @@ class SideMenu extends StatelessWidget {
                         builder: (_) => const LoginInputScreen(),
                       ));
                     },
-                    child: Text(
+                    child: const Text(
                       'Logout',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
@@ -401,19 +401,30 @@ class SideMenu extends StatelessWidget {
                     ),
                   ),
                   const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        // Usage example:
                         RoundedImageButton(
-                            imagePath: 'assets/images/facebook.png'),
+                          imagePath: 'assets/images/facebook.png',
+                          url: 'https://www.facebook.com/madhuwanclubkolkata',
+                        ),
+                        if (Webservice.appNickname != 'madhuban')
+                          RoundedImageButton(
+                            imagePath: 'assets/images/youtube.png',
+                            url: 'https://www.youtube.com',
+                          ),
                         RoundedImageButton(
-                            imagePath: 'assets/images/youtube.png'),
-                        RoundedImageButton(
-                            imagePath: 'assets/images/insta.png'),
-                        RoundedImageButton(
-                            imagePath: 'assets/images/website.png'),
+                          imagePath: 'assets/images/insta.png',
+                          url: 'https://www.instagram.com/madhuwanclub',
+                        ),
+                        if (Webservice.appNickname != 'madhuban')
+                          RoundedImageButton(
+                            imagePath: 'assets/images/website.png',
+                            url: 'https://www.yourwebsite.com',
+                          ),
                       ],
                     ),
                   )
@@ -429,8 +440,10 @@ class SideMenu extends StatelessWidget {
 
 class RoundedImageButton extends StatelessWidget {
   final String imagePath;
+  final String url;
 
-  const RoundedImageButton({Key? key, required this.imagePath})
+  const RoundedImageButton(
+      {Key? key, required this.imagePath, required this.url})
       : super(key: key);
 
   @override
@@ -438,8 +451,12 @@ class RoundedImageButton extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: ElevatedButton(
-        onPressed: () {
-          // Add onPressed action for the button
+        onPressed: () async {
+          if (await canLaunch(url)) {
+            await launch(url);
+          } else {
+            throw 'Could not launch $url';
+          }
         },
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,

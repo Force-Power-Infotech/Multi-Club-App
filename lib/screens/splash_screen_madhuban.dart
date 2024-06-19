@@ -59,13 +59,13 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
 
     Future.delayed(const Duration(seconds: 3), () {
       if (meberID != null) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => const HomeScreenMadhuwan(),
-        ));
+        // Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //   builder: (_) => const HomeScreenMadhuwan(),
+        // ));
       } else {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
-        ));
+        // Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //   builder: (_) => const LoginScreen(),
+        // ));
       }
     });
   }
@@ -99,22 +99,22 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
                   ),
                   const SizedBox(
                       height: 20), // Add some space between the image and text
-                  const Text(
-                    'The Madhuban Club',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: AppThemes
-                          .brc_splashtextcolor, // Set the color of the divider
-                    ),
-                  ),
-                  const Text(
-                    'Established on 25 September 2013',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF4B213F), // Set the color of the divider
-                    ),
-                  ),
+                  // const Text(
+                  //   'Madhuwan Club',
+                  //   style: TextStyle(
+                  //     fontWeight: FontWeight.bold,
+                  //     fontSize: 16,
+                  //     color: AppThemes
+                  //         .brc_splashtextcolor, // Set the color of the divider
+                  //   ),
+                  // ),
+                  // const Text(
+                  //   'Established on 1980 ',
+                  //   style: TextStyle(
+                  //     fontSize: 16,
+                  //     color: Color(0xFF4B213F), // Set the color of the divider
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -129,7 +129,7 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
                 return Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.rotationY(
-                      _animation.value * 3.14159 * 8), // Faster spin
+                      _animation.value * 3.14159 * 2), // Faster spin
                   child: child,
                 );
               },

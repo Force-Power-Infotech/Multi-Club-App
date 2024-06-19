@@ -117,7 +117,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
 
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight +
-            55), // Add extra height for the red bar and padding
+            80), // Add extra height for the red bar and padding
         child: Column(
           children: [
             AppBar(
@@ -185,7 +185,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
               ],
             ),
             Container(
-              padding: const EdgeInsets.only(left: 40.0, right: 40, bottom: 5),
+              padding: const EdgeInsets.only(left: 15.0, right: 15, bottom: 5),
               decoration: BoxDecoration(
                 color: AppThemes.getBackground(),
               ),
@@ -214,14 +214,14 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                         }
                       },
                       child: Container(
-                        height: 50,
+                        height: 75,
                         decoration: BoxDecoration(
                           color: AppThemes.madhuwan_home_birthday_card,
                           borderRadius: BorderRadius.circular(5),
                           image: firstImageUrl.isNotEmpty
                               ? DecorationImage(
                                   image: NetworkImage(firstImageUrl),
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.cover,
                                 )
                               : null, // Use DecorationImage only if first image URL is available
                         ),
