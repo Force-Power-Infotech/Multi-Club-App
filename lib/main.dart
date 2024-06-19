@@ -11,8 +11,6 @@ import 'package:multi_club_app/screens/splash_screen_madhuban.dart';
 import 'package:multi_club_app/screens/splash_screen_millenniumMams.dart';
 import 'package:multi_club_app/screens/table_booking.dart';
 
-const String appNickname = 'Multi Club App';
-
 void main() async {
   await Hive.initFlutter();
 
@@ -35,12 +33,19 @@ class _MyAppState extends State<MyApp> {
     'madhuban': const SplashScreenMadhuban(),
     'milleniumMams': const SplashScreenmillenniumMams(),
   };
+  final Map<String, String> appName = {
+    'madhuban': 'Madhuwan',
+    'milleniumMams': 'MM',
+    'forcempower': 'BRC',
+  };
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    String appNickname = Webservice.appNickname; // Get the app nickname
+
     return MaterialApp(
-        title: appNickname,
+        title: appName[appNickname] ?? 'DefaultAppName', // Fallback title
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
               seedColor: Colors.white,

@@ -59,13 +59,13 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
 
     Future.delayed(const Duration(seconds: 3), () {
       if (meberID != null) {
-        // Navigator.of(context).pushReplacement(MaterialPageRoute(
-        //   builder: (_) => const HomeScreenMadhuwan(),
-        // ));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) => const HomeScreenMadhuwan(),
+        ));
       } else {
-        // Navigator.of(context).pushReplacement(MaterialPageRoute(
-        //   builder: (_) => const LoginScreen(),
-        // ));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+        ));
       }
     });
   }

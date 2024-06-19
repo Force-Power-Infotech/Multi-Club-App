@@ -1,4 +1,4 @@
-package com.forcepower.multi_club_app
+package com.forcepower.madhuwan
 
 import io.flutter.embedding.android.FlutterActivity
 
