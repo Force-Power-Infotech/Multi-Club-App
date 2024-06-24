@@ -149,7 +149,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                   child: Image.asset(
                     'assets/images/madhuwan.jpg',
                     fit: BoxFit.cover,
-                    width: 70,
+                    width: 85,
                     height: 30,
                   ),
                 ),
@@ -221,7 +221,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                           image: firstImageUrl.isNotEmpty
                               ? DecorationImage(
                                   image: NetworkImage(firstImageUrl),
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.fill,
                                 )
                               : null, // Use DecorationImage only if first image URL is available
                         ),
@@ -552,14 +552,14 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                           ? name[0]
                                                               .toUpperCase()
                                                           : '',
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 16),
+                                                  const SizedBox(width: 16),
                                                   Expanded(
                                                     child: Column(
                                                       crossAxisAlignment:
@@ -568,16 +568,60 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                       children: [
                                                         Text(
                                                           name,
-                                                          style: TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 18,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                           ),
                                                         ),
-                                                        SizedBox(height: 4),
+                                                        const SizedBox(
+                                                            height: 4),
                                                         Text(
-                                                          (date),
-                                                          style: TextStyle(
+                                                          (() {
+                                                            // Split the date string
+                                                            List<String> parts =
+                                                                date.split('-');
+                                                            if (parts.length !=
+                                                                3) {
+                                                              return date; // Return original date if the format is incorrect
+                                                            }
+
+                                                            String day =
+                                                                parts[0];
+                                                            String month =
+                                                                parts[1];
+                                                            String year =
+                                                                parts[2];
+
+                                                            // List of month names
+                                                            List<String>
+                                                                months = [
+                                                              'January',
+                                                              'February',
+                                                              'March',
+                                                              'April',
+                                                              'May',
+                                                              'June',
+                                                              'July',
+                                                              'August',
+                                                              'September',
+                                                              'October',
+                                                              'November',
+                                                              'December'
+                                                            ];
+
+                                                            // Convert month from number to name
+                                                            String monthName =
+                                                                months[int.parse(
+                                                                        month) -
+                                                                    1];
+
+                                                            // Format the date
+                                                            return '$monthName $day, $year';
+                                                          })(),
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 14,
                                                             color: Colors.grey,
                                                           ),
@@ -814,7 +858,7 @@ class home_event_card extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "${event.date}",
+                        "${event.dateForHeading}",
                         style: TextStyle(
                           fontSize: 16,
                         ),

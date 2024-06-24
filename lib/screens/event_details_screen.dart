@@ -28,7 +28,7 @@ class EventDetailsScreen extends StatelessWidget {
         backgroundColor: Webservice.appNickname == 'forcempower'
             ? AppThemes.getBackground()
             : AppThemes.getBackground(),
-        title: Text(
+        title: const Text(
           "event details", // Use event name in the title
           style: TextStyle(
             color: AppThemes.brc_textcolor,
@@ -56,7 +56,7 @@ class EventDetailsScreen extends StatelessWidget {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 1,
                     blurRadius: 3,
-                    offset: Offset(0, 5),
+                    offset: const Offset(0, 5),
                   ),
                 ],
               ),
@@ -65,7 +65,7 @@ class EventDetailsScreen extends StatelessWidget {
                 children: [
                   Text(
                     "${event.eventname}",
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppThemes.brc_spotsbooking_hint_text,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -87,7 +87,7 @@ class EventDetailsScreen extends StatelessWidget {
                       ),
                       Text(
                         "${event.dateForHeading}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppThemes.brc_spotsbooking_hint_text,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -111,7 +111,7 @@ class EventDetailsScreen extends StatelessWidget {
                       ),
                       Text(
                         "${event.time}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppThemes.brc_spotsbooking_hint_text,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -133,7 +133,7 @@ class EventDetailsScreen extends StatelessWidget {
                       ),
                       Text(
                         "${event.locationName}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppThemes.brc_spotsbooking_hint_text,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -164,7 +164,7 @@ class EventDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'ABOUT THE EVENT',
                     style: TextStyle(
                       color: AppThemes.brc_spotsbooking_hint_text,
@@ -175,7 +175,7 @@ class EventDetailsScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   Text(
                     "${event.description}",
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppThemes.brc_spotsbooking_hint_text,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -188,48 +188,48 @@ class EventDetailsScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 8.0, left: 4.0, right: 4, bottom: 32),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Add onPressed action for confirming booking
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppThemes.brc_bottom_icon,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+              if (Webservice.appNickname != 'madhuban')
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 8.0, left: 4.0, right: 4, bottom: 32),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add onPressed action for confirming booking
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppThemes.brc_bottom_icon,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Center(
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            'assets/images/forward_icon.png',
-                            width: 24,
-                            height: 24,
-                            color: AppThemes.brc_textcolor,
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text(
-                              'Share',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppThemes.brc_textcolor,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Center(
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/forward_icon.png',
+                              width: 24,
+                              height: 24,
+                              color: AppThemes.brc_textcolor,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text(
+                                'Share',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppThemes.brc_textcolor,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
               if (Webservice.appNickname != 'madhuban' &&
                   Webservice.appNickname != 'milleniumMams')
                 Padding(
@@ -256,9 +256,8 @@ class EventDetailsScreen extends StatelessWidget {
                               height: 24,
                               color: AppThemes.brc_textcolor,
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
                               child: Text(
                                 'Locate',
                                 style: TextStyle(
@@ -316,7 +315,7 @@ class EventDetailsScreen extends StatelessWidget {
                                     children: [
                                       Text(
                                         '${event.eventname}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -330,7 +329,10 @@ class EventDetailsScreen extends StatelessWidget {
                                       border: Border.all(color: Colors.grey),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: MapWidget(),
+                                    child: MapWidget(
+                                      googleMapsLink:
+                                          event.locationOnMap.toString(),
+                                    ),
                                   ),
                                   const SizedBox(height: 16),
                                   // Text "Going to attend the event"

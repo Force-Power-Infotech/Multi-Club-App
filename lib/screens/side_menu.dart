@@ -131,7 +131,7 @@ class SideMenu extends StatelessWidget {
                       ));
                     },
                     child: Text(
-                      'LeaderShip',
+                      'Leadership',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
                         fontSize: 18,

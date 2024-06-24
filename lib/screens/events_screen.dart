@@ -315,7 +315,7 @@ class eventCards extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 4),
                       child: Text(
-                        event.date ?? '',
+                        event.dateForHeading ?? '',
                         style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,

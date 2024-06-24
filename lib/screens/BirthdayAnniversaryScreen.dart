@@ -25,7 +25,7 @@ class BirthdayAnniversaryScreen extends StatelessWidget {
 
   String formattedDate(String dateStr) {
     DateTime date = DateFormat("dd-MM-yyyy").parse(dateStr);
-    String formatted = DateFormat("dd MMM").format(date);
+    String formatted = DateFormat("dd MMM, yyyy").format(date);
     return formatted;
   }
 
@@ -102,28 +102,28 @@ class BirthdayAnniversaryScreen extends StatelessWidget {
                             radius: 24,
                             child: Text(
                               name.isNotEmpty ? name[0].toUpperCase() : '',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   name,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Text(
                                   formattedDate(date),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
                                   ),
@@ -131,7 +131,7 @@ class BirthdayAnniversaryScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           PulsatingButton(
                             onPressed: () {
                               if (contact.isEmpty) {

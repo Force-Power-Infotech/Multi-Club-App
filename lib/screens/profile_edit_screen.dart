@@ -340,7 +340,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '${profile.memberNameMale}', // Replace with actual phone number
+                                        profile.memberNameMale ??
+                                            'N/A', // Replace with actual member's name
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
@@ -435,10 +436,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                   4.0), // Adjust border radius as needed
                                             ),
                                             child: Text(
-                                              '${profile.membershipCode}', // Replace with actual date
-                                              style: TextStyle(
-                                                fontSize:
-                                                    16, // Increase font size for highlighted text
+                                              profile.membershipCode ??
+                                                  'N/A', // Replace with actual membership code
+                                              style: const TextStyle(
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppThemes
                                                     .brc_tablebooking_dark_text,
@@ -460,7 +461,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                     children: [
                                       Row(
                                         children: [
-                                          Expanded(
+                                          const Expanded(
                                             child: Text(
                                               'Date of Birth',
                                               style: TextStyle(
@@ -471,7 +472,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                               ),
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                               width:
                                                   12.0), // Add some space between text and text field
                                           Container(
@@ -487,8 +488,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                   4.0), // Adjust border radius as needed
                                             ),
                                             child: Text(
-                                              '${profile.memberMaleDob}', // Replace with actual date
-                                              style: TextStyle(
+                                              profile.memberMaleDob != null &&
+                                                      profile.memberMaleDob!
+                                                          .isNotEmpty
+                                                  ? '${profile.memberMaleDob}'
+                                                  : 'N/A',
+                                              style: const TextStyle(
                                                 fontSize:
                                                     16, // Increase font size for highlighted text
                                                 fontWeight: FontWeight.w400,
@@ -506,12 +511,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                 const Divider(),
                                 // Phone Number
                                 Padding(
-                                  padding: EdgeInsets.all(6.0),
+                                  padding: const EdgeInsets.all(6.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Phone Number',
                                         style: TextStyle(
                                           fontSize: 14,
@@ -521,8 +526,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '${profile.memberMalePhone}', // Replace with actual phone number
-                                        style: TextStyle(
+                                        profile.memberMalePhone ??
+                                            'N/A', // Replace with actual phone number
+                                        style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
                                           color: AppThemes
@@ -533,44 +539,47 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                   ),
                                 ),
                                 const Divider(),
-                                if (Webservice.appNickname != 'madhuban')
+                                // if (Webservice.appNickname != 'madhuban')
 
-                                  // Email
-                                  Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Email',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppThemes
-                                                .brc_tablebooking_dark_text,
-                                          ),
+                                // Email
+                                Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Email',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
                                         ),
-                                        TextField(
-                                          controller: _emailController,
-                                          decoration: InputDecoration(
-                                            hintText: '${profile.email}',
-                                            hintStyle:
-                                                TextStyle(color: Colors.grey),
-                                            border: InputBorder.none,
-                                          ),
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppThemes
-                                                .brc_tablebooking_dark_text,
-                                          ),
+                                      ),
+                                      TextField(
+                                        controller: _emailController,
+                                        decoration: InputDecoration(
+                                          hintText: profile.email != null &&
+                                                  profile.email!.isNotEmpty
+                                              ? profile.email
+                                              : 'No email found, enter Your email',
+                                          hintStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: InputBorder.none,
                                         ),
-                                      ],
-                                    ),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                if (Webservice.appNickname != 'madhuban')
-                                  const Divider(),
+                                ),
+                                // if (Webservice.appNickname != 'madhuban')
+                                const Divider(),
                                 // Address
                                 Padding(
                                   padding: const EdgeInsets.all(6.0),
@@ -578,7 +587,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Address',
                                         style: TextStyle(
                                           fontSize: 14,

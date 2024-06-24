@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/api/priviledge.dart';
 import 'package:multi_club_app/bases/api/sponsor.dart';
+import 'package:multi_club_app/bases/themes.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 
 class CarouselSponsor extends StatefulWidget {
@@ -38,7 +39,8 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
         final int nextPage = (_pageController.page?.round() ?? 0) + 1;
         final SponsorAPI? sponsorData = await _sponsorFuture;
         if (sponsorData != null && sponsorData.images != null) {
-          final int itemCount = sponsorData.images!.length;
+          final int itemCount = sponsorData.images!.length -
+              1; // Adjust for skipping the first image
           _pageController.animateToPage(
             nextPage % itemCount,
             duration: Duration(milliseconds: 500),
@@ -60,7 +62,6 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
     if (mapUrl != null && await canLaunch(mapUrl)) {
       await launch(mapUrl);
     } else {
-      // throw 'Could not launch $mapUrl';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Could not launch Map'),
@@ -90,14 +91,18 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
               height: 190, // Adjust the height of the carousel as needed
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: snapshot.data!.images!.length,
+                itemCount: snapshot.data!.images!.length -
+                    1, // Adjust for skipping the first image
                 itemBuilder: (context, index) {
+                  // Adjust index to skip the first image
+                  int adjustedIndex = index + 1;
+
                   // Check if data exists at index
-                  if (index < snapshot.data!.images!.length &&
-                      index < snapshot.data!.hyperlinks!.length) {
+                  if (adjustedIndex < snapshot.data!.images!.length &&
+                      adjustedIndex < snapshot.data!.hyperlinks!.length) {
                     return GestureDetector(
                       onTap: () async {
-                        String url = snapshot.data!.hyperlinks![index];
+                        String url = snapshot.data!.hyperlinks![adjustedIndex];
                         if (await canLaunch(url)) {
                           await launch(url);
                         } else {
@@ -122,7 +127,7 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
-                                    snapshot.data!.images![index],
+                                    snapshot.data!.images![adjustedIndex],
                                     fit: BoxFit.contain,
                                     errorBuilder: (context, error, stackTrace) {
                                       // Show a grey placeholder if image is not available or link is invalid

@@ -34,18 +34,21 @@ class GalleryAPI {
 class GalleryData {
   String? date;
   String? imageUrl;
+  String? event_name;
 
-  GalleryData({this.date, this.imageUrl});
+  GalleryData({this.date, this.imageUrl, this.event_name});
 
   GalleryData.fromJson(Map<String, dynamic> json) {
     date = json['date'];
     imageUrl = json['image_url'];
+    event_name = json['event_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['date'] = date;
     data['image_url'] = imageUrl;
+    data['event_name'] = event_name;
     return data;
   }
 
@@ -56,7 +59,7 @@ class GalleryData {
 
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
-      'date': date,
+      // 'date': date,
     });
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
