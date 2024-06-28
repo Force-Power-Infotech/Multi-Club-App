@@ -678,12 +678,12 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                         label: 'Events',
                         wheretoGo: () => const EventsScreen(),
                       ),
-                      if (Webservice.appNickname != 'milleniumMams')
-                        HomeScreenBottomIcon(
-                          asset: 'assets/images/Frame.png',
-                          label: 'Directory',
-                          wheretoGo: () => const Directory(),
-                        ),
+                      // if (Webservice.appNickname != 'milleniumMams')
+                      HomeScreenBottomIcon(
+                        asset: 'assets/images/Frame.png',
+                        label: 'Directory',
+                        wheretoGo: () => const Directory(),
+                      ),
                       HomeScreenBottomIcon(
                         asset: 'assets/images/profilelogo.png',
                         label: 'Profile',

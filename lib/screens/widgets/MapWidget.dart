@@ -50,24 +50,41 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapWidget extends StatelessWidget {
-  final String googleMapsLink;
+  final String? googleMapsLink; // Make the link nullable
   final RegExp regex = RegExp(r'@(-?\d+\.\d+),(-?\d+\.\d+)');
 
-  MapWidget({required this.googleMapsLink}); // Constructor
+  MapWidget({this.googleMapsLink}); // Constructor
 
-  LatLng extractLatLngFromLink(String link) {
+  LatLng? extractLatLngFromLink(String? link) {
+    if (link == null) return null;
     final match = regex.firstMatch(link);
     if (match != null && match.groupCount == 2) {
       final latitude = double.parse(match.group(1)!);
       final longitude = double.parse(match.group(2)!);
       return LatLng(latitude, longitude);
     }
-    throw Exception('Invalid Google Maps link');
+    return null; // Return null if the link is invalid
   }
 
   @override
   Widget build(BuildContext context) {
-    final LatLng latLng = extractLatLngFromLink(googleMapsLink);
+    final LatLng? latLng = extractLatLngFromLink(googleMapsLink);
+
+    if (latLng == null) {
+      return Container(
+        height: 200,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Center(
+          child: Text(
+            'Unable to load the map',
+            style: TextStyle(color: Colors.red, fontSize: 16),
+          ),
+        ),
+      );
+    }
 
     return Container(
       height: 200,

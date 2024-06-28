@@ -33,6 +33,24 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String facebookUrl = '';
+    String instagramUrl = '';
+    String youtubeUrl = '';
+    String websiteUrl = '';
+
+    if (Webservice.appNickname == 'madhuban') {
+      facebookUrl = 'https://www.facebook.com/madhuwanclubkolkata';
+    } else if (Webservice.appNickname == 'milleniumMams') {
+      facebookUrl = 'https://www.facebook.com/millenniummams/';
+      youtubeUrl =
+          'https://www.youtube.com/channel/UCb2vbCFvqnvmzqS74yRxY-w/videos';
+      instagramUrl = 'https://www.instagram.com/millenniummams/';
+
+      websiteUrl = 'https://millenniummams.com/';
+    } else {
+      facebookUrl = ''; // Provide a default or fallback URL if necessary
+    }
+
     return Drawer(
       child: Container(
         decoration: const BoxDecoration(
@@ -334,7 +352,7 @@ class SideMenu extends StatelessWidget {
                           },
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Feedback',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -353,7 +371,7 @@ class SideMenu extends StatelessWidget {
                         builder: (_) => const SettingScreen(),
                       ));
                     },
-                    child: Text(
+                    child: const Text(
                       'Settings',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
@@ -401,7 +419,7 @@ class SideMenu extends StatelessWidget {
                     ),
                   ),
                   const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -409,21 +427,21 @@ class SideMenu extends StatelessWidget {
                         // Usage example:
                         RoundedImageButton(
                           imagePath: 'assets/images/facebook.png',
-                          url: 'https://www.facebook.com/madhuwanclubkolkata',
+                          url: facebookUrl,
                         ),
                         if (Webservice.appNickname != 'madhuban')
                           RoundedImageButton(
                             imagePath: 'assets/images/youtube.png',
-                            url: 'https://www.youtube.com',
+                            url: youtubeUrl,
                           ),
                         RoundedImageButton(
                           imagePath: 'assets/images/insta.png',
-                          url: 'https://www.instagram.com/madhuwanclub',
+                          url: instagramUrl,
                         ),
                         if (Webservice.appNickname != 'madhuban')
                           RoundedImageButton(
                             imagePath: 'assets/images/website.png',
-                            url: 'https://www.yourwebsite.com',
+                            url: websiteUrl,
                           ),
                       ],
                     ),

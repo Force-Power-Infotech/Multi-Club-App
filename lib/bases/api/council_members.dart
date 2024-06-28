@@ -119,6 +119,7 @@ class Data {
   String? year;
   String? city;
   String? phone;
+  String? email;
 
   Data(
       {this.memberId,
@@ -127,6 +128,7 @@ class Data {
       this.category,
       this.year,
       this.phone,
+      this.email,
       this.city});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -137,6 +139,7 @@ class Data {
     year = json['year'];
     city = json['city'];
     phone = json['phone'];
+    email = json['email'];
   }
 
   Map<String, dynamic> toJson() {
@@ -148,6 +151,7 @@ class Data {
     data['year'] = year;
     data['city'] = city;
     data['phone'] = phone;
+    data['email'] = email;
     return data;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/api/directory.dart';
 import 'package:multi_club_app/bases/themes.dart';
+import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/profile_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -17,6 +18,7 @@ class _DirectoryState extends State<Directory> {
   List<Data> contacts = [];
   List<Data> filteredContacts = [];
   bool _isLoading = true; // Loading state
+  String? selectedFilter; // For dropdown filter
 
   @override
   void initState() {
@@ -49,23 +51,26 @@ class _DirectoryState extends State<Directory> {
 
   void filterContacts(String query) {
     setState(() {
-      // Filter contacts based on the search query
-      filteredContacts = contacts
-          .where((contact) =>
-              (contact.memberNameMale
-                      ?.toLowerCase()
-                      .contains(query.toLowerCase()) ??
-                  false) ||
-              (contact.memberNameFemale
-                      ?.toLowerCase()
-                      .contains(query.toLowerCase()) ??
-                  false))
-          .toList();
+      // Filter contacts based on the search query and selected city
+      filteredContacts = contacts.where((contact) {
+        bool matchesQuery = (contact.memberNameMale
+                    ?.toLowerCase()
+                    .contains(query.toLowerCase()) ??
+                false) ||
+            (contact.memberNameFemale
+                    ?.toLowerCase()
+                    .contains(query.toLowerCase()) ??
+                false);
+        bool matchesFilter = selectedFilter == null ||
+            contact.city?.toLowerCase() == selectedFilter!.toLowerCase();
+        return matchesQuery && matchesFilter;
+      }).toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isMilleniumMams = Webservice.appNickname == 'milleniumMams';
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -94,7 +99,7 @@ class _DirectoryState extends State<Directory> {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
-              onChanged: filterContacts, // Call filterContacts on text change
+              onChanged: filterContacts,
               decoration: InputDecoration(
                 hintText: 'Search contacts',
                 prefixIcon: const Icon(Icons.search),
@@ -104,54 +109,93 @@ class _DirectoryState extends State<Directory> {
               ),
             ),
           ),
+          if (isMilleniumMams)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: DropdownButton<String>(
+                isExpanded: true,
+                hint: Text('Select City'),
+                value: selectedFilter,
+                onChanged: (value) {
+                  setState(() {
+                    selectedFilter = value;
+                    filterContacts(_searchController.text);
+                  });
+                },
+                items: <String>['Kolkata', 'Mumbai', 'Bangalore']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
           Expanded(
             child: _isLoading
-                ? Center(
-                    child: CircularProgressIndicator()) // Show loading spinner
+                ? Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     itemCount: filteredContacts.length,
                     itemBuilder: (context, index) {
                       final contact = filteredContacts[index];
-                      final memberDetails = [
-                        if (contact.memberNameMale != null)
-                          {
-                            'name': contact.memberNameMale!,
-                            'imageUrl': contact.imageURLmale ?? '',
-                            'gender': 'male',
-                          },
-                        if (contact.memberNameFemale != null &&
-                            contact.memberNameFemale!.isNotEmpty)
-                          {
-                            'name': contact.memberNameFemale!,
-                            'imageUrl': contact.imageURLfemale ?? '',
-                            'gender': 'female',
-                          },
-                      ];
+                      final memberDetails = isMilleniumMams
+                          ? [
+                              if (contact.memberNameFemale != null)
+                                {
+                                  'name': contact.memberNameFemale!,
+                                  'gender': 'female',
+                                },
+                            ]
+                          : [
+                              if (contact.memberNameMale != null)
+                                {
+                                  'name': contact.memberNameMale!,
+                                  'imageUrl': contact.imageURLmale ?? '',
+                                  'gender': 'male',
+                                },
+                              if (contact.memberNameFemale != null &&
+                                  contact.memberNameFemale!.isNotEmpty)
+                                {
+                                  'name': contact.memberNameFemale!,
+                                  'imageUrl': contact.imageURLfemale ?? '',
+                                  'gender': 'female',
+                                },
+                            ];
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: memberDetails.map((member) {
                           return GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => ProfileScreen(
-                                  memberId: contact.membershipCode ?? '',
-                                  gender: member['gender']!,
-                                ),
-                              ));
-                              print("genderrr  ${member['gender']}");
+                              if (!isMilleniumMams) {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => ProfileScreen(
+                                    memberId: contact.membershipCode ?? '',
+                                    gender: member['gender']!,
+                                  ),
+                                ));
+                              }
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16.0, vertical: 8.0),
                               child: Row(
                                 children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      member['imageUrl']!,
+                                  if (isMilleniumMams)
+                                    Text(
+                                      '${index + 1}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  else
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        member['imageUrl'] ?? '',
+                                      ),
+                                      radius: 25,
                                     ),
-                                    radius: 25,
-                                  ),
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: Text(
@@ -178,6 +222,8 @@ class _DirectoryState extends State<Directory> {
     );
   }
 }
+
+
 
 
 

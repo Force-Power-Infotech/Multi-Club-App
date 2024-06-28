@@ -116,7 +116,7 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
                         designation: member.designation ?? '',
                         name: member.name ?? '',
                         phone: member.phone ?? '',
-                        mail: member.city ?? '',
+                        email: member.email ?? '',
                       );
                     },
                   );
@@ -136,13 +136,13 @@ class DepartmentInfo extends StatelessWidget {
     required this.designation,
     required this.name,
     required this.phone,
-    required this.mail,
+    required this.email,
   }) : super(key: key);
 
   final String designation;
   final String name;
   final String phone;
-  final String mail;
+  final String email;
 
   @override
   Widget build(BuildContext context) {
@@ -235,9 +235,9 @@ class DepartmentInfo extends StatelessWidget {
                   icon: const Icon(Icons.mail),
                   color: AppThemes.getBackground(),
                   onPressed: () async {
-                    final String email = mail.trim();
-                    if (email.isNotEmpty) {
-                      final Uri url = Uri.parse('mailto:$email');
+                    final String mail = email;
+                    if (mail.isNotEmpty) {
+                      final Uri url = Uri.parse('mailto:$mail');
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url);
                       } else {
