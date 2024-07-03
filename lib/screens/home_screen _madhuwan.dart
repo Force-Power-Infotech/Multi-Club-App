@@ -110,6 +110,15 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     }
   }
 
+  Future<String?> getFirstName() async {
+    var box = await Hive.openBox('UserData');
+    var userData = box.get('user_data_key');
+    if (userData != null) {
+      return userData['firstname'];
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -338,18 +347,30 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
 
                                 const SizedBox(height: 10),
                                 // Add space between the profile image and the text
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 5),
-                                  child: Text(
-                                    'Hi ${globalUsername ?? ''}!', // Use the meberID variable, if it's null, display an empty string
-                                    style: const TextStyle(
-                                      fontWeight:
-                                          FontWeight.w600, // Make the text bold
-                                      fontSize:
-                                          18, // Adjust the font size as needed
-                                    ),
-                                  ),
+                                FutureBuilder<String?>(
+                                  future: getFirstName(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator(); // Show a loading indicator while waiting for data
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      String firstName = snapshot.data ??
+                                          ''; // Get the first name, or an empty string if null
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 6, vertical: 5),
+                                        child: Text(
+                                          'Hi $firstName!',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),

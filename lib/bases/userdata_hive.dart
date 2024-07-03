@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/api/user_otp.dart';
 
@@ -6,51 +7,8 @@ class UserDataRepository {
 
   static Future<String?> getAccessCode() async {
     try {
-      // var box = await Hive.openBox(_boxName);
-      // var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
-      // print(userDataMap);
-      final userDataMap = await getUserData();
-      if (userDataMap != null) {
-        return userDataMap.theaccesscode;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print('Error retrieving access code: $e');
-      return null;
-    }
-  }
-
-  static Future<String?> getMemberID() async {
-    try {
-      // var box = await Hive.openBox(_boxName);
-      // var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
-      // print(userDataMap);
-      final userDataMap = await getUserData();
-      if (userDataMap != null) {
-        return userDataMap.memberid;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print('Error retrieving access code: $e');
-      return null;
-    }
-  }
-
-  static Future<String?> getMembername() async {
-    try {
-      // var box = await Hive.openBox(_boxName);
-      // var userData = jsonDecode(box.get('user_data_key'));
-      // final userDataMap = UserOtpAPI.fromJson((userData));
-      // print(userDataMap);
-      final userDataMap = await getUserData();
-
-      if (userDataMap != null) {
-        return userDataMap.firstname;
-      } else {
-        return null;
-      }
+      final userData = await getUserData();
+      return userData?.theaccesscode;
     } catch (e) {
       print('Error retrieving access code: $e');
       return null;
@@ -73,6 +31,36 @@ class UserDataRepository {
     }
   }
 
+  static Future<String?> getMemberID() async {
+    try {
+      final userData = await getUserData();
+      return userData?.memberid;
+    } catch (e) {
+      print('Error retrieving member ID: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> getMembername() async {
+    try {
+      final userData = await getUserData();
+      return userData?.firstname;
+    } catch (e) {
+      print('Error retrieving member name: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> getProfileImage() async {
+    try {
+      final userData = await getUserData();
+      return userData?.memberImageUrl;
+    } catch (e) {
+      print('Error retrieving profile image: $e');
+      return null;
+    }
+  }
+
   static Future<void> saveUserData(UserOtpAPI userData) async {
     try {
       var box = await Hive.openBox(_boxName);
@@ -85,10 +73,9 @@ class UserDataRepository {
   static Future<UserOtpAPI?> getUserData() async {
     try {
       var box = await Hive.openBox(_boxName);
-      var userData = Map<String, dynamic>.from(box.get('user_data_key'));
-      final userDataMap = (userData);
-      if (userDataMap != null) {
-        return UserOtpAPI.fromJson(userDataMap);
+      var userData = box.get('user_data_key');
+      if (userData != null) {
+        return UserOtpAPI.fromJson(Map<String, dynamic>.from(userData));
       } else {
         return null;
       }
