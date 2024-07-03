@@ -52,7 +52,7 @@ class _EventsScreenState extends State<EventsScreen> {
         future: _eventDetailsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child:
                   CircularProgressIndicator(), // Show loading indicator while fetching data
             );
@@ -89,8 +89,8 @@ class _EventsScreenState extends State<EventsScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4),
                               ),
-                              fixedSize:
-                                  Size(120, 40), // Set fixed width and height
+                              fixedSize: const Size(
+                                  120, 40), // Set fixed width and height
                               elevation: 5, // Add elevation for shadow effect
                             ),
                             child: Text(
@@ -107,7 +107,7 @@ class _EventsScreenState extends State<EventsScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 2),
+                        const SizedBox(width: 2),
                         SizedBox(
                           height: 31,
                           width: 145,
@@ -124,7 +124,7 @@ class _EventsScreenState extends State<EventsScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4),
                               ),
-                              fixedSize: Size(120, 40),
+                              fixedSize: const Size(120, 40),
                               elevation: 5, // Add elevation for shadow effect
                             ),
                             child: Text(
@@ -141,7 +141,7 @@ class _EventsScreenState extends State<EventsScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 2),
+                        const SizedBox(width: 2),
                         Material(
                           elevation: 5, // Set elevation for shadow effect
                           borderRadius:
@@ -161,7 +161,7 @@ class _EventsScreenState extends State<EventsScreen> {
                               onPressed: () {
                                 // Add onPressed action for square button
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.filter_alt,
                                 size: 28,
                                 fill: 0.5,
@@ -195,7 +195,7 @@ class _EventsScreenState extends State<EventsScreen> {
                     if (snapshot.data == null ||
                         snapshot.data!.eventDetails == null ||
                         snapshot.data!.eventDetails!.isEmpty)
-                      Text('No event details available'),
+                      const Text('No event details available'),
                   ],
                 ),
               ],
@@ -218,7 +218,7 @@ class eventCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppThemes.getBackground(),
         borderRadius: BorderRadius.circular(10),
@@ -227,7 +227,7 @@ class eventCards extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 5,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -239,7 +239,7 @@ class eventCards extends StatelessWidget {
                 height: 109,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
                   ),
@@ -249,33 +249,33 @@ class eventCards extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                top: 8, // Adjust top position as needed
-                right: 8, // Adjust right position as needed
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppThemes.brc_textcolor,
-                    borderRadius: BorderRadius.circular(10), // Make it round
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 0,
-                        blurRadius: 5,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      // Add onPressed action for export icon
-                    },
-                    icon: Icon(Icons.ios_share),
-                    color: AppThemes.getBackground(),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 8, // Adjust top position as needed
+              //   right: 8, // Adjust right position as needed
+              //   child: Container(
+              //     width: 40,
+              //     height: 40,
+              //     decoration: BoxDecoration(
+              //       color: AppThemes.brc_textcolor,
+              //       borderRadius: BorderRadius.circular(10), // Make it round
+              //       boxShadow: [
+              //         BoxShadow(
+              //           color: Colors.grey.withOpacity(0.5),
+              //           spreadRadius: 0,
+              //           blurRadius: 5,
+              //           offset: Offset(0, 3), // changes position of shadow
+              //         ),
+              //       ],
+              //     ),
+              //     child: IconButton(
+              //       onPressed: () {
+              //         // Add onPressed action for export icon
+              //       },
+              //       icon: Icon(Icons.ios_share),
+              //       color: AppThemes.getBackground(),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           Row(
@@ -290,7 +290,7 @@ class eventCards extends StatelessWidget {
                           top: 16, left: 16, right: 16, bottom: 4),
                       child: Text(
                         event.description ?? '',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: AppThemes.brc_textcolor),
@@ -303,7 +303,7 @@ class eventCards extends StatelessWidget {
                           horizontal: 16, vertical: 4),
                       child: Text(
                         event.eventname ?? '',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
                             color: AppThemes.brc_textcolor),
@@ -316,7 +316,7 @@ class eventCards extends StatelessWidget {
                           horizontal: 16, vertical: 4),
                       child: Text(
                         event.dateForHeading ?? '',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: AppThemes.brc_textcolor),
@@ -349,7 +349,8 @@ class eventCards extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${DateFormat('MMM').format(DateTime.parse(event.date ?? ''))}', // Extract and display the month abbreviation
+                        DateFormat('MMM').format(DateTime.parse(event.date ??
+                            '')), // Extract and display the month abbreviation
                         style: TextStyle(
                           color: AppThemes.getBackground(),
                           fontSize: 13,

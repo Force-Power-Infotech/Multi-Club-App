@@ -39,7 +39,8 @@ class SideMenu extends StatelessWidget {
     String websiteUrl = '';
 
     if (Webservice.appNickname == 'madhuban') {
-      facebookUrl = 'https://www.facebook.com/madhuwanclubkolkata';
+      facebookUrl = 'https://www.facebook.com/madhuwanclubkolkata/';
+      instagramUrl = 'https://www.instagram.com/madhuwanclub/';
     } else if (Webservice.appNickname == 'milleniumMams') {
       facebookUrl = 'https://www.facebook.com/millenniummams/';
       youtubeUrl =
@@ -364,40 +365,43 @@ class SideMenu extends StatelessWidget {
                   if (Webservice.appNickname == 'milleniumMams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  GestureDetector(
-                    onTap: () {
-                      // Update UI based on item selected from the drawer
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const SettingScreen(),
-                      ));
-                    },
-                    child: const Text(
-                      'Settings',
-                      style: TextStyle(
-                        color: AppThemes.brc_bottom_icon,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     // Update UI based on item selected from the drawer
+                  //     Navigator.of(context).push(MaterialPageRoute(
+                  //       builder: (_) => const SettingScreen(),
+                  //     ));
+                  //   },
+                  //   child: const Text(
+                  //     'Settings',
+                  //     style: TextStyle(
+                  //       color: AppThemes.brc_bottom_icon,
+                  //       fontSize: 18,
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //   ),
+                  // ),
+                  // const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
+                  if (Webservice.appNickname == 'milleniumMams')
+                    GestureDetector(
+                      onTap: () {
+                        // Update UI based on item selected from the drawer
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const TermAndCondition(),
+                        ));
+                      },
+                      child: const Text(
+                        'Term & Conditions',
+                        style: TextStyle(
+                          color: AppThemes.brc_bottom_icon,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
-                  GestureDetector(
-                    onTap: () {
-                      // Update UI based on item selected from the drawer
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const TermAndCondition(),
-                      ));
-                    },
-                    child: const Text(
-                      'Term & Conditions',
-                      style: TextStyle(
-                        color: AppThemes.brc_bottom_icon,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
+                  if (Webservice.appNickname == 'milleniumMams')
+                    const Divider(
+                        color: AppThemes.brc_bottom_icon, thickness: 1),
                   GestureDetector(
                     onTap: () async {
                       // Delete user data from Hive

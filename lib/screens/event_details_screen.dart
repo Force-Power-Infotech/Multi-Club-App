@@ -29,7 +29,7 @@ class EventDetailsScreen extends StatelessWidget {
             ? AppThemes.getBackground()
             : AppThemes.getBackground(),
         title: const Text(
-          "event details", // Use event name in the title
+          "Event Details", // Use event name in the title
           style: TextStyle(
             color: AppThemes.brc_textcolor,
             fontWeight: FontWeight.w700,

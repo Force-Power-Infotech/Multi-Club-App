@@ -34,7 +34,7 @@ class _PrivilegeListScreenState extends State<PrivilegeListScreen> {
     } else {
       // throw 'Could not launch $mapUrl';
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Could not launch Map'),
           duration: Duration(seconds: 3), // Adjust as needed
         ),
@@ -51,7 +51,7 @@ class _PrivilegeListScreenState extends State<PrivilegeListScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black26,
@@ -61,7 +61,7 @@ class _PrivilegeListScreenState extends State<PrivilegeListScreen> {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(
+                borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(10),
                   bottom: Radius.zero,
                 ),
@@ -81,42 +81,42 @@ class _PrivilegeListScreenState extends State<PrivilegeListScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     data.nameArray![index],
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     data.descriptionArray![index],
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     "${data.discountArray![index]} OFF",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.red,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                         _launchMapUrl(data.locationUrlArray![index]);
                       },
-                      child: Text('View on Map'),
+                      child: const Text('View on Map'),
                     ),
                   ),
                 ],
@@ -156,7 +156,7 @@ class _PrivilegeListScreenState extends State<PrivilegeListScreen> {
         future: _priviledgeFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(), // or any loading indicator
             );
           } else if (snapshot.hasError) {

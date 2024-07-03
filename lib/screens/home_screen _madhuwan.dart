@@ -303,6 +303,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.white,
                                       boxShadow: [
                                         BoxShadow(
                                           color: AppThemes.brc_bottom_icon
@@ -313,32 +314,25 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                         ),
                                       ],
                                     ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        child: imageUrl != null &&
-                                                imageUrl.isNotEmpty
-                                            ? Image.network(
-                                                imageUrl,
-                                                fit: BoxFit.cover,
-                                                width: 76,
-                                                height: 75,
-                                              )
-                                            : Container(
-                                                color: Colors
-                                                    .grey, // Grey color for the circle
-                                                width: 76,
-                                                height: 75,
-                                                child: const Icon(
-                                                  Icons.person,
-                                                  color: Colors.white,
-                                                  size: 50,
-                                                ),
-                                              ),
-                                      ),
-                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: imageUrl.isNotEmpty
+                                        ? Image.network(
+                                            imageUrl,
+                                            fit: BoxFit.cover,
+                                            width: 76,
+                                            height: 75,
+                                          )
+                                        : Container(
+                                            color: Colors
+                                                .grey, // Grey color for the circle
+                                            width: 75,
+                                            height: 75,
+                                            child: const Icon(
+                                              Icons.person,
+                                              color: Colors.white,
+                                              size: 50,
+                                            ),
+                                          ),
                                   ),
                                 ),
 

@@ -31,7 +31,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
   }
 
   void _startAutoScroll() {
-    // Start auto-scrolling every 2 seconds
+    // Start auto-scrolling every 3 seconds
     Future.delayed(Duration(seconds: 3), () async {
       if (_pageController.hasClients) {
         final int nextPage = (_pageController.page?.round() ?? 0) + 1;
@@ -59,7 +59,6 @@ class _CarouselWidgetState extends State<CarouselWidget> {
     if (mapUrl != null && await canLaunch(mapUrl)) {
       await launch(mapUrl);
     } else {
-      // throw 'Could not launch $mapUrl';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Could not launch Map'),
@@ -67,6 +66,92 @@ class _CarouselWidgetState extends State<CarouselWidget> {
         ),
       );
     }
+  }
+
+  void _showDetailsBottomSheet(
+      BuildContext context, int index, PriviledgeAPI data) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(10),
+                  bottom: Radius.zero,
+                ),
+                child: Image.network(
+                  data.imageUrlArray![index],
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey,
+                      width: double.infinity,
+                      height: 200,
+                    );
+                  },
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data.nameArray![index],
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    data.descriptionArray![index],
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "${data.discountArray![index]} OFF",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _launchMapUrl(data.locationUrlArray![index]);
+                      },
+                      child: const Text('View on Map'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -100,118 +185,123 @@ class _CarouselWidgetState extends State<CarouselWidget> {
                       index < snapshot.data!.nameArray!.length &&
                       index < snapshot.data!.descriptionArray!.length &&
                       index < snapshot.data!.discountArray!.length) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        width: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  snapshot.data!.imageUrlArray![index],
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    // Show a grey placeholder if image is not available or link is invalid
-                                    return Container(
-                                      color: Colors.grey,
-                                    );
-                                  },
+                    return GestureDetector(
+                      onTap: () => _showDetailsBottomSheet(
+                          context, index, snapshot.data!),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          width: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    snapshot.data!.imageUrlArray![index],
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      // Show a grey placeholder if image is not available or link is invalid
+                                      return Container(
+                                        color: Colors.grey,
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.black.withOpacity(0.5),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black.withOpacity(0.5),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              snapshot.data!.nameArray![index],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                snapshot
+                                                    .data!.nameArray![index],
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: 4),
-                                            Text(
-                                              snapshot.data!
-                                                  .descriptionArray![index],
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white,
+                                              SizedBox(height: 4),
+                                              Text(
+                                                snapshot.data!
+                                                    .descriptionArray![index],
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                ),
+                                                maxLines:
+                                                    1, // Limit to a maximum of 1 line
+                                                overflow: TextOverflow
+                                                    .ellipsis, // Handle overflow with ellipsis (...)
                                               ),
-                                              maxLines:
-                                                  1, // Limit to a maximum of 2 lines
-                                              overflow: TextOverflow
-                                                  .ellipsis, // Handle overflow with ellipsis (...)
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                          width:
-                                              8), // Add some space between the text and the container
-                                      Container(
-                                        width: 40,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: IconButton(
-                                          onPressed: () {
-                                            _launchMapUrl(snapshot.data!
-                                                .locationUrlArray![index]);
-                                          },
-                                          icon: Icon(
-                                            Icons.location_on,
-                                            color: Colors.black,
+                                            ],
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 16),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        "${snapshot.data!.discountArray![index]}OFF",
-                                        style: TextStyle(
-                                          fontSize: 38,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                        SizedBox(
+                                            width:
+                                                8), // Add some space between the text and the container
+                                        Container(
+                                          width: 40,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: IconButton(
+                                            onPressed: () {
+                                              _launchMapUrl(snapshot.data!
+                                                  .locationUrlArray![index]);
+                                            },
+                                            icon: Icon(
+                                              Icons.location_on,
+                                              color: Colors.black,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 16),
-                                ],
+                                      ],
+                                    ),
+                                    SizedBox(height: 16),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          "${snapshot.data!.discountArray![index]} OFF",
+                                          style: TextStyle(
+                                            fontSize: 38,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 16),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );
