@@ -60,7 +60,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
 icons_launcher:
-  image_path: "assets/images/madhuwan.jpg"
+  image_path: "assets/images/mmmain_logo.png"
   platforms:
     android:
       enable: true
@@ -69,7 +69,7 @@ icons_launcher:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/madhuwan_app_logo.png"
+  image_path: "assets/images/mmmain_logo.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
   remove_alpha_ios: true
 # For information on the generic Dart part of this file, see the

@@ -74,7 +74,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ),
         backgroundColor: AppThemes.getBackground(),
         title: const Text(
-          'Help Center',
+          'Notifications',
           style: TextStyle(
             color: AppThemes.brc_textcolor,
             fontWeight: FontWeight.w700,

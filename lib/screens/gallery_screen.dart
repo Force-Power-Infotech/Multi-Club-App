@@ -74,7 +74,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
             return ListView(
               children: [
-                if (appNickname == 'mm') ...[
+                if (appNickname == 'ma') ...[
                   SectionWidget(
                       sectionTitle: 'Today\'s Session',
                       galleryData: galleryData
@@ -90,7 +90,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       galleryData: galleryData
                           .where((data) => isLastMonth(parseDate(data.date!)))
                           .toList()),
-                ] else if (appNickname == 'madhuban') ...[
+                ] else if (appNickname == 'milleniumMams' ||
+                    appNickname == 'madhuban') ...[
                   for (var eventGroup in groupByevent_name(galleryData).entries)
                     SectionWidget(
                       sectionTitle: eventGroup.key,
