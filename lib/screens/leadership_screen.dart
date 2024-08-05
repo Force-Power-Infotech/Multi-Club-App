@@ -20,6 +20,15 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppThemes.brc_textcolor,
+          ),
+        ),
         backgroundColor: AppThemes.getBackground(),
         title: const Text(
           'Leadership',
@@ -44,7 +53,7 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
                 items: <String>[
                   'Executive Committee',
                   'General Committee',
-                  'Special Invitee',
+                  'Special Invite',
                   'Advisory Committee'
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -106,8 +115,8 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
                       return DepartmentInfo(
                         designation: member.designation ?? '',
                         name: member.name ?? '',
-                        phone: member.memberId ?? '',
-                        mail: member.city ?? '',
+                        phone: member.phone ?? '',
+                        email: member.email ?? '',
                       );
                     },
                   );
@@ -127,13 +136,13 @@ class DepartmentInfo extends StatelessWidget {
     required this.designation,
     required this.name,
     required this.phone,
-    required this.mail,
+    required this.email,
   }) : super(key: key);
 
   final String designation;
   final String name;
   final String phone;
-  final String mail;
+  final String email;
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +166,7 @@ class DepartmentInfo extends StatelessWidget {
                 radius: 24,
                 child: Text(
                   name.isNotEmpty ? name[0].toUpperCase() : '',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
@@ -172,7 +181,7 @@ class DepartmentInfo extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors
@@ -184,7 +193,7 @@ class DepartmentInfo extends StatelessWidget {
                             4), // Add some space between name and designation
                     Text(
                       designation,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: Colors
@@ -195,10 +204,10 @@ class DepartmentInfo extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.call),
+                icon: const Icon(Icons.call),
                 color: AppThemes.getBackground(),
                 onPressed: () async {
-                  final String phoneNumber = phone.trim();
+                  final String phoneNumber = phone;
                   if (phoneNumber.isNotEmpty) {
                     final Uri url = Uri.parse('tel:$phoneNumber');
                     if (await canLaunchUrl(url)) {
@@ -221,33 +230,66 @@ class DepartmentInfo extends StatelessWidget {
                   }
                 },
               ),
+              if (Webservice.appNickname != 'madhuban')
+                IconButton(
+                  icon: const Icon(Icons.mail),
+                  color: AppThemes.getBackground(),
+                  onPressed: () async {
+                    final String mail = email;
+                    if (mail.isNotEmpty) {
+                      final Uri url = Uri.parse('mailto:$mail');
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url);
+                      } else {
+                        // Error handling if the mail app can't be launched
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Cannot launch mail'),
+                          ),
+                        );
+                      }
+                    } else {
+                      // Inform the user that there is no email available
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('No email available'),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              //  if (Webservice.appNickname != 'madhuban')
               IconButton(
-                icon: Icon(Icons.mail),
-                color: AppThemes.getBackground(),
+                icon: Image.asset(
+                  'assets/images/wpicon.webp',
+                  width: 24.0, // Adjust the width as needed
+                  height: 24.0, // Adjust the height as needed
+                ),
                 onPressed: () async {
-                  final String email = mail.trim();
-                  if (email.isNotEmpty) {
-                    final Uri url = Uri.parse('mailto:$email');
+                  final String phoneNumber = phone.trim();
+                  if (phoneNumber.isNotEmpty) {
+                    final Uri url = Uri.parse("https://wa.me/$phoneNumber");
+
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url);
                     } else {
-                      // Error handling if the mail app can't be launched
+                      // Error handling if WhatsApp can't be launched
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Cannot launch mail'),
+                          content: Text('Cannot launch WhatsApp'),
                         ),
                       );
                     }
                   } else {
-                    // Inform the user that there is no email available
+                    // Inform the user that there is no phone number available
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('No email available'),
+                        content: Text('No phone number available'),
                       ),
                     );
                   }
                 },
-              ),
+              )
             ],
           ),
         ),

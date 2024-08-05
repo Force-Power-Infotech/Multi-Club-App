@@ -100,7 +100,7 @@ class _SplashScreenmillenniumMamsState extends State<SplashScreenmillenniumMams>
                   const SizedBox(
                       height: 20), // Add some space between the image and text
                   const Text(
-                    "The Millennium Mams'",
+                    "Millennium Mams'",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

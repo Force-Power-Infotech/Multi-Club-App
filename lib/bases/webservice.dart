@@ -1,8 +1,8 @@
 class Webservice {
   static const String rootURL = "https://club.forcempower.com/";
   // static const String appNickname = "forcempower";
-  static const String appNickname = "madhuban";
-  // static const String appNickname = "milleniumMams";
+  // static const String appNickname = "madhuban";
+  static const String appNickname = "milleniumMams";
   static const String userLoginAPI = "ws_member_login_v1.php";
   static const String userOtpAPI = "ws_member_confirm_otp_v4.php";
   static const String table_booking = "make_table_booking.php";
@@ -29,4 +29,5 @@ class Webservice {
   static const String profileEdit = "particular_member_profile.php";
   static const String sponsor = "sponsor_api.php";
   static const String gallery = "gallery_api.php";
+  static const String feedback = "feedback_api.php";
 }

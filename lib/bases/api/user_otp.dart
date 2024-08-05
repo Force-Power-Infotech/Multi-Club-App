@@ -132,18 +132,45 @@ class UserOtpAPI {
     Uri url = Uri.parse(
         "${Webservice.rootURL}${Webservice.userOtpAPI}?nickname=${Webservice.appNickname}");
     final request = http.MultipartRequest('POST', url);
+
+    // Retrieve the Firebase token from Hive
+    String? firebaseToken = await UserDataRepository.getFirebaseToken();
+
     request.fields.addAll({
       'user_name': username,
       'the_otp': otp,
       'device_type': 'ANDROID',
-      'organization_id': Webservice.appNickname
+      'organization_id': Webservice.appNickname,
+      'firebase_token':
+          firebaseToken ?? '', // Send the token or empty string if null
     });
-    http.StreamedResponse response = await request.send();
-    String responseString = await response.stream.bytesToString();
-    UserOtpAPI userOtp = UserOtpAPI.fromJson(jsonDecode(responseString));
-    await UserDataRepository.saveUserData(userOtp);
-    // print(UserDataRepository.getMemberID());
-    return userOtp;
+
+    try {
+      http.StreamedResponse response = await request.send();
+      String responseString = await response.stream.bytesToString();
+
+      // Debug: Print the response status and body
+      print("Response status: ${response.statusCode}");
+      print("Response body: $responseString");
+
+      if (response.statusCode == 200) {
+        // Check if the response is JSON
+        try {
+          UserOtpAPI userOtp = UserOtpAPI.fromJson(jsonDecode(responseString));
+          await UserDataRepository.saveUserData(userOtp);
+          return userOtp;
+        } catch (e) {
+          print('Error parsing JSON: $e');
+          throw FormatException('Invalid response format');
+        }
+      } else {
+        // Handle non-200 responses
+        throw Exception('Failed to login, status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during login: $e');
+      throw Exception('Failed to login: $e');
+    }
   }
 
   factory UserOtpAPI.fromJson(Map<String, dynamic> json) {

@@ -112,6 +112,7 @@ class Data {
   String? memberFemaleAge;
   String? imageURLmale;
   String? imageURLfemale;
+  String? city;
 
   Data(
       {this.membershipCode,
@@ -124,6 +125,7 @@ class Data {
       this.memberFemaleDob,
       this.imageURLmale,
       this.imageURLfemale,
+      this.city,
       this.memberFemaleAge});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -138,6 +140,7 @@ class Data {
     memberFemaleAge = json['member_female_age'];
     imageURLmale = json['member_image_url'];
     imageURLfemale = json['spouse_image_url'];
+    city = json['city'];
   }
 
   Map<String, dynamic> toJson() {
@@ -153,6 +156,7 @@ class Data {
     data['member_female_age'] = memberFemaleAge;
     data['member_image_url'] = imageURLmale;
     data['spouse_image_url'] = imageURLfemale;
+    data['city'] = city;
     return data;
   }
 }

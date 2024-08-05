@@ -33,6 +33,25 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String facebookUrl = '';
+    String instagramUrl = '';
+    String youtubeUrl = '';
+    String websiteUrl = '';
+
+    if (Webservice.appNickname == 'madhuban') {
+      facebookUrl = 'https://www.facebook.com/madhuwanclubkolkata/';
+      instagramUrl = 'https://www.instagram.com/madhuwanclub/';
+    } else if (Webservice.appNickname == 'milleniumMams') {
+      facebookUrl = 'https://www.facebook.com/millenniummams/';
+      youtubeUrl =
+          'https://www.youtube.com/channel/UCb2vbCFvqnvmzqS74yRxY-w/videos';
+      instagramUrl = 'https://www.instagram.com/millenniummams/';
+
+      websiteUrl = 'https://millenniummams.com/';
+    } else {
+      facebookUrl = ''; // Provide a default or fallback URL if necessary
+    }
+
     return Drawer(
       child: Container(
         decoration: const BoxDecoration(
@@ -56,7 +75,7 @@ class SideMenu extends StatelessWidget {
           ),
         ),
         child: ListView(
-          padding: EdgeInsets.only(top: 64),
+          padding: const EdgeInsets.only(top: 64),
           children: [
             if (Webservice.appNickname != 'madhuban' &&
                 Webservice.appNickname != 'milleniumMams')
@@ -67,7 +86,7 @@ class SideMenu extends StatelessWidget {
                     dividerColor: Colors.transparent,
                   ),
                   child: ExpansionTile(
-                    title: Text(
+                    title: const Text(
                       'Home',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
@@ -130,8 +149,8 @@ class SideMenu extends StatelessWidget {
                         builder: (_) => const LeadershipScreen(),
                       ));
                     },
-                    child: Text(
-                      'LeaderShip',
+                    child: const Text(
+                      'Leadership',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
                         fontSize: 18,
@@ -149,7 +168,7 @@ class SideMenu extends StatelessWidget {
                           builder: (_) => const ActivitiesScreen(),
                         ));
                       },
-                      child: Text(
+                      child: const Text(
                         'Activities',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -168,7 +187,7 @@ class SideMenu extends StatelessWidget {
                       onTap: () {
                         // Update UI based on item selected from the drawer
                       },
-                      child: Text(
+                      child: const Text(
                         "Member's Directory",
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -190,7 +209,7 @@ class SideMenu extends StatelessWidget {
                           builder: (_) => const ReciprocalClubsScreen(),
                         ));
                       },
-                      child: Text(
+                      child: const Text(
                         'Reciprocal Clubs',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -209,7 +228,7 @@ class SideMenu extends StatelessWidget {
                       onTap: () {
                         // Update UI based on item selected from the drawer
                       },
-                      child: Text(
+                      child: const Text(
                         'Bookings',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -231,7 +250,7 @@ class SideMenu extends StatelessWidget {
                           builder: (_) => const EventsScreen(),
                         ));
                       },
-                      child: Text(
+                      child: const Text(
                         'Club Events',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -251,7 +270,7 @@ class SideMenu extends StatelessWidget {
                         builder: (_) => const GalleryScreen(),
                       ));
                     },
-                    child: Text(
+                    child: const Text(
                       'Gallery',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
@@ -267,7 +286,7 @@ class SideMenu extends StatelessWidget {
                       onTap: () {
                         // Update UI based on item selected from the drawer
                       },
-                      child: Text(
+                      child: const Text(
                         'Associate',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -289,7 +308,7 @@ class SideMenu extends StatelessWidget {
                           builder: (_) => const HelpdeskScreen(),
                         ));
                       },
-                      child: Text(
+                      child: const Text(
                         'Contact us',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -309,8 +328,8 @@ class SideMenu extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Contact Us'),
-                              content: Text(
+                              title: const Text('Contact Us'),
+                              content: const Text(
                                   'How would you like to provide feedback?'),
                               actions: <Widget>[
                                 TextButton(
@@ -319,7 +338,7 @@ class SideMenu extends StatelessWidget {
                                     _launchURL(context,
                                         'tel:+91 86177 83048'); // Replace with the phone number you want to call
                                   },
-                                  child: Text('Phone'),
+                                  child: const Text('Phone'),
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -327,15 +346,15 @@ class SideMenu extends StatelessWidget {
                                     _launchURL(context,
                                         'mailto:millenniummams@gmail.com?subject=I have a doubt regarding...&body=I have a doubt regarding...'); // Replace with the email address you want to send to
                                   },
-                                  child: Text('Mail'),
+                                  child: const Text('Mail'),
                                 ),
                               ],
                             );
                           },
                         );
                       },
-                      child: Text(
-                        'Feedback',
+                      child: const Text(
+                        'Contact Us',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
                           fontSize: 18,
@@ -346,40 +365,43 @@ class SideMenu extends StatelessWidget {
                   if (Webservice.appNickname == 'milleniumMams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  GestureDetector(
-                    onTap: () {
-                      // Update UI based on item selected from the drawer
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const SettingScreen(),
-                      ));
-                    },
-                    child: Text(
-                      'Settings',
-                      style: TextStyle(
-                        color: AppThemes.brc_bottom_icon,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     // Update UI based on item selected from the drawer
+                  //     Navigator.of(context).push(MaterialPageRoute(
+                  //       builder: (_) => const SettingScreen(),
+                  //     ));
+                  //   },
+                  //   child: const Text(
+                  //     'Settings',
+                  //     style: TextStyle(
+                  //       color: AppThemes.brc_bottom_icon,
+                  //       fontSize: 18,
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //   ),
+                  // ),
+                  // const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
+                  if (Webservice.appNickname == 'milleniumMams')
+                    GestureDetector(
+                      onTap: () {
+                        // Update UI based on item selected from the drawer
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const TermAndCondition(),
+                        ));
+                      },
+                      child: const Text(
+                        'Term & Conditions',
+                        style: TextStyle(
+                          color: AppThemes.brc_bottom_icon,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
-                  GestureDetector(
-                    onTap: () {
-                      // Update UI based on item selected from the drawer
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const TermAndCondition(),
-                      ));
-                    },
-                    child: const Text(
-                      'Term & Conditions',
-                      style: TextStyle(
-                        color: AppThemes.brc_bottom_icon,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
+                  if (Webservice.appNickname == 'milleniumMams')
+                    const Divider(
+                        color: AppThemes.brc_bottom_icon, thickness: 1),
                   GestureDetector(
                     onTap: () async {
                       // Delete user data from Hive
@@ -401,29 +423,29 @@ class SideMenu extends StatelessWidget {
                     ),
                   ),
                   const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         // Usage example:
                         RoundedImageButton(
                           imagePath: 'assets/images/facebook.png',
-                          url: 'https://www.facebook.com/madhuwanclubkolkata',
+                          url: facebookUrl,
                         ),
                         if (Webservice.appNickname != 'madhuban')
                           RoundedImageButton(
                             imagePath: 'assets/images/youtube.png',
-                            url: 'https://www.youtube.com',
+                            url: youtubeUrl,
                           ),
                         RoundedImageButton(
                           imagePath: 'assets/images/insta.png',
-                          url: 'https://www.instagram.com/madhuwanclub',
+                          url: instagramUrl,
                         ),
                         if (Webservice.appNickname != 'madhuban')
                           RoundedImageButton(
                             imagePath: 'assets/images/website.png',
-                            url: 'https://www.yourwebsite.com',
+                            url: websiteUrl,
                           ),
                       ],
                     ),

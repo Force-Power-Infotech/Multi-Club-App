@@ -110,6 +110,15 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     }
   }
 
+  Future<String?> getFirstName() async {
+    var box = await Hive.openBox('UserData');
+    var userData = box.get('user_data_key');
+    if (userData != null) {
+      return userData['firstname'];
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,7 +158,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                   child: Image.asset(
                     'assets/images/madhuwan.jpg',
                     fit: BoxFit.cover,
-                    width: 70,
+                    width: 85,
                     height: 30,
                   ),
                 ),
@@ -221,7 +230,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                           image: firstImageUrl.isNotEmpty
                               ? DecorationImage(
                                   image: NetworkImage(firstImageUrl),
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.fill,
                                 )
                               : null, // Use DecorationImage only if first image URL is available
                         ),
@@ -303,6 +312,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.white,
                                       boxShadow: [
                                         BoxShadow(
                                           color: AppThemes.brc_bottom_icon
@@ -313,49 +323,54 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                         ),
                                       ],
                                     ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        child: imageUrl != null &&
-                                                imageUrl.isNotEmpty
-                                            ? Image.network(
-                                                imageUrl,
-                                                fit: BoxFit.cover,
-                                                width: 76,
-                                                height: 75,
-                                              )
-                                            : Container(
-                                                color: Colors
-                                                    .grey, // Grey color for the circle
-                                                width: 76,
-                                                height: 75,
-                                                child: const Icon(
-                                                  Icons.person,
-                                                  color: Colors.white,
-                                                  size: 50,
-                                                ),
-                                              ),
-                                      ),
-                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: imageUrl.isNotEmpty
+                                        ? Image.network(
+                                            imageUrl,
+                                            fit: BoxFit.cover,
+                                            width: 76,
+                                            height: 75,
+                                          )
+                                        : Container(
+                                            color: Colors
+                                                .grey, // Grey color for the circle
+                                            width: 75,
+                                            height: 75,
+                                            child: const Icon(
+                                              Icons.person,
+                                              color: Colors.white,
+                                              size: 50,
+                                            ),
+                                          ),
                                   ),
                                 ),
 
                                 const SizedBox(height: 10),
                                 // Add space between the profile image and the text
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 5),
-                                  child: Text(
-                                    'Hi ${globalUsername ?? ''}!', // Use the meberID variable, if it's null, display an empty string
-                                    style: const TextStyle(
-                                      fontWeight:
-                                          FontWeight.w600, // Make the text bold
-                                      fontSize:
-                                          18, // Adjust the font size as needed
-                                    ),
-                                  ),
+                                FutureBuilder<String?>(
+                                  future: getFirstName(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator(); // Show a loading indicator while waiting for data
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      String firstName = snapshot.data ??
+                                          ''; // Get the first name, or an empty string if null
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 6, vertical: 5),
+                                        child: Text(
+                                          'Hi $firstName!',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),
@@ -552,14 +567,14 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                           ? name[0]
                                                               .toUpperCase()
                                                           : '',
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 16),
+                                                  const SizedBox(width: 16),
                                                   Expanded(
                                                     child: Column(
                                                       crossAxisAlignment:
@@ -568,16 +583,60 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                       children: [
                                                         Text(
                                                           name,
-                                                          style: TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 18,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                           ),
                                                         ),
-                                                        SizedBox(height: 4),
+                                                        const SizedBox(
+                                                            height: 4),
                                                         Text(
-                                                          (date),
-                                                          style: TextStyle(
+                                                          (() {
+                                                            // Split the date string
+                                                            List<String> parts =
+                                                                date.split('-');
+                                                            if (parts.length !=
+                                                                3) {
+                                                              return date; // Return original date if the format is incorrect
+                                                            }
+
+                                                            String day =
+                                                                parts[0];
+                                                            String month =
+                                                                parts[1];
+                                                            String year =
+                                                                parts[2];
+
+                                                            // List of month names
+                                                            List<String>
+                                                                months = [
+                                                              'January',
+                                                              'February',
+                                                              'March',
+                                                              'April',
+                                                              'May',
+                                                              'June',
+                                                              'July',
+                                                              'August',
+                                                              'September',
+                                                              'October',
+                                                              'November',
+                                                              'December'
+                                                            ];
+
+                                                            // Convert month from number to name
+                                                            String monthName =
+                                                                months[int.parse(
+                                                                        month) -
+                                                                    1];
+
+                                                            // Format the date
+                                                            return '$monthName $day, $year';
+                                                          })(),
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 14,
                                                             color: Colors.grey,
                                                           ),
@@ -814,7 +873,7 @@ class home_event_card extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "${event.date}",
+                        "${event.dateForHeading}",
                         style: TextStyle(
                           fontSize: 16,
                         ),

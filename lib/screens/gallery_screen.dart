@@ -62,26 +62,42 @@ class _GalleryScreenState extends State<GalleryScreen> {
             return const Center(child: Text('No data available'));
           } else {
             List<GalleryData> galleryData = snapshot.data!.galleryData!;
-            galleryData.sort(
-                (a, b) => parseDate(b.date!).compareTo(parseDate(a.date!)));
+            final appNickname = Webservice.appNickname;
+
+            if (appNickname == 'mm') {
+              galleryData.sort(
+                  (a, b) => parseDate(b.date!).compareTo(parseDate(a.date!)));
+            } else if (appNickname == 'madhuban') {
+              galleryData
+                  .sort((a, b) => a.event_name!.compareTo(b.event_name!));
+            }
 
             return ListView(
               children: [
-                SectionWidget(
-                    sectionTitle: 'Today\'s Session',
-                    galleryData: galleryData
-                        .where((data) => isToday(parseDate(data.date!)))
-                        .toList()),
-                SectionWidget(
-                    sectionTitle: 'Last Week',
-                    galleryData: galleryData
-                        .where((data) => isLastWeek(parseDate(data.date!)))
-                        .toList()),
-                SectionWidget(
-                    sectionTitle: 'Last Month',
-                    galleryData: galleryData
-                        .where((data) => isLastMonth(parseDate(data.date!)))
-                        .toList()),
+                if (appNickname == 'ma') ...[
+                  SectionWidget(
+                      sectionTitle: 'Today\'s Session',
+                      galleryData: galleryData
+                          .where((data) => isToday(parseDate(data.date!)))
+                          .toList()),
+                  SectionWidget(
+                      sectionTitle: 'Last Week',
+                      galleryData: galleryData
+                          .where((data) => isLastWeek(parseDate(data.date!)))
+                          .toList()),
+                  SectionWidget(
+                      sectionTitle: 'Last Month',
+                      galleryData: galleryData
+                          .where((data) => isLastMonth(parseDate(data.date!)))
+                          .toList()),
+                ] else if (appNickname == 'milleniumMams' ||
+                    appNickname == 'madhuban') ...[
+                  for (var eventGroup in groupByevent_name(galleryData).entries)
+                    SectionWidget(
+                      sectionTitle: eventGroup.key,
+                      galleryData: eventGroup.value,
+                    ),
+                ]
               ],
             );
           }
@@ -127,6 +143,18 @@ class _GalleryScreenState extends State<GalleryScreen> {
     return date.isAfter(startOfLastMonth.subtract(const Duration(days: 1))) &&
         date.isBefore(endOfLastMonth.add(const Duration(days: 1)));
   }
+
+  Map<String, List<GalleryData>> groupByevent_name(
+      List<GalleryData> galleryData) {
+    Map<String, List<GalleryData>> groupedData = {};
+    for (var data in galleryData) {
+      if (!groupedData.containsKey(data.event_name)) {
+        groupedData[data.event_name!] = [];
+      }
+      groupedData[data.event_name]!.add(data);
+    }
+    return groupedData;
+  }
 }
 
 class SectionWidget extends StatelessWidget {
@@ -165,28 +193,6 @@ class SectionWidget extends StatelessWidget {
                 mainAxisSpacing: 4.0,
               ),
               itemBuilder: (context, index) {
-                // return GestureDetector(
-                //   onTap: () {
-                //     showDialog(
-                //       context: context,
-                //       builder: (BuildContext context) {
-                //         return Dialog(
-                //           child: Image.network(
-                //             galleryData[index].imageUrl!,
-                //             fit: BoxFit.contain,
-                //           ),
-                //         );
-                //       },
-                //     );
-                //   },
-                //   child: Container(
-                //     color: Colors.grey,
-                //     child: Image.network(
-                //       galleryData[index].imageUrl!,
-                //       fit: BoxFit.cover,
-                //     ),
-                //   ),
-                // );
                 return GestureDetector(
                   onTap: () {
                     showDialog(

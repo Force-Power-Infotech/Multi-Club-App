@@ -98,7 +98,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
       await launch(whatsappUrl);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Could not launch WhatsApp'),
           duration: Duration(seconds: 3), // Adjust as needed
         ),
@@ -112,7 +112,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
       key: _scaffoldKey,
 
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(
+        preferredSize: const Size.fromHeight(
           Webservice.appNickname == 'milleniumMams'
               ? kToolbarHeight + 0
               : kToolbarHeight + 55,
@@ -203,7 +203,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                   future: SponsorAPI.details(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
@@ -267,7 +267,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
           } else if (snapshot.hasData) {
             final profileData = snapshot.data!.data?.first;
             if (profileData == null) {
-              return Center(child: Text('No profile data available'));
+              return const Center(child: Text('No profile data available'));
             }
 
             String imageUrl = profileData.maleImageURL ??
@@ -320,20 +320,19 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                                     ));
                                   },
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: AppThemes.brc_bottom_icon
-                                              .withOpacity(0.5),
-                                          spreadRadius: 2,
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 7),
-                                        ),
-                                      ],
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppThemes.brc_bottom_icon
+                                                .withOpacity(0.5),
+                                            spreadRadius: 2,
+                                            blurRadius: 5,
+                                            offset: const Offset(0, 7),
+                                          ),
+                                        ],
+                                      ),
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(10.0),
@@ -344,6 +343,34 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                                                 fit: BoxFit.cover,
                                                 width: 76,
                                                 height: 75,
+                                                // Show a placeholder while the image is loading
+                                                loadingBuilder: (context, child,
+                                                    loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  } else {
+                                                    // Optionally, you can return a loading indicator while the image is loading
+                                                    return Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  }
+                                                },
+                                                // Handle image loading errors
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Container(
+                                                    color: Colors
+                                                        .grey, // Grey color for the circle
+                                                    width: 76,
+                                                    height: 75,
+                                                    child: const Icon(
+                                                      Icons.person,
+                                                      color: Colors.white,
+                                                      size: 50,
+                                                    ),
+                                                  );
+                                                },
                                               )
                                             : Container(
                                                 color: Colors
@@ -356,9 +383,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                                                   size: 50,
                                                 ),
                                               ),
-                                      ),
-                                    ),
-                                  ),
+                                      )),
                                 ),
 
                                 const SizedBox(height: 10),
@@ -538,7 +563,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            EventsScreen()), // Replace EventScreen() with your actual screen
+                                            const EventsScreen()), // Replace EventScreen() with your actual screen
                                   );
                                 },
                                 child: Text(
@@ -558,7 +583,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Center(
+                              return const Center(
                                 child:
                                     CircularProgressIndicator(), // Show loading indicator while fetching data
                               );
@@ -586,7 +611,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                                 );
                               } else {
                                 // Handle case where eventAPI or eventAPI.eventDetails is null
-                                return Center(
+                                return const Center(
                                   child: Text('No events available'),
                                 );
                               }
@@ -620,7 +645,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
               ],
             );
           } else {
-            return Center(child: Text('No profile data found'));
+            return const Center(child: Text('No profile data found'));
           }
         },
       ),
@@ -657,7 +682,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(
                       20), // Adjust the top left corner radius as needed
                   topRight: Radius.circular(
@@ -678,12 +703,12 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                         label: 'Events',
                         wheretoGo: () => const EventsScreen(),
                       ),
-                      if (Webservice.appNickname != 'milleniumMams')
-                        HomeScreenBottomIcon(
-                          asset: 'assets/images/Frame.png',
-                          label: 'Directory',
-                          wheretoGo: () => const Directory(),
-                        ),
+                      // if (Webservice.appNickname != 'milleniumMams')
+                      HomeScreenBottomIcon(
+                        asset: 'assets/images/Frame.png',
+                        label: 'Directory',
+                        wheretoGo: () => const Directory(),
+                      ),
                       HomeScreenBottomIcon(
                         asset: 'assets/images/profilelogo.png',
                         label: 'Profile',
@@ -746,7 +771,7 @@ class home_event_card extends StatelessWidget {
                     children: [
                       Text(
                         "${event.eventname}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
@@ -755,7 +780,7 @@ class home_event_card extends StatelessWidget {
                       ),
                       Text(
                         "${event.date}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                         ),
                         maxLines: 1,
@@ -763,7 +788,7 @@ class home_event_card extends StatelessWidget {
                       ),
                       Text(
                         "${event.description}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
                         ),

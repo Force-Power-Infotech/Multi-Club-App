@@ -22,12 +22,11 @@ class EventAPI {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    if (this.eventDetails != null) {
-      data['event_details'] =
-          this.eventDetails?.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    if (eventDetails != null) {
+      data['event_details'] = eventDetails?.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -46,8 +45,8 @@ class EventAPI {
       'organization_id': Webservice.appNickname,
       // 'theaccesscode': "${accessCode}",
       'theaccesscode': "BmP1",
-      'the_event_type': 'SPORTS',
-      'filter_type': 'All\tBody'
+      'the_event_type': 'All',
+      'filter_type': 'All'
     });
 
     http.StreamedResponse response = await request.send();
@@ -77,6 +76,8 @@ class EventDetails {
   String? locationOnMap;
   String? link;
   String? eventType;
+  String? status;
+  String? city;
 
   EventDetails(
       {this.eventid,
@@ -97,6 +98,8 @@ class EventDetails {
       this.locationName,
       this.locationOnMap,
       this.link,
+      this.status,
+      this.city,
       this.eventType});
 
   EventDetails.fromJson(Map<String, dynamic> json) {
@@ -119,29 +122,33 @@ class EventDetails {
     locationOnMap = json['location_on_map'];
     link = json['link'];
     eventType = json['event_type'];
+    status = json['status'];
+    city = json['city'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['eventid'] = this.eventid;
-    data['eventname'] = this.eventname;
-    data['description'] = this.description;
-    data['eventmobile'] = this.eventmobile;
-    data['eventemail'] = this.eventemail;
-    data['eventstartdate'] = this.eventstartdate;
-    data['eventstarttime'] = this.eventstarttime;
-    data['eventimage'] = this.eventimage;
-    data['venue'] = this.venue;
-    data['date'] = this.date;
-    data['time'] = this.time;
-    data['date_for_heading'] = this.dateForHeading;
-    data['guest'] = this.guest;
-    data['entry_fee'] = this.entryFee;
-    data['location_id'] = this.locationId;
-    data['location_name'] = this.locationName;
-    data['location_on_map'] = this.locationOnMap;
-    data['link'] = this.link;
-    data['event_type'] = this.eventType;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['eventid'] = eventid;
+    data['eventname'] = eventname;
+    data['description'] = description;
+    data['eventmobile'] = eventmobile;
+    data['eventemail'] = eventemail;
+    data['eventstartdate'] = eventstartdate;
+    data['eventstarttime'] = eventstarttime;
+    data['eventimage'] = eventimage;
+    data['venue'] = venue;
+    data['date'] = date;
+    data['time'] = time;
+    data['date_for_heading'] = dateForHeading;
+    data['guest'] = guest;
+    data['entry_fee'] = entryFee;
+    data['location_id'] = locationId;
+    data['location_name'] = locationName;
+    data['location_on_map'] = locationOnMap;
+    data['link'] = link;
+    data['event_type'] = eventType;
+    data['status'] = status;
+    data['city'] = city;
     return data;
   }
 }

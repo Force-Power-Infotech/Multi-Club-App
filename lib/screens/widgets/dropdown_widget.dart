@@ -35,7 +35,7 @@ class _ColorSelectorState extends State<ColorSelector> {
         ),
         DropdownButton<ColorItem>(
           isExpanded: true,
-          style: Theme.of(context).textTheme.headline6,
+          // style: Theme.of(context).textTheme.headline6,
           value: currentChoice,
           items: widget.items
               .map<DropdownMenuItem<ColorItem>>(

@@ -160,6 +160,10 @@ class Data {
   String? maleImageURL;
   String? femaleImageURL;
   String? email;
+  String? city;
+  String? batch;
+  String? country;
+  String? chapter_name;
 
   Data(
       {this.membershipCode,
@@ -174,6 +178,10 @@ class Data {
       this.maleImageURL,
       this.femaleImageURL,
       this.email,
+      this.city,
+      this.batch,
+      this.country,
+      this.chapter_name,
       this.memberFemaleAge});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -190,6 +198,10 @@ class Data {
     femaleImageURL = json['spouse_image_url'];
     officeAddress = json['office_address'];
     email = json['email'];
+    city = json['city'];
+    batch = json['batch'];
+    country = json['country'];
+    chapter_name = json['chapter_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -207,6 +219,10 @@ class Data {
     data['spouse_image_url'] = femaleImageURL;
     data['office_address'] = officeAddress;
     data['email'] = email;
+    data['city'] = city;
+    data['batch'] = batch;
+    data['country'] = country;
+    data['chapter_name'] = chapter_name;
     return data;
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "969024558922",
+    "project_id": "millenniummams-7fca8",
+    "storage_bucket": "millenniummams-7fca8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969024558922:android:28d94ee06f178fd104d3b3",
+        "android_client_info": {
+          "package_name": "com.forcepower.madhuwan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjb351bqUhXIimeWhYUSXqqHO8OTMWjz8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
