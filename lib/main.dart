@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:multi_club_app/bases/api/firebase_messaging_service.dart';
@@ -25,7 +27,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print("Handling a background message: ${message.messageId}");
+  log("Handling a background message: ${message.messageId}");
 }
 
 void main() async {
@@ -35,9 +37,10 @@ void main() async {
   );
   await _initializeFlutterLocalNotifications();
 
-  FirebaseMessagingService().initialize();
   await Hive.initFlutter();
   await Hive.openBox('UserData');
+
+  await FirebaseMessagingService.initialize();
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -48,8 +51,24 @@ Future<void> _initializeFlutterLocalNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  final InitializationSettings initializationSettings = InitializationSettings(
+  const DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings(
+    requestAlertPermission: true,
+    requestSoundPermission: true,
+    requestBadgePermission: true,
+    requestProvisionalPermission: false,
+    requestCriticalPermission: false,
+    defaultPresentAlert: true,
+    defaultPresentSound: true,
+    defaultPresentBadge: true,
+    defaultPresentBanner: true,
+    defaultPresentList: true,
+    notificationCategories: <DarwinNotificationCategory>[],
+  );
+
+  const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
+    iOS: initializationSettingsDarwin,
   );
 
   await flutterLocalNotificationsPlugin.initialize(

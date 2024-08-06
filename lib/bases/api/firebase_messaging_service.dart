@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
 
 class FirebaseMessagingService {
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  static FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<void> initialize() async {
+  static Future<void> initialize() async {
     // Request permission for iOS devices
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,

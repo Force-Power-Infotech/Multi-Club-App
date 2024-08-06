@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
@@ -136,14 +138,21 @@ class UserOtpAPI {
     // Retrieve the Firebase token from Hive
     String? firebaseToken = await UserDataRepository.getFirebaseToken();
 
-    request.fields.addAll({
+    // get platform
+    String platform = Platform.isAndroid
+        ? 'ANDROID'
+        : Platform.isIOS
+            ? 'IOS'
+            : 'OTHER';
+    final fields = {
       'user_name': username,
       'the_otp': otp,
-      'device_type': 'ANDROID',
+      'device_type': platform,
       'organization_id': Webservice.appNickname,
-      'firebase_token':
-          firebaseToken ?? '', // Send the token or empty string if null
-    });
+      'token_id': firebaseToken ?? '', // Send the token or empty string if null
+    };
+    log('Request fields: $fields');
+    request.fields.addAll(fields);
 
     try {
       http.StreamedResponse response = await request.send();

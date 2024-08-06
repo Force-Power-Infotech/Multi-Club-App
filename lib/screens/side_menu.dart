@@ -406,8 +406,12 @@ class SideMenu extends StatelessWidget {
                     onTap: () async {
                       // Delete user data from Hive
                       var box = await Hive.openBox('UserData');
+                      // get firebase token
+                      String? token = await box.get('firebase_token');
                       // Clear the data stored in the box
                       await box.clear();
+                      // Save the firebase token back to the box
+                      await box.put('firebase_token', token);
                       // Update UI based on item selected from the drawer
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (_) => const LoginInputScreen(),
