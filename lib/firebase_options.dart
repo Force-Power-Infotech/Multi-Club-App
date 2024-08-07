@@ -69,7 +69,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '969024558922',
     projectId: 'millenniummams-7fca8',
     storageBucket: 'millenniummams-7fca8.appspot.com',
-    iosBundleId: 'com.forcepower.multiClubApp',
+    iosBundleId: 'com.forcepower.MillenniumMams;',
   );
-
 }
