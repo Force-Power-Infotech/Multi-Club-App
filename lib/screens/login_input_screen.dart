@@ -13,45 +13,51 @@ class LoginInputScreen extends StatefulWidget {
 }
 
 class _LoginInputScreenState extends State<LoginInputScreen> {
-  // isEmail: bool
   bool isLoading = false;
   bool isEmail = false;
-  // input: TextEditingController
   final input = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Verify',
-          style: TextStyle(color: AppThemes.brc_textcolor),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Webservice.appNickname == 'forcempower'
             ? AppThemes.brc_background
             : AppThemes.getBackground(),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppThemes.brc_textcolor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            // Header Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                // Title: Enter Mobile Number
                 Text(
                   'Enter ${isEmail ? 'Email ID' : 'Mobile Number'}',
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 20.0),
-                // TextButton: Use Email ID/Phone Number
                 // TextButton(
                 //   onPressed: () {
-                //     // setState: isEmail
                 //     setState(() {
                 //       isEmail = !isEmail;
                 //     });
@@ -59,26 +65,31 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
                 //   child: Text(
                 //     'Use ${isEmail ? 'Mobile Number' : 'Email ID'}',
                 //     style: const TextStyle(
-                //       color: Colors.black,
-                //       // underline
+                //       color: Colors.blue,
                 //       decoration: TextDecoration.underline,
                 //     ),
                 //   ),
                 // ),
               ],
             ),
-            // Input Text Field: Mobile Number/Email ID
+            const SizedBox(height: 20.0),
+            // Input Text Field
             TextField(
               controller: input,
               decoration: InputDecoration(
                 hintText: isEmail ? 'Email ID' : 'Mobile Number',
-                // suffix icon
-                suffixIcon: isEmail
-                    ? const Icon(Icons.email)
-                    : const Icon(Icons.phone_android),
-                // underline border
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                prefixIcon: Icon(isEmail ? Icons.email : Icons.phone_android),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Webservice.appNickname == 'forcempower'
+                        ? AppThemes.brc_background
+                        : AppThemes.getBackground(),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               keyboardType:
@@ -88,47 +99,38 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
                     ? null
                     : 10), // Limit to 10 characters for phone number
                 FilteringTextInputFormatter.allow(
-                    RegExp(r'[0-9]')), // Allow only digits
+                    RegExp(r'[0-9]')), // Allow only digits for phone number
               ],
             ),
+            const SizedBox(height: 20.0),
             // TextButton: Can't Login? Click Here
-            // Container(
+            // Align(
             //   alignment: Alignment.centerLeft,
             //   child: TextButton(
             //     onPressed: () {
             //       // Navigate to the forgot screen
             //     },
-            //     style: TextButton.styleFrom(
-            //       // no padding
-            //       padding: EdgeInsets.zero,
-            //     ),
             //     child: const Text(
             //       'Can\'t Login? Click Here',
             //       style: TextStyle(
-            //         color: Colors.black,
-            //         // underline
+            //         color: Colors.blue,
             //         decoration: TextDecoration.underline,
             //       ),
             //     ),
             //   ),
             // ),
-            // Spacer
             const Spacer(),
-            // ElevatedButton: Icon: Arrow Right
+            // ElevatedButton
             ElevatedButton(
               onPressed: () async {
-                // check if the input is valid
                 setState(() {
-                  isLoading =
-                      true; // Set isLoading to true when button is pressed
+                  isLoading = true;
                 });
                 UserLoginAPI user = await UserLoginAPI.login(input.text);
                 setState(() {
-                  isLoading =
-                      false; // Set isLoading to false after data is fetched
+                  isLoading = false;
                 });
                 if (user.processStatus == "YES") {
-                  // Navigate to the OTP screen
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -140,9 +142,9 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
                     SnackBar(
                       content: Text(
                         '${user.processMessage}',
-                        style: const TextStyle(color: AppThemes.brc_textcolor),
+                        style: const TextStyle(color: Colors.white),
                       ),
-                      backgroundColor: AppThemes.brc_otp_success,
+                      backgroundColor: Colors.green,
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -151,9 +153,9 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
                     SnackBar(
                       content: Text(
                         '${user.processMessage}',
-                        style: const TextStyle(color: AppThemes.brc_textcolor),
+                        style: const TextStyle(color: Colors.white),
                       ),
-                      backgroundColor: AppThemes.brc_otp_error,
+                      backgroundColor: Colors.red,
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -163,20 +165,22 @@ class _LoginInputScreenState extends State<LoginInputScreen> {
                 backgroundColor: Webservice.appNickname == 'forcempower'
                     ? AppThemes.brc_background
                     : AppThemes.getBackground(),
-                shape: const CircleBorder(),
-                minimumSize: const Size(60, 60),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                minimumSize: const Size(double.infinity, 50),
+                elevation: 5,
               ),
               child: isLoading
                   ? const CircularProgressIndicator(
-                      // Show CircularProgressIndicator while loading
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        AppThemes.brc_textcolor,
-                      ),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     )
-                  : const Icon(
-                      Icons.arrow_forward,
-                      size: 30,
-                      color: AppThemes.brc_textcolor,
+                  : const Text(
+                      'Proceed',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppThemes.brc_textcolor),
                     ),
             ),
           ],

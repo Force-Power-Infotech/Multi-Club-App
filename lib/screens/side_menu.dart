@@ -5,6 +5,7 @@ import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/activities_screen.dart';
 import 'package:multi_club_app/screens/events_screen.dart';
 import 'package:multi_club_app/screens/gallery_screen.dart';
+import 'package:multi_club_app/screens/gallery_webview.dart';
 import 'package:multi_club_app/screens/helpdesk_screen.dart';
 import 'package:multi_club_app/screens/leadership_screen.dart';
 import 'package:multi_club_app/screens/login_input_screen.dart';
@@ -267,7 +268,7 @@ class SideMenu extends StatelessWidget {
                     onTap: () {
                       // Update UI based on item selected from the drawer
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const GalleryScreen(),
+                        builder: (_) => GalleryWebView(),
                       ));
                     },
                     child: const Text(

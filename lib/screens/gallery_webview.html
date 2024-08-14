@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Millenium Mams' Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <style>
+        /* Custom Tailwind classes for modern UI */
+        .gallery-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-red-500 to-red-900 text-white py-2 shadow-lg">
+        <div class="container mx-auto flex justify-center items-center">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <img src="https://i.ibb.co/1LtYzh2/mmmain-logo.png" alt="Logo" class="w-12 h-12 mr-2 rounded-full">
+                <h1 class="text-xl font-bold tracking-wide">Millenium Mams' Gallery</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Gallery Section -->
+    <div class="bg-white  h-full py-6 sm:py-8 lg:py-12">
+        <div class="mx-auto max-w-screen-2xl px-4 md:px-8">
+            <div class="mb-4 flex items-center justify-between gap-8 sm:mb-8 md:mb-12">
+                <div class="flex items-center gap-12">
+                    <h2 class="text-2xl font-bold text-gray-800 lg:text-3xl dark:text-white">Gallery</h2>
+                </div>
+            </div>
+
+            <div id="gallery" class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 xl:gap-8">
+                <!-- Albums and Files will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-900 text-white text-center py-2">
+        <p>© 2024 Millenium Mams' Gallery</p>
+    </footer>
+
+    <script>
+        // Google API Key and Folder ID
+        const API_KEY = 'AIzaSyDOyBpQBorYNm4Ox34-vZeIFP9UiFlr1rw';
+        const FOLDER_ID = '1x6h5y8LEeqcJlwbGfk_XjE0AUtxE20-3'; // Replace with your folder ID
+
+        // Load the API client and auth2 library
+        function loadClient() {
+            gapi.client.setApiKey(API_KEY);
+            return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
+                .then(function () {
+                    console.log("GAPI client loaded for API");
+                    listItems();
+                },
+                    function (err) { console.error("Error loading GAPI client for API", err); });
+        }
+
+        // List folders and files inside the specified folder
+        function listItems() {
+            gapi.client.drive.files.list({
+                'q': `'${FOLDER_ID}' in parents and trashed=false`,
+                'fields': "files(id, name, mimeType, webViewLink, thumbnailLink, iconLink)"
+            }).then(function (response) {
+                const items = response.result.files;
+                const galleryDiv = document.getElementById('gallery');
+
+                items.forEach(item => {
+                    const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-80 gallery-card';
+
+                    itemElement.innerHTML = `
+                        <a href="${item.webViewLink}" target="_blank" class="block text-center">
+                            <img src="${isFolder ? 'https://img.icons8.com/color/96/folder-invoices.png' : item.thumbnailLink}" 
+                                alt="${item.name}" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
+                            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
+                            <span class="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">${item.name}</span>
+                        </a>
+                    `;
+
+                    galleryDiv.appendChild(itemElement);
+                });
+            });
+        }
+
+        gapi.load("client", loadClient);
+    </script>
+</body>
+
+</html>

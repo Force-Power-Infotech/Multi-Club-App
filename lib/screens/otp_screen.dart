@@ -16,140 +16,179 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  // otp: TextEditingController
   bool isLoading = false;
-//refrence the box
   final _userData = Hive.box('UserData');
+  final otpControllers = List.generate(4, (_) => TextEditingController());
+  final otpFocusNodes = List.generate(4, (_) => FocusNode());
 
-  final otp = TextEditingController();
+  @override
+  void dispose() {
+    for (var controller in otpControllers) {
+      controller.dispose();
+    }
+    for (var node in otpFocusNodes) {
+      node.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppThemes.brc_textcolor,
       appBar: AppBar(
         title: const Text(
-          'OTP',
+          'Enter OTP',
           style: TextStyle(color: AppThemes.brc_textcolor),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppThemes.brc_textcolor),
           onPressed: () {
-            // Navigate to the previous screen
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Webservice.appNickname == 'forcempower'
-            ? AppThemes.getBackground()
-            : AppThemes
-                .getBackground(), // Use custom primary color from light theme
+        backgroundColor: AppThemes.getBackground(),
+        elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                'Enter OTP',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+            const SizedBox(height: 24),
+            Text(
+              'Please enter the OTP sent to ${widget.username}',
+              style: const TextStyle(
+                fontSize: 18,
+                color: AppThemes.brc_spotsbooking_hint_text,
               ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20.0),
-            // Input Text Field: OTP
-            TextField(
-              controller: otp,
-              decoration: const InputDecoration(
-                // hint text
-                hintText: 'Enter OTP',
-                // underline border
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-              ),
-              keyboardType: TextInputType.number,
+            const SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(4, (index) {
+                return SizedBox(
+                  width: 50,
+                  height: 60,
+                  child: TextField(
+                    controller: otpControllers[index],
+                    focusNode: otpFocusNodes[index],
+                    maxLength: 1,
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    decoration: InputDecoration(
+                      counterText: '',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                            12), // Increased border radius
+                      ),
+                    ),
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
+                        if (index < 3) {
+                          FocusScope.of(context)
+                              .requestFocus(otpFocusNodes[index + 1]);
+                        }
+                      } else {
+                        if (index > 0) {
+                          FocusScope.of(context)
+                              .requestFocus(otpFocusNodes[index - 1]);
+                        }
+                      }
+                    },
+                    onSubmitted: (value) {
+                      if (index == 3) {
+                        otpFocusNodes[index].unfocus();
+                      }
+                    },
+                  ),
+                );
+              }),
             ),
-            // Spacer
-            const Spacer(),
-            // ElevatedButton: Icon: Arrow Right
+            const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: () async {
-                // check if the input is valid
-                setState(() {
-                  isLoading =
-                      true; // Set isLoading to true when button is pressed
-                });
-                UserOtpAPI user =
-                    await UserOtpAPI.login(widget.username, otp.text);
-                setState(() {
-                  isLoading =
-                      false; // Set isLoading to false after data is fetched
-                });
-                if (user.processStatus == "YES") {
-                  // Navigate to the Home screen
-                  // setUserData();
-                  if (Webservice.appNickname == 'forcempower') {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => const HomeScreen(),
-                    ));
-                  } else if (Webservice.appNickname == 'madhuban') {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => const HomeScreenMadhuwan(),
-                    ));
-                  } else if (Webservice.appNickname == 'milleniumMams') {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => const HomeScreenMillenniumMams(),
-                    ));
-                  }
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      String otpCode = otpControllers.map((c) => c.text).join();
+                      UserOtpAPI user =
+                          await UserOtpAPI.login(widget.username, otpCode);
+                      setState(() {
+                        isLoading = false;
+                      });
 
-                  // _userData.put(1, user.memberid);
-                  print(_userData.get('user_data_key'));
+                      if (user.processStatus == "YES") {
+                        if (Webservice.appNickname == 'forcempower') {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (_) => const HomeScreen()),
+                          );
+                        } else if (Webservice.appNickname == 'madhuban') {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (_) => const HomeScreenMadhuwan()),
+                          );
+                        } else if (Webservice.appNickname == 'milleniumMams') {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                    const HomeScreenMillenniumMams()),
+                          );
+                        }
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'WELCOME 🙏 ${user.firstname} ${user.lastname}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: AppThemes.brc_textcolor),
-                      ),
-                      backgroundColor: AppThemes.brc_otp_success,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        '${user.processMessage}',
-                        style: TextStyle(color: AppThemes.brc_textcolor),
-                      ),
-                      backgroundColor: AppThemes.brc_otp_error,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                }
-              },
+                        _userData.put(1, user.memberid);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'WELCOME 🙏 ${user.firstname} ${user.lastname}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: AppThemes.brc_textcolor),
+                            ),
+                            backgroundColor: AppThemes.brc_otp_success,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${user.processMessage}',
+                              style: TextStyle(color: AppThemes.brc_textcolor),
+                            ),
+                            backgroundColor: AppThemes.brc_otp_error,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Webservice.appNickname == 'forcempower'
-                    ? AppThemes.getBackground()
-                    : AppThemes.getBackground(),
-                shape: const CircleBorder(),
-                minimumSize: const Size(60, 60),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                backgroundColor: AppThemes.getBackground(),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
               child: isLoading
                   ? const CircularProgressIndicator(
-                      // Show CircularProgressIndicator while loading
                       valueColor: AlwaysStoppedAnimation<Color>(
                         AppThemes.brc_textcolor,
                       ),
                     )
-                  : const Icon(
-                      Icons.arrow_forward,
-                      size: 30,
-                      color: AppThemes.brc_textcolor,
+                  : const Text(
+                      'Verify & Proceed',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: AppThemes.brc_textcolor,
+                      ),
                     ),
             ),
           ],

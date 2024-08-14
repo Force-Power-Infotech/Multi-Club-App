@@ -30,4 +30,5 @@ class Webservice {
   static const String sponsor = "sponsor_api.php";
   static const String gallery = "gallery_api.php";
   static const String feedback = "feedback_api.php";
+  static const String ws_user_register = "ws_user_register.php";
 }
