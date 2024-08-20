@@ -99,7 +99,7 @@ class ProfileEditAPI {
     } else {
       print('Image File: ${imageFile}');
     }
-
+    print('Request: $request');
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
     return ProfileEditAPI.fromJson(jsonDecode(responseString));

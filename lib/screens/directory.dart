@@ -17,8 +17,8 @@ class _DirectoryState extends State<Directory> {
   late TextEditingController _searchController;
   List<Data> contacts = [];
   List<Data> filteredContacts = [];
-  bool _isLoading = true; // Loading state
-  String? selectedFilter; // For dropdown filter
+  bool _isLoading = true;
+  String? selectedFilter;
 
   @override
   void initState() {
@@ -39,19 +39,18 @@ class _DirectoryState extends State<Directory> {
       setState(() {
         contacts = directoryData.data ?? [];
         filteredContacts.addAll(contacts);
-        _isLoading = false; // Data loaded
+        _isLoading = false;
       });
     } catch (e) {
       print('Error fetching directory data: $e');
       setState(() {
-        _isLoading = false; // Stop loading on error
+        _isLoading = false;
       });
     }
   }
 
   void filterContacts(String query) {
     setState(() {
-      // Filter contacts based on the search query and selected city
       filteredContacts = contacts.where((contact) {
         bool matchesQuery = (contact.memberNameMale
                     ?.toLowerCase()
@@ -101,39 +100,57 @@ class _DirectoryState extends State<Directory> {
               controller: _searchController,
               onChanged: filterContacts,
               decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
                 hintText: 'Search contacts',
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search, color: Colors.grey),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide.none,
                 ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(Icons.clear, color: Colors.grey),
+                        onPressed: () {
+                          _searchController.clear();
+                          filterContacts('');
+                        },
+                      )
+                    : null,
+                isDense: true,
               ),
             ),
           ),
           if (isMilleniumMams)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: DropdownButton<String>(
-                isExpanded: true,
-                hint: Text('Select Chapter'),
-                value: selectedFilter,
-                onChanged: (value) {
-                  setState(() {
-                    selectedFilter = value;
-                    filterContacts(_searchController.text);
-                  });
-                },
-                items: <String>['Kolkata', 'Mumbai', 'Bangalore']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  hint: Text('Select Chapter'),
+                  value: selectedFilter,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedFilter = value;
+                      filterContacts(_searchController.text);
+                    });
+                  },
+                  items: <String>['Kolkata', 'Mumbai', 'Bangalore']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                  style: const TextStyle(color: Colors.black, fontSize: 16),
+                ),
               ),
             ),
           Expanded(
             child: _isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator(color: Colors.orange))
                 : ListView.builder(
                     itemCount: filteredContacts.length,
                     itemBuilder: (context, index) {
@@ -162,57 +179,75 @@ class _DirectoryState extends State<Directory> {
                                 },
                             ];
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: memberDetails.map((member) {
-                          return GestureDetector(
-                            onTap: () {
-                              if (!isMilleniumMams) {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ProfileScreen(
-                                    memberId: contact.membershipCode ?? '',
-                                    gender: member['gender']!,
-                                  ),
-                                ));
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Row(
-                                children: [
-                                  if (isMilleniumMams)
-                                    Text(
-                                      '${index + 1}',
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                      return Card(
+                        elevation: 2.0,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: memberDetails.map((member) {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (!isMilleniumMams) {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (_) => ProfileScreen(
+                                                  memberId:
+                                                      contact.membershipCode ??
+                                                          '',
+                                                  gender: member['gender']!,
+                                                )));
+                                  }
+                                },
+                                child: Row(
+                                  children: [
+                                    if (!isMilleniumMams)
+                                      CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                          member['imageUrl'] ?? '',
+                                        ),
+                                        radius: 30,
+                                        backgroundColor: Colors.grey[200],
                                       ),
-                                    )
-                                  else
-                                    CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        member['imageUrl'] ?? '',
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            member['name']!,
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          if (contact.city != null)
+                                            Text(
+                                              contact.city!,
+                                              style: TextStyle(
+                                                color: Colors.grey[600],
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                        ],
                                       ),
-                                      radius: 25,
                                     ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Text(
-                                      member['name']!,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -222,6 +257,7 @@ class _DirectoryState extends State<Directory> {
     );
   }
 }
+
 
 
 

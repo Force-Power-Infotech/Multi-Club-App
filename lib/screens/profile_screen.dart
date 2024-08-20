@@ -700,6 +700,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _refreshEvents() async {
+    // Fetch event details again
+    setState(() {
+      _profileData = ProfieviewAPI.list();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -750,85 +757,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
         ],
       ),
-      body: FutureBuilder<ProfieviewAPI>(
-        future: _profileData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            final profileData = snapshot.data!.data?.first;
-            if (profileData == null) {
-              return const Center(child: Text('No profile data available'));
-            }
+      body: RefreshIndicator(
+        onRefresh: _refreshEvents,
+        child: FutureBuilder<ProfieviewAPI>(
+          future: _profileData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              final profileData = snapshot.data!.data?.first;
+              if (profileData == null) {
+                return const Center(child: Text('No profile data available'));
+              }
 
-            String imageUrl = profileData.maleImageURL ??
-                ''; // Placeholder, replace with actual logic
+              String imageUrl = profileData.maleImageURL ??
+                  ''; // Placeholder, replace with actual logic
 
-            return ListView(
-              children: [
-                SizedBox(
-                  height: 160,
-                  child: Stack(
-                    children: [
-                      // Image section with stack
-                      Container(
-                        height: 160, // Set the height as needed
-                        color:
-                            AppThemes.brc_textcolor, // Change color as needed
-                      ),
-                      Container(
-                        height: 50, // Set the height as needed
-                        color:
-                            AppThemes.getBackground(), // Change color as needed
-                      ),
-                      // Profile image
-                      Positioned(
-                        top: -8,
-                        left: 0,
-                        right: 0, // Align image horizontally to the center
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: AppThemes.getBackground(),
-                                    // Set the color of the border
-                                    width: 8, // Set the width of the border
-                                  ),
-                                  borderRadius: BorderRadius.circular(100.0),
-                                ),
-                                child: Container(
+              return ListView(
+                children: [
+                  SizedBox(
+                    height: 160,
+                    child: Stack(
+                      children: [
+                        // Image section with stack
+                        Container(
+                          height: 160, // Set the height as needed
+                          color:
+                              AppThemes.brc_textcolor, // Change color as needed
+                        ),
+                        Container(
+                          height: 50, // Set the height as needed
+                          color: AppThemes
+                              .getBackground(), // Change color as needed
+                        ),
+                        // Profile image
+                        Positioned(
+                          top: -8,
+                          left: 0,
+                          right: 0, // Align image horizontally to the center
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Column(
+                              children: [
+                                Container(
                                   decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(
-                                            0.3), // Adjust shadow color and opacity as needed
-                                        spreadRadius:
-                                            1, // Adjust spread radius as needed
-                                        blurRadius:
-                                            4, // Adjust blur radius as needed
-                                        offset: const Offset(
-                                            0, 3), // Adjust offset as needed
-                                      ),
-                                    ],
+                                    border: Border.all(
+                                      color: AppThemes.getBackground(),
+                                      // Set the color of the border
+                                      width: 8, // Set the width of the border
+                                    ),
+                                    borderRadius: BorderRadius.circular(100.0),
                                   ),
-                                  child: ClipOval(
-                                    child: Image.network(
-                                      imageUrl,
-                                      fit: BoxFit.cover,
-                                      width: 100,
-                                      height: 100,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        } else {
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(
+                                              0.3), // Adjust shadow color and opacity as needed
+                                          spreadRadius:
+                                              1, // Adjust spread radius as needed
+                                          blurRadius:
+                                              4, // Adjust blur radius as needed
+                                          offset: const Offset(
+                                              0, 3), // Adjust offset as needed
+                                        ),
+                                      ],
+                                    ),
+                                    child: ClipOval(
+                                      child: Image.network(
+                                        imageUrl,
+                                        fit: BoxFit.cover,
+                                        width: 100,
+                                        height: 100,
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          } else {
+                                            return Container(
+                                              color: Colors.grey,
+                                              width: 100,
+                                              height: 100,
+                                              child: const Icon(
+                                                Icons.person,
+                                                color: Colors.white,
+                                                size: 50,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        errorBuilder: (BuildContext context,
+                                            Object error,
+                                            StackTrace? stackTrace) {
                                           return Container(
                                             color: Colors.grey,
                                             width: 100,
@@ -839,150 +863,259 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               size: 50,
                                             ),
                                           );
-                                        }
-                                      },
-                                      errorBuilder: (BuildContext context,
-                                          Object error,
-                                          StackTrace? stackTrace) {
-                                        return Container(
-                                          color: Colors.grey,
-                                          width: 100,
-                                          height: 100,
-                                          child: const Icon(
-                                            Icons.person,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                        );
-                                      },
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 0, vertical: 0),
+                                  child: Text(
+                                    widget.gender == 'female'
+                                        ? profileData.memberNameFemale ?? ''
+                                        : profileData.memberNameMale ?? '',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 24,
+                                        color: AppThemes
+                                            .brc_bottom_icon // Adjust the font size as needed
+                                        ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (Webservice.appNickname != 'milleniumMams')
+                    Container(
+                      color: AppThemes.brc_textcolor,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 135.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppThemes.brc_textcolor,
+                            borderRadius: BorderRadius.circular(4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 0,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(
+                                    top: 8), // Adjust padding as needed
+                                child: Text(
+                                  profileData.membershipCode ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppThemes.brc_spotsbooking_hint_text,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                width: double.infinity,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: AppThemes.getBackground(),
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(4),
+                                    bottomRight: Radius.circular(4),
+                                  ),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    'MEMBER ID NO.',
+                                    style: TextStyle(
+                                      fontSize: 8,
+                                      color: AppThemes.brc_textcolor,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 0),
-                                child: Text(
-                                  widget.gender == 'female'
-                                      ? profileData.memberNameFemale ?? ''
-                                      : profileData.memberNameMale ?? '',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 24,
-                                      color: AppThemes
-                                          .brc_bottom_icon // Adjust the font size as needed
-                                      ),
-                                ),
-                              )
                             ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                if (Webservice.appNickname != 'milleniumMams')
+                    ),
+                  if (widget.gender == 'female')
+                    _buildFemaleSpecificContainer(
+                        profileData, '${profileData.memberNameFemale}'),
                   Container(
                     color: AppThemes.brc_textcolor,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 135.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppThemes.brc_textcolor,
-                          borderRadius: BorderRadius.circular(4),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 0,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (Webservice.appNickname != 'madhuban' &&
+                              Webservice.appNickname != 'milleniumMams')
                             Container(
-                              padding: const EdgeInsets.only(
-                                  top: 8), // Adjust padding as needed
-                              child: Text(
-                                profileData.membershipCode ?? '',
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppThemes.brc_spotsbooking_hint_text,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              width: double.infinity, // Adjust width as needed
+
                               decoration: BoxDecoration(
-                                color: AppThemes.getBackground(),
+                                color: AppThemes
+                                    .getBackground(), // Color for the header
                                 borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(4),
-                                  bottomRight: Radius.circular(4),
+                                  topLeft: Radius.circular(12),
+                                  topRight: Radius.circular(12),
                                 ),
                               ),
-                              child: const Center(
-                                child: Text(
-                                  'MEMBER ID NO.',
-                                  style: TextStyle(
-                                    fontSize: 8,
-                                    color: AppThemes.brc_textcolor,
-                                    fontWeight: FontWeight.w600,
+                              child: const Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Center(
+                                  child: Text(
+                                    'PAYOUT',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppThemes
+                                          .brc_textcolor, // Text color for the header
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                if (widget.gender == 'female')
-                  _buildFemaleSpecificContainer(
-                      profileData, '${profileData.memberNameFemale}'),
-                Container(
-                  color: AppThemes.brc_textcolor,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 25, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (Webservice.appNickname != 'madhuban' &&
-                            Webservice.appNickname != 'milleniumMams')
+                          if (Webservice.appNickname != 'madhuban' &&
+                              Webservice.appNickname != 'milleniumMams')
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppThemes.brc_profilecard_color,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        children: [
+                                          const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'OUTSTANDING',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: AppThemes
+                                                          .brc_tablebooking_dark_text,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'CREDIT BALANCE',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppThemes
+                                                          .brc_tablebooking_dark_text,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(
+                                                '₹2000.00',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppThemes
+                                                      .brc_tablebooking_dark_text,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                              height:
+                                                  16), // Add some space between the row and the button
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              // Add your button onPressed logic here
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  AppThemes.getBackground(),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              'PAY NOW',
+                                              style: TextStyle(
+                                                  color:
+                                                      AppThemes.brc_textcolor),
+                                            ), // Replace 'Click Me' with your button text
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // Add content for the body here
+                                  ],
+                                ),
+                              ),
+                            ),
                           Container(
                             width: double.infinity, // Adjust width as needed
-
                             decoration: BoxDecoration(
-                              color: AppThemes
-                                  .getBackground(), // Color for the header
+                              color: Webservice.appNickname != 'madhuban'
+                                  ? AppThemes
+                                      .getBackground() // Color for the header
+                                  : AppThemes
+                                      .getBackground(), // Transparent color if appNickname is 'madhuban'
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(12),
                                 topRight: Radius.circular(12),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Center(
-                                child: Text(
-                                  'PAYOUT',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppThemes
-                                        .brc_textcolor, // Text color for the header
-                                  ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                widget.gender == 'male'
+                                    ? 'PERSONAL DETAILS'
+                                    : 'SPOUSE DETAILS',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppThemes.brc_textcolor,
                                 ),
                               ),
                             ),
                           ),
-                        if (Webservice.appNickname != 'madhuban' &&
-                            Webservice.appNickname != 'milleniumMams')
                           Container(
                             decoration: BoxDecoration(
                               color: AppThemes.brc_profilecard_color,
@@ -1004,20 +1137,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      children: [
-                                        const Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'OUTSTANDING',
+                                  if (widget.gender != 'male')
+                                    Padding(
+                                      padding: const EdgeInsets.all(6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Expanded(
+                                                child: Text(
+                                                  'Name',
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w600,
@@ -1025,106 +1156,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .brc_tablebooking_dark_text,
                                                   ),
                                                 ),
-                                                Text(
-                                                  'CREDIT BALANCE',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets
+                                                    .symmetric(
+                                                    horizontal: 8.0,
+                                                    vertical:
+                                                        4.0), // Adjust padding as needed
+                                                decoration: BoxDecoration(
+                                                  color: AppThemes
+                                                      .brc_not_available_bg,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.0), // Adjust border radius as needed
+                                                ),
+                                                child: Text(
+                                                  profileData.memberNameMale ??
+                                                      '',
+                                                  style: const TextStyle(
+                                                    fontSize:
+                                                        16, // Increase font size for highlighted text
                                                     fontWeight: FontWeight.w400,
                                                     color: AppThemes
-                                                        .brc_tablebooking_dark_text,
+                                                        .brc_spotsbooking_hint_text,
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                            Text(
-                                              '₹2000.00',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppThemes
-                                                    .brc_tablebooking_dark_text,
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                            height:
-                                                16), // Add some space between the row and the button
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Add your button onPressed logic here
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                AppThemes.getBackground(),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
+                                            ],
                                           ),
-                                          child: const Text(
-                                            'PAY NOW',
-                                            style: TextStyle(
-                                                color: AppThemes.brc_textcolor),
-                                          ), // Replace 'Click Me' with your button text
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  // Add content for the body here
-                                ],
-                              ),
-                            ),
-                          ),
-                        Container(
-                          width: double.infinity, // Adjust width as needed
-                          decoration: BoxDecoration(
-                            color: Webservice.appNickname != 'madhuban'
-                                ? AppThemes
-                                    .getBackground() // Color for the header
-                                : AppThemes
-                                    .getBackground(), // Transparent color if appNickname is 'madhuban'
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                              topRight: Radius.circular(12),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              widget.gender == 'male'
-                                  ? 'PERSONAL DETAILS'
-                                  : 'SPOUSE DETAILS',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppThemes.brc_textcolor,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppThemes.brc_profilecard_color,
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(4),
-                              topRight: Radius.circular(4),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (widget.gender != 'male')
+                                  if (widget.gender != 'male') const Divider(),
+                                  if (Webservice.appNickname != 'milleniumMams')
+                                    Padding(
+                                      padding: const EdgeInsets.all(6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              if (Webservice.appNickname !=
+                                                  'madhuban')
+                                                const Expanded(
+                                                  child: Text(
+                                                    'Date of Joining',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: AppThemes
+                                                          .brc_tablebooking_dark_text,
+                                                    ),
+                                                  ),
+                                                ),
+                                              if (Webservice.appNickname !=
+                                                  'madhuban')
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8.0,
+                                                      vertical:
+                                                          4.0), // Adjust padding as needed
+                                                  decoration: BoxDecoration(
+                                                    // Background color
+                                                    color: AppThemes
+                                                        .brc_not_available_bg,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4.0), // Adjust border radius as needed
+                                                  ),
+                                                  child: Text(
+                                                    profileData.memberMaleDob ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                      fontSize:
+                                                          16, // Increase font size for highlighted text
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppThemes
+                                                          .brc_spotsbooking_hint_text,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  if (Webservice.appNickname != 'milleniumMams')
+                                    if (Webservice.appNickname != 'madhuban')
+                                      const Divider(),
                                   Padding(
                                     padding: const EdgeInsets.all(6.0),
                                     child: Column(
@@ -1135,7 +1258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           children: [
                                             const Expanded(
                                               child: Text(
-                                                'Name',
+                                                'Date of Birth',
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
@@ -1151,14 +1274,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   vertical:
                                                       4.0), // Adjust padding as needed
                                               decoration: BoxDecoration(
+                                                // Background color
                                                 color: AppThemes
                                                     .brc_not_available_bg,
                                                 borderRadius: BorderRadius.circular(
                                                     4.0), // Adjust border radius as needed
                                               ),
                                               child: Text(
-                                                profileData.memberNameMale ??
-                                                    '',
+                                                profileData.memberMaleDob ?? '',
                                                 style: const TextStyle(
                                                   fontSize:
                                                       16, // Increase font size for highlighted text
@@ -1173,21 +1296,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ],
                                     ),
                                   ),
-                                if (widget.gender != 'male') const Divider(),
-                                if (Webservice.appNickname != 'milleniumMams')
-                                  Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            if (Webservice.appNickname !=
-                                                'madhuban')
+                                  const Divider(),
+                                  if (Webservice.appNickname == 'milleniumMams')
+                                    Padding(
+                                      padding: const EdgeInsets.all(6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
                                               const Expanded(
                                                 child: Text(
-                                                  'Date of Joining',
+                                                  'Chapter Name',
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w600,
@@ -1196,8 +1317,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   ),
                                                 ),
                                               ),
-                                            if (Webservice.appNickname !=
-                                                'madhuban')
                                               Container(
                                                 padding: const EdgeInsets
                                                     .symmetric(
@@ -1213,7 +1332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           4.0), // Adjust border radius as needed
                                                 ),
                                                 child: Text(
-                                                  profileData.memberMaleDob ??
+                                                  profileData.chapter_name ??
                                                       '',
                                                   style: const TextStyle(
                                                     fontSize:
@@ -1224,226 +1343,191 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   ),
                                                 ),
                                               ),
-                                          ],
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                if (Webservice.appNickname != 'milleniumMams')
-                                  if (Webservice.appNickname != 'madhuban')
+                                  if (Webservice.appNickname == 'milleniumMams')
                                     const Divider(),
-                                Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
+                                  if (Webservice.appNickname == 'milleniumMams')
+                                    Padding(
+                                      padding: const EdgeInsets.all(6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          const Expanded(
-                                            child: Text(
-                                              'Date of Birth',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppThemes
-                                                    .brc_tablebooking_dark_text,
+                                          Row(
+                                            children: [
+                                              const Expanded(
+                                                child: Text(
+                                                  'City',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppThemes
+                                                        .brc_tablebooking_dark_text,
+                                                  ),
+                                                ),
                                               ),
+                                              Container(
+                                                padding: const EdgeInsets
+                                                    .symmetric(
+                                                    horizontal: 8.0,
+                                                    vertical:
+                                                        4.0), // Adjust padding as needed
+                                                decoration: BoxDecoration(
+                                                  // Background color
+                                                  color: AppThemes
+                                                      .brc_not_available_bg,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.0), // Adjust border radius as needed
+                                                ),
+                                                child: Text(
+                                                  profileData.city ?? '',
+                                                  style: const TextStyle(
+                                                    fontSize:
+                                                        16, // Increase font size for highlighted text
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppThemes
+                                                        .brc_spotsbooking_hint_text,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  if (Webservice.appNickname == 'milleniumMams')
+                                    const Divider(),
+                                  if (Webservice.appNickname == 'milleniumMams')
+                                    Padding(
+                                      padding: const EdgeInsets.all(6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Expanded(
+                                                child: Text(
+                                                  'Country',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppThemes
+                                                        .brc_tablebooking_dark_text,
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                padding: const EdgeInsets
+                                                    .symmetric(
+                                                    horizontal: 8.0,
+                                                    vertical:
+                                                        4.0), // Adjust padding as needed
+                                                decoration: BoxDecoration(
+                                                  // Background color
+                                                  color: AppThemes
+                                                      .brc_not_available_bg,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.0), // Adjust border radius as needed
+                                                ),
+                                                child: Text(
+                                                  profileData.country ?? '',
+                                                  style: const TextStyle(
+                                                    fontSize:
+                                                        16, // Increase font size for highlighted text
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppThemes
+                                                        .brc_spotsbooking_hint_text,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  if (Webservice.appNickname == 'milleniumMams')
+                                    const Divider(),
+                                  GestureDetector(
+                                    onTap: () => _makePhoneCall(
+                                        profileData.memberMalePhone ?? ''),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            'Phone Number',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppThemes
+                                                  .brc_tablebooking_dark_text,
                                             ),
                                           ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0,
-                                                vertical:
-                                                    4.0), // Adjust padding as needed
-                                            decoration: BoxDecoration(
-                                              // Background color
+                                          Text(
+                                            profileData.memberMalePhone ?? '',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
                                               color: AppThemes
-                                                  .brc_not_available_bg,
-                                              borderRadius: BorderRadius.circular(
-                                                  4.0), // Adjust border radius as needed
-                                            ),
-                                            child: Text(
-                                              profileData.memberMaleDob ?? '',
-                                              style: const TextStyle(
-                                                fontSize:
-                                                    16, // Increase font size for highlighted text
-                                                fontWeight: FontWeight.w400,
-                                                color: AppThemes
-                                                    .brc_spotsbooking_hint_text,
-                                              ),
+                                                  .brc_tablebooking_dark_text,
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                const Divider(),
-                                if (Webservice.appNickname == 'milleniumMams')
-                                  Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Expanded(
-                                              child: Text(
-                                                'Chapter Name',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppThemes
-                                                      .brc_tablebooking_dark_text,
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 8.0,
-                                                  vertical:
-                                                      4.0), // Adjust padding as needed
-                                              decoration: BoxDecoration(
-                                                // Background color
-                                                color: AppThemes
-                                                    .brc_not_available_bg,
-                                                borderRadius: BorderRadius.circular(
-                                                    4.0), // Adjust border radius as needed
-                                              ),
-                                              child: Text(
-                                                profileData.chapter_name ?? '',
-                                                style: const TextStyle(
-                                                  fontSize:
-                                                      16, // Increase font size for highlighted text
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppThemes
-                                                      .brc_spotsbooking_hint_text,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
                                     ),
                                   ),
-                                if (Webservice.appNickname == 'milleniumMams')
                                   const Divider(),
-                                if (Webservice.appNickname == 'milleniumMams')
-                                  Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Expanded(
-                                              child: Text(
-                                                'City',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppThemes
-                                                      .brc_tablebooking_dark_text,
-                                                ),
-                                              ),
+                                  // if (Webservice.appNickname != 'madhuban')
+                                  GestureDetector(
+                                    onTap: () =>
+                                        _sendEmail(profileData.email ?? ''),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            'Email',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppThemes
+                                                  .brc_tablebooking_dark_text,
                                             ),
-                                            Container(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 8.0,
-                                                  vertical:
-                                                      4.0), // Adjust padding as needed
-                                              decoration: BoxDecoration(
-                                                // Background color
-                                                color: AppThemes
-                                                    .brc_not_available_bg,
-                                                borderRadius: BorderRadius.circular(
-                                                    4.0), // Adjust border radius as needed
-                                              ),
-                                              child: Text(
-                                                profileData.city ?? '',
-                                                style: const TextStyle(
-                                                  fontSize:
-                                                      16, // Increase font size for highlighted text
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppThemes
-                                                      .brc_spotsbooking_hint_text,
-                                                ),
-                                              ),
+                                          ),
+                                          Text(
+                                            profileData.email ?? '',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppThemes
+                                                  .brc_tablebooking_dark_text,
                                             ),
-                                          ],
-                                        ),
-                                      ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                if (Webservice.appNickname == 'milleniumMams')
+                                  // if (Webservice.appNickname != 'madhuban')
                                   const Divider(),
-                                if (Webservice.appNickname == 'milleniumMams')
                                   Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Expanded(
-                                              child: Text(
-                                                'Country',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppThemes
-                                                      .brc_tablebooking_dark_text,
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 8.0,
-                                                  vertical:
-                                                      4.0), // Adjust padding as needed
-                                              decoration: BoxDecoration(
-                                                // Background color
-                                                color: AppThemes
-                                                    .brc_not_available_bg,
-                                                borderRadius: BorderRadius.circular(
-                                                    4.0), // Adjust border radius as needed
-                                              ),
-                                              child: Text(
-                                                profileData.country ?? '',
-                                                style: const TextStyle(
-                                                  fontSize:
-                                                      16, // Increase font size for highlighted text
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppThemes
-                                                      .brc_spotsbooking_hint_text,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                if (Webservice.appNickname == 'milleniumMams')
-                                  const Divider(),
-                                GestureDetector(
-                                  onTap: () => _makePhoneCall(
-                                      profileData.memberMalePhone ?? ''),
-                                  child: Padding(
                                     padding: const EdgeInsets.all(6.0),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         const Text(
-                                          'Phone Number',
+                                          'Address',
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
@@ -1452,7 +1536,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                         ),
                                         Text(
-                                          profileData.memberMalePhone ?? '',
+                                          '${profileData.officeAddress ?? ''}', // Replace with actual address
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400,
@@ -1463,100 +1547,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ],
                                     ),
                                   ),
-                                ),
-                                const Divider(),
-                                // if (Webservice.appNickname != 'madhuban')
-                                GestureDetector(
-                                  onTap: () =>
-                                      _sendEmail(profileData.email ?? ''),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(6.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'Email',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppThemes
-                                                .brc_tablebooking_dark_text,
-                                          ),
-                                        ),
-                                        Text(
-                                          profileData.email ?? '',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppThemes
-                                                .brc_tablebooking_dark_text,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                // if (Webservice.appNickname != 'madhuban')
-                                const Divider(),
-                                Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Address',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppThemes
-                                              .brc_tablebooking_dark_text,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${profileData.officeAddress ?? ''}', // Replace with actual address
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppThemes
-                                              .brc_tablebooking_dark_text,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const Divider(),
-                              ],
+                                  const Divider(),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: double.infinity, // Adjust width as needed
+                          Container(
+                            width: double.infinity, // Adjust width as needed
 
-                          decoration: BoxDecoration(
-                            color: AppThemes.getBackground(),
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(12),
-                              bottomRight: Radius.circular(12),
-                            ), // Color for the header
+                            decoration: BoxDecoration(
+                              color: AppThemes.getBackground(),
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(12),
+                                bottomRight: Radius.circular(12),
+                              ), // Color for the header
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(10.0),
+                            ),
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(10.0),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                if (widget.gender == 'male')
-                  _buildFemaleSpecificContainer(profileData, 'male'),
-              ],
-            );
-          } else {
-            return const Center(child: Text('No profile data found'));
-          }
-        },
+                  if (widget.gender == 'male')
+                    _buildFemaleSpecificContainer(profileData, 'male'),
+                ],
+              );
+            } else {
+              return const Center(child: Text('No profile data found'));
+            }
+          },
+        ),
       ),
     );
   }

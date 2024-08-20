@@ -48,6 +48,15 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppThemes.brc_textcolor,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: SlideTransition(
           position: _offsetAnimation,
           child: const Text(
@@ -55,6 +64,7 @@ class _LoginScreenState extends State<LoginScreen>
             style: TextStyle(color: AppThemes.brc_textcolor),
           ),
         ),
+
         backgroundColor: Webservice.appNickname == 'forcempower'
             ? AppThemes.brc_background
             : AppThemes
@@ -122,49 +132,20 @@ class _LoginScreenState extends State<LoginScreen>
               ),
             ),
             // Buttons Row
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: SlideTransition(
-                    position: _offsetAnimation,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Navigate and replace the current page with login input page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginInputScreen(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Webservice.appNickname == 'forcempower'
-                            ? AppThemes.brc_background
-                            : AppThemes
-                                .getBackground(), // Use custom primary color from light theme
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text('Login',
-                          style: TextStyle(color: AppThemes.brc_textcolor)),
-                    ),
-                  ),
-                ),
-                if (widget.shouldShowRegisterButton)
-                  const SizedBox(width: 16), // Add spacing between buttons
-                if (widget.shouldShowRegisterButton)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
                   Expanded(
                     child: SlideTransition(
                       position: _offsetAnimation,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Navigate to the register input page
+                          // Navigate and replace the current page with login input page
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const RegisterInputScreen(),
+                              builder: (context) => const LoginInputScreen(),
                             ),
                           );
                         },
@@ -179,12 +160,46 @@ class _LoginScreenState extends State<LoginScreen>
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        child: const Text('Register',
+                        child: const Text('Login',
                             style: TextStyle(color: AppThemes.brc_textcolor)),
                       ),
                     ),
                   ),
-              ],
+                  if (widget.shouldShowRegisterButton)
+                    const SizedBox(width: 16), // Add spacing between buttons
+                  if (widget.shouldShowRegisterButton)
+                    Expanded(
+                      child: SlideTransition(
+                        position: _offsetAnimation,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Navigate to the register input page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const RegisterInputScreen(),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Webservice.appNickname ==
+                                    'forcempower'
+                                ? AppThemes.brc_background
+                                : AppThemes
+                                    .getBackground(), // Use custom primary color from light theme
+                            minimumSize: const Size(double.infinity, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text('Register',
+                              style: TextStyle(color: AppThemes.brc_textcolor)),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ],
         ),

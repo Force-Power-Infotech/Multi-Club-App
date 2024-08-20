@@ -26,6 +26,13 @@ class _EventsScreenState extends State<EventsScreen> {
     _eventDetailsFuture = EventAPI.details();
   }
 
+  Future<void> _refreshEvents() async {
+    // Fetch event details again
+    setState(() {
+      _eventDetailsFuture = EventAPI.details();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,171 +58,143 @@ class _EventsScreenState extends State<EventsScreen> {
         ),
         centerTitle: true,
       ),
-      body: FutureBuilder<EventAPI>(
-        future: _eventDetailsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child:
-                  CircularProgressIndicator(), // Show loading indicator while fetching data
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                  'Error: ${snapshot.error}'), // Show error message if fetching data fails
-            );
-          } else {
-            // Once data is fetched successfully, display the events
-            return ListView(
-              children: [
-                if (Webservice.appNickname != 'madhuban' &&
-                    Webservice.appNickname != 'milleNniumMams')
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 32),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 145,
-                          height: 31,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedOption = 'past';
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: selectedOption == 'past'
-                                  ? AppThemes.getBackground()
-                                  : AppThemes.brc_textcolor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
+      body: RefreshIndicator(
+        onRefresh: _refreshEvents,
+        child: FutureBuilder<EventAPI>(
+          future: _eventDetailsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child:
+                    CircularProgressIndicator(), // Show loading indicator while fetching data
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                    'Error: ${snapshot.error}'), // Show error message if fetching data fails
+              );
+            } else {
+              // Once data is fetched successfully, display the events
+              return ListView(
+                children: [
+                  if (Webservice.appNickname != 'madhuban' &&
+                      Webservice.appNickname != 'milleNniumMams')
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 32),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            width: 145,
+                            height: 31,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedOption = 'past';
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: selectedOption == 'past'
+                                    ? AppThemes.getBackground()
+                                    : AppThemes.brc_textcolor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                fixedSize: const Size(
+                                    120, 40), // Set fixed width and height
+                                elevation: 5, // Add elevation for shadow effect
                               ),
-                              fixedSize: const Size(
-                                  120, 40), // Set fixed width and height
-                              elevation: 5, // Add elevation for shadow effect
-                            ),
-                            child: Text(
-                              'PAST',
-                              style: TextStyle(
-                                color: selectedOption == 'past'
-                                    ? Colors.white
-                                    : AppThemes.brc_spotsbooking_hint_text,
-                                fontSize: 14,
-                                fontWeight: selectedOption == 'past'
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 2),
-                        SizedBox(
-                          height: 31,
-                          width: 145,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedOption = 'present';
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: selectedOption == 'present'
-                                  ? AppThemes.getBackground()
-                                  : AppThemes.brc_textcolor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              fixedSize: const Size(120, 40),
-                              elevation: 5, // Add elevation for shadow effect
-                            ),
-                            child: Text(
-                              'ONGOING',
-                              style: TextStyle(
-                                color: selectedOption == 'present'
-                                    ? Colors.white
-                                    : AppThemes.brc_spotsbooking_hint_text,
-                                fontSize: 14,
-                                fontWeight: selectedOption == 'present'
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
+                              child: Text(
+                                'PAST',
+                                style: TextStyle(
+                                  color: selectedOption == 'past'
+                                      ? Colors.white
+                                      : AppThemes.brc_spotsbooking_hint_text,
+                                  fontSize: 14,
+                                  fontWeight: selectedOption == 'past'
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 2),
-                        // Material(
-                        //   elevation: 5, // Set elevation for shadow effect
-                        //   borderRadius:
-                        //       BorderRadius.circular(4), // Set round edges
-                        //   child: Container(
-                        //     width: 31,
-                        //     height: 31,
-                        //     decoration: BoxDecoration(
-                        //       color: AppThemes
-                        //           .getBackground(), // Set background color
-                        //       borderRadius:
-                        //           BorderRadius.circular(4), // Set round edges
-                        //     ),
-                        //     child: IconButton(
-                        //       padding: EdgeInsets.zero,
-                        //       color: AppThemes.brc_textcolor,
-                        //       onPressed: () {
-                        //         // Add onPressed action for square button
-                        //       },
-                        //       icon: const Icon(
-                        //         Icons.filter_alt,
-                        //         size: 28,
-                        //         fill: 0.5,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
+                          const SizedBox(width: 2),
+                          SizedBox(
+                            height: 31,
+                            width: 145,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedOption = 'present';
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: selectedOption == 'present'
+                                    ? AppThemes.getBackground()
+                                    : AppThemes.brc_textcolor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                fixedSize: const Size(120, 40),
+                                elevation: 5, // Add elevation for shadow effect
+                              ),
+                              child: Text(
+                                'ONGOING',
+                                style: TextStyle(
+                                  color: selectedOption == 'present'
+                                      ? Colors.white
+                                      : AppThemes.brc_spotsbooking_hint_text,
+                                  fontSize: 14,
+                                  fontWeight: selectedOption == 'present'
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 2),
+                        ],
+                      ),
                     ),
-                  ),
-                Column(
-                  children: [
-                    if (snapshot.data != null &&
-                        snapshot.data!.eventDetails != null) ...[
-                      if (Webservice.appNickname == 'madhuban')
-                        Column(
-                          children: snapshot.data!.eventDetails!
-                              .map((event) => EventCards(event: event))
-                              .toList(),
-                        ),
-                      if (Webservice.appNickname != 'madhuwan')
-                        if (selectedOption == 'past')
+                  Column(
+                    children: [
+                      if (snapshot.data != null &&
+                          snapshot.data!.eventDetails != null) ...[
+                        if (Webservice.appNickname == 'madhuban')
                           Column(
                             children: snapshot.data!.eventDetails!
-                                .where((event) => event.status == 'past')
                                 .map((event) => EventCards(event: event))
                                 .toList(),
                           ),
-                      if (Webservice.appNickname != 'madhuwan')
-                        if (selectedOption == 'present')
-                          Column(
-                            children: snapshot.data!.eventDetails!
-                                .where((event) => event.status == 'present')
-                                .map((event) => EventCards(event: event))
-                                .toList(),
-                          ),
-                      // if (Webservice.appNickname != 'madhuwan')
-                      //   if (selectedOption != 'Club' &&
-                      //       snapshot.data!.eventDetails!.isNotEmpty)
-                      //     eventCards(event: snapshot.data!.eventDetails!.first),
+                        if (Webservice.appNickname != 'madhuwan')
+                          if (selectedOption == 'past')
+                            Column(
+                              children: snapshot.data!.eventDetails!
+                                  .where((event) => event.status == 'past')
+                                  .map((event) => EventCards(event: event))
+                                  .toList(),
+                            ),
+                        if (Webservice.appNickname != 'madhuwan')
+                          if (selectedOption == 'present')
+                            Column(
+                              children: snapshot.data!.eventDetails!
+                                  .where((event) => event.status == 'present')
+                                  .map((event) => EventCards(event: event))
+                                  .toList(),
+                            ),
+                      ],
+                      if (snapshot.data == null ||
+                          snapshot.data!.eventDetails == null ||
+                          snapshot.data!.eventDetails!.isEmpty)
+                        const Text('No event details available'),
                     ],
-                    if (snapshot.data == null ||
-                        snapshot.data!.eventDetails == null ||
-                        snapshot.data!.eventDetails!.isEmpty)
-                      const Text('No event details available'),
-                  ],
-                ),
-              ],
-            );
-          }
-        },
+                  ),
+                ],
+              );
+            }
+          },
+        ),
       ),
     );
   }

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:multi_club_app/bases/api/delete_acount.dart';
+import 'package:multi_club_app/bases/api/delete_button_show.dart';
 import 'package:multi_club_app/bases/api/profile_edit.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+import 'package:multi_club_app/screens/login_screen.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   const ProfileEditScreen({Key? key}) : super(key: key);
@@ -14,6 +18,8 @@ class ProfileEditScreen extends StatefulWidget {
 }
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
+  bool _showDeleteButton = false; // Control visibility of the delete button
+
   late Future<ProfieviewAPI> _profileData;
 
   late TextEditingController _nameController;
@@ -39,7 +45,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   @override
   void initState() {
     super.initState();
-
+    fetchDeleteButtonStatus();
     // Initialize controllers
     _nameController = TextEditingController();
     _membershipController = TextEditingController();
@@ -70,6 +76,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       print('Error fetching profile data: $error');
       // Handle the error accordingly
     });
+  }
+
+  Future<void> fetchDeleteButtonStatus() async {
+    try {
+      DeleteButtonShowApi response = await DeleteButtonShowApi.directory();
+      setState(() {
+        _showDeleteButton = response.action == "YES";
+      });
+    } catch (e) {
+      print('Error fetching delete button status: $e');
+      // Handle error, e.g., show a message or log the error
+    }
   }
 
   @override
@@ -643,71 +661,170 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 Padding(
                   padding: const EdgeInsets.only(
                       bottom: 64.0, left: 32, right: 32, top: 32),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      // Retrieve text from controllers
-                      // String email = _emailController.text;
-                      String address = _addressController.text.isNotEmpty
-                          ? _addressController.text
-                          : (profile.officeAddress ?? '');
-                      String email = _emailController.text.isNotEmpty
-                          ? _emailController.text
-                          : (profile.email ?? '');
-                      // Call the API to post data
-                      try {
-                        ProfileEditAPI response = await ProfileEditAPI.details(
-                            email, address, _image);
-                        // Handle the response here if needed
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              '${response.processMessage}',
-                              style: const TextStyle(
-                                  color: AppThemes.brc_textcolor),
-                            ),
-                            backgroundColor: AppThemes.brc_otp_success,
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                        print('API response: ${response}');
-                      } catch (e) {
-                        // Handle any errors
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              '$e',
-                              style: const TextStyle(
-                                  color: AppThemes.brc_textcolor),
-                            ),
-                            backgroundColor: AppThemes.brc_otp_error,
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                        print('Error posting data: $e');
-                      }
+                  child: Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          // Retrieve text from controllers
+                          // String email = _emailController.text;
+                          String address = _addressController.text.isNotEmpty
+                              ? _addressController.text
+                              : (profile.officeAddress ?? '');
+                          String email = _emailController.text.isNotEmpty
+                              ? _emailController.text
+                              : (profile.email ?? '');
+                          // Call the API to post data
+                          try {
+                            ProfileEditAPI response =
+                                await ProfileEditAPI.details(
+                                    email, address, _image);
+                            // Handle the response here if needed
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${response.processMessage}',
+                                  style: const TextStyle(
+                                      color: AppThemes.brc_textcolor),
+                                ),
+                                backgroundColor: AppThemes.brc_otp_success,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                            Navigator.of(context)
+                                .pop(); // Navigate back to the previous page
 
-                      // Add your update logic here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppThemes.getLightColor(),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            8.0), // Adjust the border radius as needed
-                      ),
-                    ),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: const Center(
-                        child: Text(
-                          'UPDATE',
-                          style: TextStyle(
-                              fontSize: 16.0), // Adjust the font size as needed
+                            print('API response: ${response}');
+                          } catch (e) {
+                            // Handle any errors
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '$e',
+                                  style: const TextStyle(
+                                      color: AppThemes.brc_textcolor),
+                                ),
+                                backgroundColor: AppThemes.brc_otp_error,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                            print('Error posting data: $e');
+                          }
+
+                          // Add your update logic here
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppThemes.getLightColor(),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                8.0), // Adjust the border radius as needed
+                          ),
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          child: const Center(
+                            child: Text(
+                              'UPDATE',
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: AppThemes
+                                      .brc_textcolor), // Adjust the font size as needed
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 16.0, // Add some space between buttons
+                      ),
+                      if (_showDeleteButton)
+                        ElevatedButton(
+                          onPressed: () async {
+                            // Assuming you have the userid and phonenumber variables ready
+                            String userid = profile.membershipCode ??
+                                ''; // Replace with actual user ID
+                            String phonenumber = profile.memberMalePhone ??
+                                ''; // Replace with actual phone number
+
+                            try {
+                              // Call the DeleteAccountApi to delete the account
+                              DeleteAccountApi response =
+                                  await DeleteAccountApi.deleteaccount(
+                                      userid, phonenumber);
+
+                              // Check the response and show appropriate message
+                              if (response.status == 'success') {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Account deleted status: ${response.status}',
+                                      style: const TextStyle(
+                                          color: AppThemes.brc_textcolor),
+                                    ),
+                                    backgroundColor: AppThemes.brc_otp_success,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Failed to delete account: ${response.message}, try logging in again !!',
+                                      style: const TextStyle(
+                                          color: AppThemes.brc_textcolor),
+                                    ),
+                                    backgroundColor: AppThemes.brc_otp_error,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              // Handle any errors
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Error: $e',
+                                    style: const TextStyle(
+                                        color: AppThemes.brc_textcolor),
+                                  ),
+                                  backgroundColor: AppThemes.brc_otp_error,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                              print('Error deleting account: $e');
+                            }
+
+                            // Add your update logic here if needed
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppThemes.getLightColor(),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Adjust the border radius as needed
+                            ),
+                          ),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: const Center(
+                              child: Text(
+                                'DELETE PROFILE',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: AppThemes
+                                      .brc_textcolor, // Adjust the font size as needed
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
+                // add a delete button here below the update button
               ],
             );
           } else {

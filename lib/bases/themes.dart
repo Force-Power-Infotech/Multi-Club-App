@@ -39,7 +39,7 @@ class AppThemes {
 
   // Constants for CSC theme
   static const Color mm_background = Color(0xFFdc2228);
-  static const Color mm_light_card = Color(0xFFd47476);
+  static const Color mm_light_card = Color.fromARGB(255, 238, 222, 222);
 
   // Constants for Madhuwan theme
   static const Color madhuwan_background = Color(0xFF2d2d92);

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/api/register.dart';
 import 'package:multi_club_app/bases/themes.dart';
@@ -30,7 +29,7 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Webservice.appNickname == 'forcempower'
-            ? AppThemes.brc_background
+            ? AppThemes.getBackground()
             : AppThemes.getBackground(),
         elevation: 0,
         leading: IconButton(
@@ -94,6 +93,7 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                           _buildTextField(
                             controller: _firstNameController,
                             labelText: 'First Name',
+                            icon: Icons.person,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your first name';
@@ -104,10 +104,12 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                           _buildTextField(
                             controller: _middleNameController,
                             labelText: 'Middle Name',
+                            icon: Icons.person_outline,
                           ),
                           _buildTextField(
                             controller: _lastNameController,
                             labelText: 'Last Name',
+                            icon: Icons.person,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your last name';
@@ -118,6 +120,7 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                           _buildTextField(
                             controller: _phoneNumberController,
                             labelText: 'Phone Number',
+                            icon: Icons.phone,
                             keyboardType: TextInputType.phone,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -129,6 +132,7 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                           _buildTextField(
                             controller: _emailController,
                             labelText: 'Email',
+                            icon: Icons.email,
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -200,7 +204,7 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   Webservice.appNickname == 'forcempower'
-                                      ? AppThemes.brc_background
+                                      ? AppThemes.getBackground()
                                       : AppThemes.getBackground(),
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
@@ -231,6 +235,7 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
   Widget _buildTextField({
     required TextEditingController controller,
     required String labelText,
+    required IconData icon,
     TextInputType keyboardType = TextInputType.text,
     String? Function(String?)? validator,
   }) {
@@ -243,13 +248,14 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
           labelText: labelText,
           labelStyle:
               const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          prefixIcon: Icon(icon, color: AppThemes.getBackground()),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
                 color: Webservice.appNickname == 'forcempower'
-                    ? AppThemes.brc_background
+                    ? AppThemes.getBackground()
                     : AppThemes.getBackground(),
                 width: 2),
             borderRadius: BorderRadius.circular(12),
