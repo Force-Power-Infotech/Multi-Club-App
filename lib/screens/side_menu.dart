@@ -268,7 +268,8 @@ class SideMenu extends StatelessWidget {
                     onTap: () {
                       // Update UI based on item selected from the drawer
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => GalleryWebView(),
+                        // builder: (_) => GalleryWebView(),
+                        builder: (_) => GalleryScreen(),
                       ));
                     },
                     child: const Text(
