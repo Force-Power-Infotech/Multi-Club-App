@@ -66,7 +66,7 @@ class _SplashScreenmillenniumMamsState extends State<SplashScreenmillenniumMams>
         ));
       } else {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => LoginWebViewScreen(),
+          builder: (_) => LoginScreen(),
         ));
       }
     });
