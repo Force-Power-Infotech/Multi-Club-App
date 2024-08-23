@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/screens/home_screen%20_millenniummams.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
+import 'package:multi_club_app/screens/login_webview%20screen.dart';
 
 class SplashScreenmillenniumMams extends StatefulWidget {
   const SplashScreenmillenniumMams({Key? key}) : super(key: key);
@@ -65,7 +66,7 @@ class _SplashScreenmillenniumMamsState extends State<SplashScreenmillenniumMams>
         ));
       } else {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
+          builder: (_) => LoginWebViewScreen(),
         ));
       }
     });
