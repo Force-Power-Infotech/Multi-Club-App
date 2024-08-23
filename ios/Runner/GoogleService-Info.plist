@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDiI97zSzTGEuFPph6uEHc3aj2x3knl5uY</string>
+	<string>AIzaSyB_1MNzTjOFSda5U4M1d8Vpdn5OfWJLyZk</string>
 	<key>GCM_SENDER_ID</key>
-	<string>969024558922</string>
+	<string>1042644907370</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.forcepower.multiClubApp</string>
+	<string>com.forcepower.MillenniumMams</string>
 	<key>PROJECT_ID</key>
-	<string>millenniummams-7fca8</string>
+	<string>millenniummams-c7c65</string>
 	<key>STORAGE_BUCKET</key>
-	<string>millenniummams-7fca8.appspot.com</string>
+	<string>millenniummams-c7c65.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:969024558922:ios:13cbe0b1293cfd0e04d3b3</string>
+	<string>1:1042644907370:ios:6dbba96c56b7acbe04a113</string>
 </dict>
 </plist>
