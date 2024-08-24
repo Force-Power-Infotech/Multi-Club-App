@@ -127,6 +127,7 @@ class _MyAppState extends State<MyApp> {
     String appNickname = Webservice.appNickname; // Get the app nickname
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: appName[appNickname] ?? 'DefaultAppName', // Fallback title
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
