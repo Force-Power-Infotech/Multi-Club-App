@@ -475,62 +475,64 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                   ),
                                 if (Webservice.appNickname != 'milleniumMams')
                                   const Divider(),
-                                Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Expanded(
-                                            child: Text(
-                                              'Date of Birth',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppThemes
-                                                    .brc_tablebooking_dark_text,
+                                if (Webservice.appNickname != 'milleniumMams')
+                                  Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Expanded(
+                                              child: Text(
+                                                'Date of Birth',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppThemes
+                                                      .brc_tablebooking_dark_text,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                              width:
-                                                  12.0), // Add some space between text and text field
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0,
-                                                vertical:
-                                                    4.0), // Adjust padding as needed
-                                            decoration: BoxDecoration(
-                                              // Background color
-                                              color: AppThemes
-                                                  .brc_not_available_bg,
-                                              borderRadius: BorderRadius.circular(
-                                                  4.0), // Adjust border radius as needed
-                                            ),
-                                            child: Text(
-                                              profile.memberMaleDob != null &&
-                                                      profile.memberMaleDob!
-                                                          .isNotEmpty
-                                                  ? '${profile.memberMaleDob}'
-                                                  : 'N/A',
-                                              style: const TextStyle(
-                                                fontSize:
-                                                    16, // Increase font size for highlighted text
-                                                fontWeight: FontWeight.w400,
+                                            const SizedBox(
+                                                width:
+                                                    12.0), // Add some space between text and text field
+                                            Container(
+                                              padding: const EdgeInsets
+                                                  .symmetric(
+                                                  horizontal: 8.0,
+                                                  vertical:
+                                                      4.0), // Adjust padding as needed
+                                              decoration: BoxDecoration(
+                                                // Background color
                                                 color: AppThemes
-                                                    .brc_tablebooking_dark_text,
+                                                    .brc_not_available_bg,
+                                                borderRadius: BorderRadius.circular(
+                                                    4.0), // Adjust border radius as needed
+                                              ),
+                                              child: Text(
+                                                profile.memberMaleDob != null &&
+                                                        profile.memberMaleDob!
+                                                            .isNotEmpty
+                                                    ? '${profile.memberMaleDob}'
+                                                    : 'N/A',
+                                                style: const TextStyle(
+                                                  fontSize:
+                                                      16, // Increase font size for highlighted text
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppThemes
+                                                      .brc_tablebooking_dark_text,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-
-                                const Divider(),
+                                if (Webservice.appNickname != 'milleniumMams')
+                                  const Divider(),
                                 // Phone Number
                                 Padding(
                                   padding: const EdgeInsets.all(6.0),
@@ -603,40 +605,43 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                 // if (Webservice.appNickname != 'madhuban')
                                 const Divider(),
                                 // Address
-                                Padding(
-                                  padding: const EdgeInsets.all(6.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Address',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppThemes
-                                              .brc_tablebooking_dark_text,
+                                if (Webservice.appNickname != 'milleniumMams')
+                                  Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Address',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppThemes
+                                                .brc_tablebooking_dark_text,
+                                          ),
                                         ),
-                                      ),
-                                      TextField(
-                                        controller: _addressController,
-                                        decoration: InputDecoration(
-                                          hintText: '${profile.officeAddress}',
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none,
+                                        TextField(
+                                          controller: _addressController,
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                '${profile.officeAddress}',
+                                            hintStyle:
+                                                TextStyle(color: Colors.grey),
+                                            border: InputBorder.none,
+                                          ),
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppThemes
+                                                .brc_tablebooking_dark_text,
+                                          ),
                                         ),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppThemes
-                                              .brc_tablebooking_dark_text,
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                const Divider(),
+                                if (Webservice.appNickname != 'milleniumMams')
+                                  const Divider(),
                               ],
                             ),
                           ),

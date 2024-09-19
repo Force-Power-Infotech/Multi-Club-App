@@ -51,7 +51,7 @@ class EventAPI {
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
-    // print('in api code ${responseString}');
+    print('in event api code ${responseString}');
     return EventAPI.fromJson(jsonDecode(responseString));
   }
 }

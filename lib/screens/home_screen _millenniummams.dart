@@ -176,79 +176,8 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                     ));
                   },
                 ),
-                // IconButton(
-                //   icon: Image.asset(
-                //     'assets/images/helpdesk.png',
-                //     width: 20,
-                //     height: 20,
-                //     color: AppThemes.brc_textcolor,
-                //   ),
-                //   onPressed: () {
-                //     // Add onPressed action for the helpdesk icon
-                //     Navigator.of(context).push(MaterialPageRoute(
-                //       builder: (_) => const HelpdeskScreen(),
-                //     ));
-                //   },
-                // ),
               ],
             ),
-            if (Webservice.appNickname != 'milleniumMams')
-              Container(
-                padding:
-                    const EdgeInsets.only(left: 40.0, right: 40, bottom: 5),
-                decoration: BoxDecoration(
-                  color: AppThemes.getBackground(),
-                ),
-                child: FutureBuilder<SponsorAPI>(
-                  future: SponsorAPI.details(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      List<String> imageUrls = snapshot.data?.images ?? [];
-                      String firstImageUrl = imageUrls.isNotEmpty
-                          ? imageUrls.first
-                          : ''; // Get the first image URL
-                      List<String> hyperlinks = snapshot.data?.hyperlinks ?? [];
-                      String firstHyperlink = hyperlinks.isNotEmpty
-                          ? hyperlinks.first
-                          : ''; // Get the first hyperlink
-                      return GestureDetector(
-                        onTap: () {
-                          // Redirect to the first hyperlink when tapped
-                          if (firstHyperlink.isNotEmpty) {
-                            // Add logic here to handle redirection
-                            launch(firstHyperlink);
-                          }
-                        },
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: AppThemes.mm_light_card,
-                            borderRadius: BorderRadius.circular(5),
-                            image: firstImageUrl.isNotEmpty
-                                ? DecorationImage(
-                                    image: NetworkImage(firstImageUrl),
-                                    fit: BoxFit.contain,
-                                  )
-                                : null, // Use DecorationImage only if first image URL is available
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
-            // if (Webservice.appNickname == 'milleniumMams')
-            //   Container(
-            //     height: 55,
-            //     decoration: BoxDecoration(
-            //       color: AppThemes.getBackground(),
-            //       // borderRadius: BorderRadius.circular(5),
-            //     ),
-            //   ),
           ],
         ),
       ),
@@ -350,7 +279,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                                                     return child;
                                                   } else {
                                                     // Optionally, you can return a loading indicator while the image is loading
-                                                    return Center(
+                                                    return const Center(
                                                       child:
                                                           CircularProgressIndicator(),
                                                     );
@@ -420,129 +349,6 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                         const SizedBox(
                             height:
                                 15), // Add space above the first line of text
-                        // const Padding(
-                        //   padding: EdgeInsets.only(
-                        //       left: 16.0), // Adjust left padding as needed
-                        //   child: Text(
-                        //     'Recent Birthdays ', // Text above the boxes
-                        //     style: TextStyle(
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.w600,
-                        //     ), // Adjust font size as needed
-                        //   ),
-                        // ),
-                        // Add space between the lines of text
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        //   child: Container(
-                        //     decoration: BoxDecoration(
-                        //       color: AppThemes.brc_textcolor,
-                        //       borderRadius: BorderRadius.circular(8),
-                        //     ),
-                        //     height:
-                        //         190, // Adjust the height of the container as needed
-                        //     child: FutureBuilder<DobAPI>(
-                        //       future: DobAPI
-                        //           .details(), // Calling the asynchronous method
-                        //       builder: (context, snapshot) {
-                        //         if (snapshot.connectionState ==
-                        //             ConnectionState.waiting) {
-                        //           // Show loading indicator while waiting for data
-                        //           return Center(
-                        //               child: CircularProgressIndicator());
-                        //         } else if (snapshot.hasError) {
-                        //           // Show error message if there's an error
-                        //           return Center(
-                        //               child: Text('Error: ${snapshot.error}'));
-                        //         } else {
-                        //           // Once data is loaded, display the ListView
-                        //           final memberNames =
-                        //               snapshot.data?.memberName ?? [];
-                        //           return ListView.builder(
-                        //             itemCount: memberNames.length,
-                        //             itemBuilder: (context, index) {
-                        //               final name = memberNames[index];
-                        //               return Padding(
-                        //                 padding: const EdgeInsets.all(16.0),
-                        //                 child: Row(
-                        //                   mainAxisAlignment:
-                        //                       MainAxisAlignment.spaceBetween,
-                        //                   children: [
-                        //                     Column(
-                        //                       crossAxisAlignment:
-                        //                           CrossAxisAlignment.start,
-                        //                       children: [
-                        //                         Text(
-                        //                           name,
-                        //                           style: const TextStyle(
-                        //                             fontSize: 16,
-                        //                             fontWeight: FontWeight.bold,
-                        //                             color: AppThemes
-                        //                                 .brc_helpdesk_text_color,
-                        //                           ),
-                        //                         ),
-                        //                         const Text(
-                        //                           'Member ID: efve',
-                        //                           style: TextStyle(
-                        //                             fontSize: 12,
-                        //                             color: AppThemes
-                        //                                 .brc_helpdesk_text_color,
-                        //                           ),
-                        //                         ),
-                        //                       ],
-                        //                     ),
-                        //                     ElevatedButton(
-                        //                       onPressed: () {
-                        //                         launchWhatsApp(
-                        //                             context,
-                        //                             "1234567890",
-                        //                             "Hello, this is a test message!");
-                        //                       },
-                        //                       style: ButtonStyle(
-                        //                         padding:
-                        //                             MaterialStateProperty.all(
-                        //                           EdgeInsets.zero,
-                        //                         ), // Remove padding
-                        //                         backgroundColor:
-                        //                             MaterialStateProperty.all(
-                        //                           Colors.transparent,
-                        //                         ), // Transparent background
-                        //                         elevation:
-                        //                             MaterialStateProperty.all(
-                        //                           0,
-                        //                         ), // Remove shadow
-                        //                       ),
-                        //                       child: Ink(
-                        //                         decoration: BoxDecoration(
-                        //                           borderRadius:
-                        //                               BorderRadius.circular(8),
-                        //                           color: AppThemes
-                        //                               .brc_gradient_light_color,
-                        //                         ),
-                        //                         child: const Padding(
-                        //                           padding: EdgeInsets.all(8.0),
-                        //                           child: Row(
-                        //                             mainAxisAlignment:
-                        //                                 MainAxisAlignment
-                        //                                     .center,
-                        //                             children: [
-                        //                               Icon(Icons
-                        //                                   .message), // Icon for WhatsApp
-                        //                             ],
-                        //                           ),
-                        //                         ),
-                        //                       ),
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //               );
-                        //             },
-                        //           );
-                        //         }
-                        //       },
-                        //     ),
-                        //   ),
-                        // ),
 
                         const SizedBox(height: 20),
                         Padding(
@@ -595,12 +401,29 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                             } else {
                               // Data has been successfully fetched
                               final eventAPI = snapshot.data;
+
                               // Check if eventAPI or eventAPI.eventDetails is null before accessing it
                               if (eventAPI != null &&
                                   eventAPI.eventDetails != null) {
-                                // Use the event data to populate the home_event_card widgets
+                                // Filter the events based on the 'status'
+                                List<EventDetails> filteredEvents = eventAPI
+                                    .eventDetails!
+                                    .where((event) =>
+                                        event.status ==
+                                        'present') // Adjust this condition based on your actual status logic
+                                    .toList();
+
+                                if (filteredEvents.isEmpty) {
+                                  // No events with the desired status, show 'No upcoming events'
+                                  return const Center(
+                                    child: Text('No upcoming events'),
+                                  );
+                                }
+
+                                // Show the first three events (or fewer if there are less than 3)
                                 List<EventDetails> firstThreeEvents =
-                                    eventAPI.eventDetails!.take(3).toList();
+                                    filteredEvents.take(3).toList();
+
                                 return Padding(
                                   padding: const EdgeInsets.all(15.0),
                                   child: Column(
@@ -621,23 +444,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
 
                         const SizedBox(
                             height:
-                                15), // Add space above the first line of text
-                        if (Webservice.appNickname != 'milleniumMams')
-                          const Padding(
-                            padding: EdgeInsets.only(
-                                left: 16.0), // Adjust left padding as needed
-                            child: Text(
-                              'Privilege', // Text above the boxes
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ), // Adjust font size as needed
-                            ),
-                          ),
-                        if (Webservice.appNickname != 'milleniumMams')
-                          CarouselWidget()
-
-                        // Add space between the lines of text
+                                50), // Add space above the first line of text
                       ],
                     ),
                   ),
@@ -653,23 +460,6 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.only(bottom: 8.0),
-            //   child: Container(
-            //     height: 30, // Height of the red bar
-            //     decoration: BoxDecoration(
-            //       color: Colors.transparent, // Red color for the bar
-            //       borderRadius: BorderRadius.circular(5), // Round edges
-            //       image: DecorationImage(
-            //         image: AssetImage(
-            //             'assets/images/demo-logo.png'), // Path to your image asset
-            //         fit: BoxFit
-            //             .contain, // Cover the entire container with the image
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            if (Webservice.appNickname != 'milleniumMams') SlideshowWidget(),
             Container(
               decoration: BoxDecoration(
                 boxShadow: [
@@ -693,11 +483,11 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      HomeScreenBottomIcon(
-                        asset: 'assets/images/home.png',
-                        label: 'Home',
-                        wheretoGo: () => const HomeScreenMillenniumMams(),
-                      ),
+                      // HomeScreenBottomIcon(
+                      //   asset: 'assets/images/home.png',
+                      //   label: 'Home',
+                      //   wheretoGo: () => const HomeScreenMillenniumMams(),
+                      // ),
                       HomeScreenBottomIcon(
                         asset: 'assets/images/mybooking.png',
                         label: 'Events',
