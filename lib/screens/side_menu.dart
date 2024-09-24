@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
+import 'package:multi_club_app/screens/about_screen.dart';
 import 'package:multi_club_app/screens/activities_screen.dart';
 import 'package:multi_club_app/screens/events_screen.dart';
 import 'package:multi_club_app/screens/gallery_screen.dart';
@@ -42,7 +43,7 @@ class SideMenu extends StatelessWidget {
     if (Webservice.appNickname == 'madhuban') {
       facebookUrl = 'https://www.facebook.com/madhuwanclubkolkata/';
       instagramUrl = 'https://www.instagram.com/madhuwanclub/';
-    } else if (Webservice.appNickname == 'milleniumMams') {
+    } else if (Webservice.appNickname == 'millmams') {
       facebookUrl = 'https://www.facebook.com/millenniummams/';
       youtubeUrl =
           'https://www.youtube.com/channel/UCb2vbCFvqnvmzqS74yRxY-w/videos';
@@ -66,10 +67,8 @@ class SideMenu extends StatelessWidget {
                 AppThemes.brc_gradient_light_color,
               if (Webservice.appNickname == 'forcempower')
                 AppThemes.brc_gradient_dark_color,
-              if (Webservice.appNickname == 'milleniumMams')
-                AppThemes.mm_light_card,
-              if (Webservice.appNickname == 'milleniumMams')
-                AppThemes.mm_background,
+              if (Webservice.appNickname == 'millmams') AppThemes.mm_light_card,
+              if (Webservice.appNickname == 'millmams') AppThemes.mm_background,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -79,7 +78,7 @@ class SideMenu extends StatelessWidget {
           padding: const EdgeInsets.only(top: 64),
           children: [
             if (Webservice.appNickname != 'madhuban' &&
-                Webservice.appNickname != 'milleniumMams')
+                Webservice.appNickname != 'millmams')
               Container(
                 padding: EdgeInsets.zero,
                 child: Theme(
@@ -147,6 +146,24 @@ class SideMenu extends StatelessWidget {
                     onTap: () {
                       // Update UI based on item selected from the drawer
                       Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => AboutScreen(),
+                      ));
+                    },
+                    child: const Text(
+                      'About Us',
+                      style: TextStyle(
+                        color: AppThemes.brc_bottom_icon,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
+
+                  GestureDetector(
+                    onTap: () {
+                      // Update UI based on item selected from the drawer
+                      Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => const LeadershipScreen(),
                       ));
                     },
@@ -161,7 +178,7 @@ class SideMenu extends StatelessWidget {
                   ),
                   const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -179,11 +196,11 @@ class SideMenu extends StatelessWidget {
                       ),
                     ),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -198,11 +215,11 @@ class SideMenu extends StatelessWidget {
                       ),
                     ),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -220,11 +237,11 @@ class SideMenu extends StatelessWidget {
                       ),
                     ),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -239,11 +256,11 @@ class SideMenu extends StatelessWidget {
                       ),
                     ),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -261,15 +278,15 @@ class SideMenu extends StatelessWidget {
                       ),
                     ),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   GestureDetector(
                     onTap: () {
                       // Update UI based on item selected from the drawer
                       Navigator.of(context).push(MaterialPageRoute(
-                        // builder: (_) => GalleryWebView(),
-                        builder: (_) => GalleryScreen(),
+                        builder: (_) => GalleryWebView(),
+                        // builder: (_) => GalleryScreen(),
                       ));
                     },
                     child: const Text(
@@ -283,7 +300,7 @@ class SideMenu extends StatelessWidget {
                   ),
                   const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -298,11 +315,11 @@ class SideMenu extends StatelessWidget {
                       ),
                     ),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -320,10 +337,10 @@ class SideMenu extends StatelessWidget {
                       ),
                     ),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
-                  if (Webservice.appNickname == 'milleniumMams')
+                  if (Webservice.appNickname == 'millmams')
                     GestureDetector(
                       onTap: () {
                         showDialog(
@@ -364,7 +381,7 @@ class SideMenu extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (Webservice.appNickname == 'milleniumMams')
+                  if (Webservice.appNickname == 'millmams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   // GestureDetector(
@@ -384,7 +401,7 @@ class SideMenu extends StatelessWidget {
                   //   ),
                   // ),
                   // const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
-                  if (Webservice.appNickname == 'milleniumMams')
+                  if (Webservice.appNickname == 'millmams')
                     GestureDetector(
                       onTap: () {
                         // Update UI based on item selected from the drawer
@@ -401,7 +418,7 @@ class SideMenu extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (Webservice.appNickname == 'milleniumMams')
+                  if (Webservice.appNickname == 'millmams')
                     const Divider(
                         color: AppThemes.brc_bottom_icon, thickness: 1),
                   GestureDetector(

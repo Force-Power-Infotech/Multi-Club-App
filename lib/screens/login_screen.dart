@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen>
                               height: 100,
                             ),
                           )
-                        : Webservice.appNickname == 'milleniumMams'
+                        : Webservice.appNickname == 'millmams'
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(2),
                                 child: Image.asset(
@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen>
                 position: _offsetAnimation,
                 child: const SingleChildScrollView(
                   child: Text(
-                    Webservice.appNickname == 'milleniumMams'
+                    Webservice.appNickname == 'millmams'
                         ? "Founded in 1993 by Mr. Bishnu Dhanuka and Mr. Sanjay Bhuwania, Millennium Mams has been a trailblazer in empowering women through financial literacy. With chapters in Kolkata, Bangalore, and Mumbai, and a presence in over 22 countries and 40 cities, the organization has a global reach. Millennium Mams is dedicated to enhancing women's financial acumen through comprehensive educational programs, adhering to Warren Buffett's timeless investment principles, and teaching the art of long-term investing and financial planning. Till date, Millennium Mams has empowered over 10,000 women worldwide. The organization offers offline classes in Kolkata and online classes for members in all other locations. The curriculum imparts financial knowledge through various methods, including studying current affairs and business dailies, analyzing balance sheets, participating in annual general meetings (AGMs), tracking global economic trends, and conducting plant visits. These programs aim to build a community of financially independent women who can take charge of their financial futures. Many enterprising women have become successful entrepreneurs and long-term investors with robust portfolios. A significant milestone was the delegation's participation in the Berkshire Hathaway Annual General Meeting in Omaha, Nebraska, highlighting Millennium Mams as India's largest group of women investors and earning recognition in The Sunday Times Magazine, London. Millennium Mams continues to inspire and educate thousands of women globally, promoting financial independence and fostering a community of empowered women worldwide."
                         : Webservice.appNickname == 'brc'
                             ? "Madhuwan Club was seeded by friends in 1980 with an aim to procreate togetherness, forging unforgettable friendships. Staying true to its core, Madhuwan subsists as a unique socio-cultural organisation inclusive of like-minded people. The club fosters fellowship in society wielding entertainment as a catalyst. Entertainment that is created by the organising & performing talent of the member families. Tested over 40 years, the vision of Madhuwan remains the same."

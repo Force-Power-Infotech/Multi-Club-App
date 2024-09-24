@@ -88,7 +88,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ListView(
             children: [
               if (Webservice.appNickname != 'madhuban' &&
-                  Webservice.appNickname != 'milleniumMams')
+                  Webservice.appNickname != 'millmams')
                 Container(
                   color: AppThemes.brc_textcolor,
                   child: Row(

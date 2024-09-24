@@ -144,12 +144,12 @@ class _MyAppState extends State<MyApp> {
     'BRC': const SplashScreenBRC(),
     'stardb': const SplashScreenMadhuban(),
     'madhuban': const SplashScreenMadhuban(),
-    'milleniumMams': const SplashScreenmillenniumMams(),
+    'millmams': const SplashScreenmillenniumMams(),
   };
 
   final Map<String, String> appName = {
     'madhuban': 'Madhuwan',
-    'milleniumMams': 'MM',
+    'millmams': 'MM',
     'forcempower': 'BRC',
   };
 }

@@ -90,7 +90,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       galleryData: galleryData
                           .where((data) => isLastMonth(parseDate(data.date!)))
                           .toList()),
-                ] else if (appNickname == 'milleniumMams' ||
+                ] else if (appNickname == 'millmams' ||
                     appNickname == 'madhuban') ...[
                   for (var eventGroup in groupByevent_name(galleryData).entries)
                     SectionWidget(

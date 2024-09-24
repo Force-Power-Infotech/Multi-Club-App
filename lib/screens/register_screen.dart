@@ -63,7 +63,7 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                             height: 50,
                           ),
                         )
-                      : Webservice.appNickname == 'milleniumMams'
+                      : Webservice.appNickname == 'millmams'
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.asset(

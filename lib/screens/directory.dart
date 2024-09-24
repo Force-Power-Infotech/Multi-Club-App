@@ -69,7 +69,7 @@ class _DirectoryState extends State<Directory> {
 
   @override
   Widget build(BuildContext context) {
-    bool isMilleniumMams = Webservice.appNickname == 'milleniumMams';
+    bool ismillmams = Webservice.appNickname == 'millmams';
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -122,7 +122,7 @@ class _DirectoryState extends State<Directory> {
               ),
             ),
           ),
-          if (isMilleniumMams)
+          if (ismillmams)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: DropdownButtonHideUnderline(
@@ -155,7 +155,7 @@ class _DirectoryState extends State<Directory> {
                     itemCount: filteredContacts.length,
                     itemBuilder: (context, index) {
                       final contact = filteredContacts[index];
-                      final memberDetails = isMilleniumMams
+                      final memberDetails = ismillmams
                           ? [
                               if (contact.memberNameFemale != null)
                                 {
@@ -194,7 +194,7 @@ class _DirectoryState extends State<Directory> {
                             children: memberDetails.map((member) {
                               return GestureDetector(
                                 onTap: () {
-                                  if (!isMilleniumMams) {
+                                  if (!ismillmams) {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
                                             builder: (_) => ProfileScreen(
@@ -207,7 +207,7 @@ class _DirectoryState extends State<Directory> {
                                 },
                                 child: Row(
                                   children: [
-                                    if (!isMilleniumMams)
+                                    if (!ismillmams)
                                       CircleAvatar(
                                         backgroundImage: NetworkImage(
                                           member['imageUrl'] ?? '',

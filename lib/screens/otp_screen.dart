@@ -136,7 +136,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             MaterialPageRoute(
                                 builder: (_) => const HomeScreenMadhuwan()),
                           );
-                        } else if (Webservice.appNickname == 'milleniumMams') {
+                        } else if (Webservice.appNickname == 'millmams') {
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                                 builder: (_) =>

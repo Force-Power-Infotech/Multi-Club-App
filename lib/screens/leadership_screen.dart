@@ -63,7 +63,7 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
                 }).toList(),
               ),
             ),
-          if (Webservice.appNickname == 'milleniumMams')
+          if (Webservice.appNickname == 'millmams')
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: DropdownButton<String>(
@@ -98,7 +98,7 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
                           .where(
                               (member) => member.category == selectedCategory)
                           .toList()
-                      : Webservice.appNickname == 'milleniumMams'
+                      : Webservice.appNickname == 'millmams'
                           ? allMembers
                               .where((member) => member.city == selectedCity)
                               .toList()

@@ -114,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     Container(
                       width: double.infinity, // Adjust width as needed
                       decoration: BoxDecoration(
@@ -141,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   if (Webservice.appNickname != 'madhuban' &&
-                      Webservice.appNickname != 'milleniumMams')
+                      Webservice.appNickname != 'millmams')
                     Container(
                       decoration: BoxDecoration(
                         color: AppThemes.brc_profilecard_color,
@@ -335,8 +335,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    if (Webservice.appNickname !=
-                                        'milleniumMams')
+                                    if (Webservice.appNickname != 'millmams')
                                       const Expanded(
                                         child: Text(
                                           'Date of Joining',
@@ -382,7 +381,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (Webservice.appNickname != 'milleniumMams')
+                                if (Webservice.appNickname != 'millmams')
                                   Row(
                                     children: [
                                       const Expanded(
@@ -422,9 +421,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ),
-                          if (Webservice.appNickname != 'milleniumMams')
+                          if (Webservice.appNickname != 'millmams')
                             const Divider(),
-                          if (Webservice.appNickname != 'milleniumMams')
+                          if (Webservice.appNickname != 'millmams')
                             Padding(
                               padding: const EdgeInsets.all(6.0),
                               child: Column(
@@ -470,9 +469,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                             ),
-                          if (Webservice.appNickname != 'milleniumMams')
+                          if (Webservice.appNickname != 'millmams')
                             const Divider(),
-                          if (Webservice.appNickname == 'milleniumMams')
+                          if (Webservice.appNickname == 'millmams')
                             Padding(
                               padding: const EdgeInsets.all(6.0),
                               child: Column(
@@ -518,9 +517,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                             ),
-                          if (Webservice.appNickname == 'milleniumMams')
+                          if (Webservice.appNickname == 'millmams')
                             const Divider(),
-                          if (Webservice.appNickname == 'milleniumMams')
+                          if (Webservice.appNickname == 'millmams')
                             Padding(
                               padding: const EdgeInsets.all(6.0),
                               child: Column(
@@ -566,7 +565,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                             ),
-                          if (Webservice.appNickname == 'milleniumMams')
+                          if (Webservice.appNickname == 'millmams')
                             const Divider(),
 
                           Padding(
@@ -604,7 +603,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const Divider(),
                           // if (Webservice.appNickname != 'madhuban' &&
-                          //     Webservice.appNickname != 'milleniumMams')
+                          //     Webservice.appNickname != 'millmams')
                           Padding(
                             padding: const EdgeInsets.all(6.0),
                             child: Column(
@@ -631,9 +630,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           // if (Webservice.appNickname != 'madhuban' &&
-                          //     Webservice.appNickname != 'milleniumMams')
+                          //     Webservice.appNickname != 'millmams')
                           const Divider(),
-                          if (Webservice.appNickname != 'milleniumMams')
+                          if (Webservice.appNickname != 'millmams')
                             Padding(
                               padding: const EdgeInsets.all(6.0),
                               child: Column(
@@ -661,7 +660,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                             ),
-                          if (Webservice.appNickname != 'milleniumMams')
+                          if (Webservice.appNickname != 'millmams')
                             const Divider(),
                         ],
                       ),
@@ -897,7 +896,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  if (Webservice.appNickname != 'milleniumMams')
+                  if (Webservice.appNickname != 'millmams')
                     Container(
                       color: AppThemes.brc_textcolor,
                       child: Padding(
@@ -970,7 +969,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           if (Webservice.appNickname != 'madhuban' &&
-                              Webservice.appNickname != 'milleniumMams')
+                              Webservice.appNickname != 'millmams')
                             Container(
                               width: double.infinity, // Adjust width as needed
 
@@ -998,7 +997,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                           if (Webservice.appNickname != 'madhuban' &&
-                              Webservice.appNickname != 'milleniumMams')
+                              Webservice.appNickname != 'millmams')
                             Container(
                               decoration: BoxDecoration(
                                 color: AppThemes.brc_profilecard_color,
@@ -1194,7 +1193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                   if (widget.gender != 'male') const Divider(),
-                                  if (Webservice.appNickname != 'milleniumMams')
+                                  if (Webservice.appNickname != 'millmams')
                                     Padding(
                                       padding: const EdgeInsets.all(6.0),
                                       child: Column(
@@ -1251,7 +1250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                                     ),
-                                  if (Webservice.appNickname != 'milleniumMams')
+                                  if (Webservice.appNickname != 'millmams')
                                     if (Webservice.appNickname != 'madhuban')
                                       const Divider(),
                                   Padding(
@@ -1261,7 +1260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         if (Webservice.appNickname !=
-                                            'milleniumMams')
+                                            'millmams')
                                           Row(
                                             children: [
                                               const Expanded(
@@ -1306,9 +1305,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ],
                                     ),
                                   ),
-                                  if (Webservice.appNickname != 'milleniumMams')
+                                  if (Webservice.appNickname != 'millmams')
                                     const Divider(),
-                                  if (Webservice.appNickname != 'milleniumMams')
+                                  if (Webservice.appNickname != 'millmams')
                                     Padding(
                                       padding: const EdgeInsets.all(6.0),
                                       child: Column(
@@ -1316,7 +1315,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           if (Webservice.appNickname !=
-                                              'milleniumMams')
+                                              'millmams')
                                             Row(
                                               children: [
                                                 const Expanded(
@@ -1363,9 +1362,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                                     ),
-                                  if (Webservice.appNickname != 'milleniumMams')
+                                  if (Webservice.appNickname != 'millmams')
                                     const Divider(),
-                                  if (Webservice.appNickname == 'milleniumMams')
+                                  if (Webservice.appNickname == 'millmams')
                                     Padding(
                                       padding: const EdgeInsets.all(6.0),
                                       child: Column(
@@ -1415,9 +1414,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                                     ),
-                                  if (Webservice.appNickname == 'milleniumMams')
+                                  if (Webservice.appNickname == 'millmams')
                                     const Divider(),
-                                  if (Webservice.appNickname == 'milleniumMams')
+                                  if (Webservice.appNickname == 'millmams')
                                     Padding(
                                       padding: const EdgeInsets.all(6.0),
                                       child: Column(
@@ -1467,7 +1466,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                                     ),
-                                  if (Webservice.appNickname == 'milleniumMams')
+                                  if (Webservice.appNickname == 'millmams')
                                     const Divider(),
                                   GestureDetector(
                                     onTap: () => _makePhoneCall(
@@ -1535,7 +1534,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   // if (Webservice.appNickname != 'madhuban')
                                   const Divider(),
-                                  if (Webservice.appNickname != 'milleniumMams')
+                                  if (Webservice.appNickname != 'millmams')
                                     Padding(
                                       padding: const EdgeInsets.all(6.0),
                                       child: Column(
@@ -1563,7 +1562,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                                     ),
-                                  if (Webservice.appNickname != 'milleniumMams')
+                                  if (Webservice.appNickname != 'millmams')
                                     const Divider(),
                                 ],
                               ),

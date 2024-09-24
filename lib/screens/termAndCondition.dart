@@ -61,6 +61,12 @@ class _TermAndConditionState extends State<TermAndCondition>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppThemes.getBackground(),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppThemes.brc_textcolor),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: const Text(
           'Terms & Conditions',
           style: TextStyle(

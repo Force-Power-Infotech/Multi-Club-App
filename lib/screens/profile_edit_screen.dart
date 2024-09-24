@@ -372,7 +372,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                 ),
                                 const Divider(),
                                 if (Webservice.appNickname != 'madhuban' &&
-                                    Webservice.appNickname != 'milleniumMams')
+                                    Webservice.appNickname != 'millmams')
                                   Padding(
                                     padding: const EdgeInsets.all(6.0),
                                     child: Column(
@@ -419,9 +419,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                     ),
                                   ),
                                 if (Webservice.appNickname != 'madhuban' &&
-                                    Webservice.appNickname != 'milleniumMams')
+                                    Webservice.appNickname != 'millmams')
                                   const Divider(),
-                                if (Webservice.appNickname != 'milleniumMams')
+                                if (Webservice.appNickname != 'millmams')
                                   Padding(
                                     padding: const EdgeInsets.all(6.0),
                                     child: Column(
@@ -473,9 +473,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                       ],
                                     ),
                                   ),
-                                if (Webservice.appNickname != 'milleniumMams')
+                                if (Webservice.appNickname != 'millmams')
                                   const Divider(),
-                                if (Webservice.appNickname != 'milleniumMams')
+                                if (Webservice.appNickname != 'millmams')
                                   Padding(
                                     padding: const EdgeInsets.all(6.0),
                                     child: Column(
@@ -531,7 +531,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                       ],
                                     ),
                                   ),
-                                if (Webservice.appNickname != 'milleniumMams')
+                                if (Webservice.appNickname != 'millmams')
                                   const Divider(),
                                 // Phone Number
                                 Padding(
@@ -605,7 +605,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                 // if (Webservice.appNickname != 'madhuban')
                                 const Divider(),
                                 // Address
-                                if (Webservice.appNickname != 'milleniumMams')
+                                if (Webservice.appNickname != 'millmams')
                                   Padding(
                                     padding: const EdgeInsets.all(6.0),
                                     child: Column(
@@ -640,7 +640,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                       ],
                                     ),
                                   ),
-                                if (Webservice.appNickname != 'milleniumMams')
+                                if (Webservice.appNickname != 'millmams')
                                   const Divider(),
                               ],
                             ),

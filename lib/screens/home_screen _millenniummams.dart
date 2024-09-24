@@ -113,7 +113,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
 
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(
-          Webservice.appNickname == 'milleniumMams'
+          Webservice.appNickname == 'millmams'
               ? kToolbarHeight + 0
               : kToolbarHeight + 55,
         ),
@@ -493,7 +493,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                         label: 'Events',
                         wheretoGo: () => const EventsScreen(),
                       ),
-                      // if (Webservice.appNickname != 'milleniumMams')
+                      // if (Webservice.appNickname != 'millmams')
                       HomeScreenBottomIcon(
                         asset: 'assets/images/Frame.png',
                         label: 'Directory',

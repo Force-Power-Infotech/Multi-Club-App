@@ -211,7 +211,7 @@ class EventDetailsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               if (Webservice.appNickname != 'madhuban' &&
-                  Webservice.appNickname != 'milleniumMams')
+                  Webservice.appNickname != 'millmams')
                 Padding(
                   padding: const EdgeInsets.only(
                       top: 8.0, left: 4.0, right: 4, bottom: 32),
@@ -254,7 +254,7 @@ class EventDetailsScreen extends StatelessWidget {
                   ),
                 ),
               if (Webservice.appNickname != 'madhuban' &&
-                  Webservice.appNickname != 'milleniumMams')
+                  Webservice.appNickname != 'millmams')
                 Padding(
                   padding: const EdgeInsets.only(
                       top: 8.0, left: 4.0, right: 4, bottom: 32),
@@ -297,7 +297,7 @@ class EventDetailsScreen extends StatelessWidget {
                   ),
                 ),
               // if (Webservice.appNickname == 'madhuban' &&
-              //     Webservice.appNickname == 'milleniumMams')
+              //     Webservice.appNickname == 'millmams')
               Padding(
                 padding: const EdgeInsets.only(
                     top: 8.0, left: 4.0, right: 4, bottom: 32),
@@ -468,8 +468,7 @@ class EventDetailsScreen extends StatelessWidget {
                                       ),
                                       if (Webservice.appNickname ==
                                               'madhuban' &&
-                                          Webservice.appNickname !=
-                                              'milleniumMams')
+                                          Webservice.appNickname != 'millmams')
                                         ElevatedButton(
                                           style: ButtonStyle(
                                             backgroundColor:
@@ -542,7 +541,7 @@ class EventDetailsScreen extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
-                              'Registration',
+                              'Register',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
