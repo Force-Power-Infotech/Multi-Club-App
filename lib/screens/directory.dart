@@ -17,6 +17,7 @@ class _DirectoryState extends State<Directory> {
   late TextEditingController _searchController;
   List<Data> contacts = [];
   List<Data> filteredContacts = [];
+  List<String> cities = []; // Store dynamic cities
   bool _isLoading = true;
   String? selectedFilter;
 
@@ -33,12 +34,29 @@ class _DirectoryState extends State<Directory> {
     super.dispose();
   }
 
+  // Fetch directory data and populate the contacts and cities
   void fetchDirectory() async {
     try {
       DirectoryAPI directoryData = await DirectoryAPI.directory();
       setState(() {
         contacts = directoryData.data ?? [];
         filteredContacts.addAll(contacts);
+
+        // // Extract unique cities dynamically from the contact list
+        // cities = contacts
+        //     .map((contact) => contact.city ?? '')
+        //     .where((city) => city.isNotEmpty)
+        //     .toSet()
+        //     .toList();
+        cities = contacts
+            .map((member) => (member.global == '' || member.global == null)
+                ? member.city ?? ''
+                : '${member.global}') // Get the city of each member
+            // .where((city) => city.isNotEmpty) // Filter out empty cities
+            .toSet() // Remove duplicates
+            .toList();
+        cities.sort(); // Optional: sort cities alphabetically
+
         _isLoading = false;
       });
     } catch (e) {
@@ -49,6 +67,7 @@ class _DirectoryState extends State<Directory> {
     }
   }
 
+  // Filter contacts based on search query and selected city
   void filterContacts(String query) {
     setState(() {
       filteredContacts = contacts.where((contact) {
@@ -61,7 +80,8 @@ class _DirectoryState extends State<Directory> {
                     .contains(query.toLowerCase()) ??
                 false);
         bool matchesFilter = selectedFilter == null ||
-            contact.city?.toLowerCase() == selectedFilter!.toLowerCase();
+            contact.city?.toLowerCase() == selectedFilter!.toLowerCase() ||
+            contact.global?.toLowerCase() == selectedFilter!.toLowerCase();
         return matchesQuery && matchesFilter;
       }).toList();
     });
@@ -136,11 +156,11 @@ class _DirectoryState extends State<Directory> {
                       filterContacts(_searchController.text);
                     });
                   },
-                  items: <String>['Kolkata', 'Mumbai', 'Bangalore']
-                      .map<DropdownMenuItem<String>>((String value) {
+                  // Dynamically populate the city dropdown options
+                  items: cities.map<DropdownMenuItem<String>>((String city) {
                     return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
+                      value: city,
+                      child: Text(city),
                     );
                   }).toList(),
                   icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
@@ -257,7 +277,6 @@ class _DirectoryState extends State<Directory> {
     );
   }
 }
-
 
 
 

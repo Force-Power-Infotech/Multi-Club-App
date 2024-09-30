@@ -1,20 +1,84 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:multi_club_app/bases/api/council_members.dart'; // Ensure the path is correct
 import 'package:multi_club_app/bases/themes.dart';
+import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart'; // Ensure the path is correct
 
 class LeadershipScreen extends StatefulWidget {
-  const LeadershipScreen({Key? key}) : super(key: key);
+  const LeadershipScreen({super.key});
 
   @override
   _LeadershipScreenState createState() => _LeadershipScreenState();
 }
 
 class _LeadershipScreenState extends State<LeadershipScreen> {
-  String selectedCategory = 'Executive Committee';
-  String selectedCity = 'Kolkata'; // Default city
-  final List<String> cities = ['Kolkata', 'Mumbai', 'Bangalore'];
+  String? selectedCategory;
+  String? selectedCity;
+  List<Data> allMembers = [];
+  List<String> categories = [];
+  List<String> cities = [];
+  bool isLoadingFilters = true;
+  bool isLoadingMembers = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchMembers(); // Fetch members and filters
+  }
+
+  Future<void> _fetchMembers() async {
+    setState(() {
+      isLoadingMembers = true;
+    });
+    try {
+      CouncilAPI response = await CouncilAPI.list(); // Fetch council members
+
+      // Get the list of all members
+      allMembers = response.data ?? [];
+
+      // Populate filters (categories or cities) dynamically based on members
+      _populateFilters(allMembers);
+
+      setState(() {
+        isLoadingFilters = false; // Filters and members are now loaded
+      });
+    } catch (e) {
+      print('Error fetching members: $e');
+    } finally {
+      setState(() {
+        isLoadingMembers = false;
+      });
+    }
+  }
+
+  void _populateFilters(List<Data> members) {
+    if (Webservice.appNickname == 'madhuban') {
+      categories = members
+          .map((member) =>
+              member.category ?? '') // Get the category of each member
+          .where(
+              (category) => category.isNotEmpty) // Filter out empty categories
+          .toSet() // Remove duplicates
+          .toList();
+      if (categories.isNotEmpty) {
+        selectedCategory = categories.first; // Default selected category
+      }
+    } else if (Webservice.appNickname == 'millmams') {
+      cities = members
+          .map((member) => (member.global == '' || member.global == null)
+              ? member.city ?? ''
+              : '${member.global}') // Get the city of each member
+          // .where((city) => city.isNotEmpty) // Filter out empty cities
+          .toSet() // Remove duplicates
+          .toList();
+      if (cities.isNotEmpty) {
+        selectedCity = cities.first; // Default selected city
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,111 +102,112 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
               color: AppThemes.brc_textcolor),
         ),
       ),
-      body: Column(
-        children: [
-          if (Webservice.appNickname == 'madhuban')
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DropdownButton<String>(
-                value: selectedCategory,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedCategory = newValue!;
-                  });
-                },
-                items: <String>[
-                  'Executive Committee',
-                  'General Committee',
-                  'Special Invite',
-                  'Advisory Committee'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
+      body: isLoadingFilters
+          ? const Center(
+              child:
+                  CircularProgressIndicator()) // Show loader while filters are loading
+          : Column(
+              children: [
+                if (Webservice.appNickname == 'madhuban' &&
+                    categories.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButton<String>(
+                      value: selectedCategory,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCategory = newValue!;
+                        });
+                      },
+                      items: categories
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                if (Webservice.appNickname == 'millmams' && cities.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButton<String>(
+                      value: selectedCity,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCity = newValue!;
+                        });
+                      },
+                      items:
+                          cities.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                Expanded(
+                  child: isLoadingMembers
+                      ? const Center(
+                          child:
+                              CircularProgressIndicator()) // Show loader while members are loading
+                      : _buildMembersList(),
+                ),
+              ],
             ),
-          if (Webservice.appNickname == 'millmams')
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DropdownButton<String>(
-                value: selectedCity,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedCity = newValue!;
-                  });
-                },
-                items: cities.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
-          Expanded(
-            child: FutureBuilder<CouncilAPI>(
-              future: CouncilAPI.list(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.data!.isEmpty) {
-                  return Center(child: Text('No data available'));
-                } else {
-                  final allMembers = snapshot.data!.data!;
-                  final filteredMembers = Webservice.appNickname == 'madhuban'
-                      ? allMembers
-                          .where(
-                              (member) => member.category == selectedCategory)
-                          .toList()
-                      : Webservice.appNickname == 'millmams'
-                          ? allMembers
-                              .where((member) => member.city == selectedCity)
-                              .toList()
-                          : allMembers;
+    );
+  }
 
-                  if (filteredMembers.isEmpty) {
-                    return Center(child: Text('No members in this category'));
-                  }
+  Widget _buildMembersList() {
+    // Filter members based on the selected category or city
+    final filteredMembers = Webservice.appNickname == 'madhuban'
+        ? allMembers
+            .where((member) => member.category == selectedCategory)
+            .toList()
+        : Webservice.appNickname == 'millmams'
+            ? allMembers
+                .where((member) => (member.city == selectedCity ||
+                    member.global == selectedCity))
+                .toList()
+            : allMembers;
 
-                  return ListView.builder(
-                    itemCount: filteredMembers.length,
-                    itemBuilder: (context, index) {
-                      final member = filteredMembers[index];
-                      return DepartmentInfo(
-                        designation: member.designation ?? '',
-                        name: member.name ?? '',
-                        phone: member.phone ?? '',
-                        email: member.email ?? '',
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          ),
-        ],
-      ),
+    if (filteredMembers.isEmpty) {
+      return const Center(child: Text('No members in this category or city'));
+    }
+
+    return ListView.builder(
+      itemCount: filteredMembers.length,
+      itemBuilder: (context, index) {
+        final member = filteredMembers[index];
+        return DepartmentInfo(
+          designation: member.designation ?? '',
+          name: member.name ?? '',
+          phone: member.phone ?? '',
+          email: member.email ?? '',
+          member_image: member.member_image ?? '',
+        );
+      },
     );
   }
 }
 
 class DepartmentInfo extends StatelessWidget {
+  // ignore: use_super_parameters
   const DepartmentInfo({
     Key? key,
     required this.designation,
     required this.name,
     required this.phone,
     required this.email,
+    required this.member_image,
   }) : super(key: key);
 
   final String designation;
   final String name;
   final String phone;
   final String email;
+  final String member_image;
 
   @override
   Widget build(BuildContext context) {
@@ -161,17 +226,22 @@ class DepartmentInfo extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CircleAvatar(
-                backgroundColor: AppThemes.getLightColor(),
-                radius: 24,
-                child: Text(
-                  name.isNotEmpty ? name[0].toUpperCase() : '',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              member_image.isNotEmpty
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(member_image),
+                      radius: 24,
+                    )
+                  : CircleAvatar(
+                      backgroundColor: AppThemes.getLightColor(),
+                      radius: 24,
+                      child: Text(
+                        name.isNotEmpty ? name[0].toUpperCase() : '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
               const SizedBox(
                   width: 16), // Add some space between avatar and text
               Expanded(

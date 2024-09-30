@@ -569,7 +569,7 @@ class home_event_card extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "${event.date}",
+                        "${event.dateForHeading}",
                         style: const TextStyle(
                           fontSize: 16,
                         ),

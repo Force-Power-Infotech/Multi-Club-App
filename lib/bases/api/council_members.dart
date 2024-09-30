@@ -120,6 +120,8 @@ class Data {
   String? city;
   String? phone;
   String? email;
+  String? global;
+  String? member_image;
 
   Data(
       {this.memberId,
@@ -129,7 +131,9 @@ class Data {
       this.year,
       this.phone,
       this.email,
-      this.city});
+      this.city,
+      this.global,
+      this.member_image});
 
   Data.fromJson(Map<String, dynamic> json) {
     memberId = json['member_id'];
@@ -140,6 +144,8 @@ class Data {
     city = json['city'];
     phone = json['phone'];
     email = json['email'];
+    global = json['global'];
+    member_image = json['member_image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -152,6 +158,8 @@ class Data {
     data['city'] = city;
     data['phone'] = phone;
     data['email'] = email;
+    data['global'] = global;
+    data['member_image'] = member_image;
     return data;
   }
 }

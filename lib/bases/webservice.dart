@@ -1,8 +1,10 @@
+import 'package:multi_club_app/bases/app_constant.dart';
+
 class Webservice {
   static const String rootURL = "https://club.forcempower.com/";
   // static const String appNickname = "forcempower";
   // static const String appNickname = "madhuban";
-  static const String appNickname = "millmams";
+  static const String appNickname = AppConstant.millmams;
   static const String userLoginAPI = "ws_member_login_v1.php";
   static const String userOtpAPI = "ws_member_confirm_otp_v4.php";
   static const String table_booking = "make_table_booking.php";
