@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:http/http.dart' as http;
+import 'dart:developer';
 
 class SponsorAPI {
   String? processStatus;
@@ -46,6 +47,7 @@ class SponsorAPI {
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
+    log('SponsorAPI Response: $responseString');
     return SponsorAPI.fromJson(jsonDecode(responseString));
   }
 }

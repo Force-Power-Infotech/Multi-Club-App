@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madhuwan Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <style>
+        /* Custom Tailwind classes for modern UI */
+        .gallery-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            background: #f9fafb;
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-overlay {
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0;
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .gallery-card:hover .icon-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header Section with Search Bar -->
+    <header class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-4 shadow-lg rounded-b-3xl">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <!-- Logo and Title -->
+            <div class="flex items-center space-x-3">
+                <img src="https://play-lh.googleusercontent.com/DCriOAMaOxTQ8wPJVZlt7XAsYO9Mdw2jdjkSfW0jenRcHFYbLkt8gBCilc7PGMxjZfU=w240-h480-rw" alt="Logo" class="w-12 h-12 rounded-full">
+                <!-- <h1 class="text-2xl font-semibold tracking-wide">Madhuwan Gallery</h1> -->
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative w-1/2 max-w-md">
+                <input type="text" id="searchBar" placeholder="Search files or albums..." class="w-full p-2 rounded-lg text-gray-800 focus:outline-none" oninput="filterItems()">
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <img src="https://img.icons8.com/ios-glyphs/20/ffffff/search.png" alt="Search Icon" class="w-5 h-5 opacity-70">
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Gallery Section -->
+    <main class="py-8 sm:py-12">
+        <div class="container mx-auto px-4">
+            <!-- Gallery Grid -->
+            <div id="gallery" class="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5">
+                <!-- Albums and Files will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Google API Key and Folder ID
+        const API_KEY = 'AIzaSyDOyBpQBorYNm4Ox34-vZeIFP9UiFlr1rw';
+        const FOLDER_ID = '1XqVUFmnOtGswlHOwEIzNE0y0qOKH3XUa';
+        let allItems = []; // To store all items for filtering
+
+        // Load the API client and auth2 library
+        function loadClient() {
+            gapi.client.setApiKey(API_KEY);
+            return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
+                .then(function () {
+                    console.log("GAPI client loaded for API");
+                    listItems();
+                },
+                    function (err) { console.error("Error loading GAPI client for API", err); });
+        }
+
+        // List folders and files inside the specified folder
+        function listItems() {
+            gapi.client.drive.files.list({
+                'q': `'${FOLDER_ID}' in parents and trashed=false`,
+                'fields': "files(id, name, mimeType, webViewLink, thumbnailLink, iconLink)"
+            }).then(function (response) {
+                allItems = response.result.files;
+                displayItems(allItems);
+            });
+        }
+
+        // Display items in the gallery
+        function displayItems(items) {
+            const galleryDiv = document.getElementById('gallery');
+            galleryDiv.innerHTML = ''; // Clear existing items
+
+            items.forEach(item => {
+                const isFolder = item.mimeType === 'application/vnd.google-apps.folder';
+                const itemElement = document.createElement('div');
+                itemElement.className = 'group relative flex h-48 items-end rounded-lg shadow-md hover:shadow-xl gallery-card';
+                itemElement.setAttribute("data-name", item.name.toLowerCase());
+
+                itemElement.innerHTML = `
+                    <a href="${item.webViewLink}" target="_blank" class="block w-full h-full relative">
+                        <img src="${isFolder ? 'https://img.icons8.com/color/96/folder-invoices.png' : item.thumbnailLink}" 
+                            alt="${item.name}" class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 transform group-hover:scale-105" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50"></div>
+<span class="relative px-3 py-1 text-sm font-medium text-white bg-indigo-600 bg-opacity-80 rounded-lg">${item.name}</span>
+                        <div class="icon-overlay absolute bottom-3 left-3 bg-gray-800 bg-opacity-70 p-1 rounded-lg flex">
+                            <img src="https://img.icons8.com/ios-glyphs/20/ffffff/eye.png" alt="View" class="w-4 h-4">
+                            <img src="https://img.icons8.com/ios-glyphs/20/ffffff/share.png" alt="Share" class="w-4 h-4">
+                            <img src="https://img.icons8.com/ios-glyphs/20/ffffff/info.png" alt="Info" class="w-4 h-4">
+                        </div>
+                    </a>
+                `;
+
+                galleryDiv.appendChild(itemElement);
+            });
+        }
+
+        // Filter items based on search input
+        function filterItems() {
+            const searchQuery = document.getElementById('searchBar').value.toLowerCase();
+            const filteredItems = allItems.filter(item => item.name.toLowerCase().includes(searchQuery));
+            displayItems(filteredItems);
+        }
+
+        gapi.load("client", loadClient);
+    </script>
+</body>
+
+</html>
