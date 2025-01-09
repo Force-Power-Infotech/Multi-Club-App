@@ -154,7 +154,7 @@ class EventDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${event.city ?? 'Not decided yet'}",
+                        "${event.city ?? ''}",
                         style: const TextStyle(
                           color: AppThemes.brc_spotsbooking_hint_text,
                           fontSize: 14,

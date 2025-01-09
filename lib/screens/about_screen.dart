@@ -31,7 +31,7 @@ class AboutScreen extends StatelessWidget {
               const SizedBox(height: 24),
               Center(
                 child: Text(
-                  'Millennium Mams',
+                  "Millennium Mams'",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -42,7 +42,7 @@ class AboutScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                "Founded in 1993 by Mr. Bishnu Dhanuka and Mr. Sanjay Bhuwania, Millennium Mams has been a trailblazer in empowering women through financial literacy. With chapters in Kolkata, Bangalore, and Mumbai, and a presence in over 22 countries and 40 cities, the organization has a global reach.",
+                "Founded in 1993 by Mr. Bishnu Dhanuka and Mr. Sanjay Bhuwania, Millennium Mams' has been a trailblazer in empowering women through financial literacy. With chapters in Kolkata, Bangalore, and Mumbai, and a presence in over 22 countries and 40 cities, the organization has a global reach.",
                 style: TextStyle(fontSize: 16, height: 1.5),
               ),
               const SizedBox(height: 16),
@@ -56,7 +56,7 @@ class AboutScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                "Millennium Mams is dedicated to enhancing women's financial acumen through comprehensive educational programs, adhering to Warren Buffett's timeless investment principles, and teaching the art of long-term investing and financial planning.",
+                "Millennium Mams' is dedicated to enhancing women's financial acumen through comprehensive educational programs, adhering to Warren Buffett's timeless investment principles, and teaching the art of long-term investing and financial planning.",
                 style: TextStyle(fontSize: 16, height: 1.5),
               ),
               const SizedBox(height: 16),
@@ -70,7 +70,7 @@ class AboutScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                "Till date, Millennium Mams has empowered over 10,000 women worldwide. The organization offers offline classes in Kolkata and online classes for members in all other locations. The curriculum imparts financial knowledge through various methods, including studying current affairs and business dailies, analyzing balance sheets, participating in annual general meetings (AGMs), tracking global economic trends, and conducting plant visits.",
+                "Till date, Millennium Mams' has empowered over 10,000 women worldwide. The organization offers offline classes in Kolkata and online classes for members in all other locations. The curriculum imparts financial knowledge through various methods, including studying current affairs and business dailies, analyzing balance sheets, participating in annual general meetings (AGMs), tracking global economic trends, and conducting plant visits.",
                 style: TextStyle(fontSize: 16, height: 1.5),
               ),
               const SizedBox(height: 16),
@@ -98,7 +98,7 @@ class AboutScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                "A significant milestone was the delegation's participation in the Berkshire Hathaway Annual General Meeting in Omaha, Nebraska, highlighting Millennium Mams as India's largest group of women investors and earning recognition in The Sunday Times Magazine, London.",
+                "A significant milestone was the delegation's participation in the Berkshire Hathaway Annual General Meeting in Omaha, Nebraska, highlighting Millennium Mams' as India's largest group of women investors and earning recognition in The Sunday Times Magazine, London.",
                 style: TextStyle(fontSize: 16, height: 1.5),
               ),
               const SizedBox(height: 16),
@@ -112,7 +112,7 @@ class AboutScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                "Millennium Mams continues to inspire and educate thousands of women globally, promoting financial independence and fostering a community of empowered women worldwide.",
+                "Millennium Mams' continues to inspire and educate thousands of women globally, promoting financial independence and fostering a community of empowered women worldwide.",
                 style: TextStyle(fontSize: 16, height: 1.5),
               ),
               const SizedBox(height: 24),

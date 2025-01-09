@@ -209,144 +209,160 @@ class EventCards extends StatelessWidget {
   }) : super(key: key);
 
   void _showFeedbackModal(BuildContext context) {
-    double _rating = 0;
-    final TextEditingController _feedbackController = TextEditingController();
-    bool _isSubmitting = false;
+  double _rating = 0;
+  final TextEditingController _feedbackController = TextEditingController();
+  bool _isSubmitting = false;
 
-    void _submitFeedback(StateSetter setState) async {
+  void _submitFeedback(StateSetter setState) async {
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      final response = await FeedbackApi.directory(
+        _rating.toString(),
+        _feedbackController.text,
+      );
+
       setState(() {
-        _isSubmitting = true;
+        _isSubmitting = false;
       });
 
-      try {
-        final response = await FeedbackApi.directory(
-          _rating.toString(),
-          _feedbackController.text,
-        );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          response.processMessage ?? 'Feedback submitted successfully',
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor:
+            response.processStatus == 'YES' ? Colors.green : Colors.red,
+      ));
 
-        setState(() {
-          _isSubmitting = false;
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              response.processMessage ?? 'Feedback submittedd successfully'),
-          backgroundColor:
-              response.processStatus == 'YES' ? Colors.green : Colors.red,
-        ));
-
-        if (response.processStatus == 'YES') {
-          Navigator.of(context)
-              .pop(); // Close the modal after successful submission
-        }
-      } catch (error) {
-        setState(() {
-          _isSubmitting = false;
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Failed to submit feedback. Please try again later.'),
-          backgroundColor: Colors.red,
-        ));
+      if (response.processStatus == 'YES') {
+        Navigator.of(context).pop(); // Close the modal after successful submission
       }
-    }
+    } catch (error) {
+      setState(() {
+        _isSubmitting = false;
+      });
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return DraggableScrollableSheet(
-          expand: false,
-          builder: (_, scrollController) {
-            return StatefulBuilder(
-              builder: (context, setState) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(25)),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Failed to submit feedback. Please try again later.'),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (BuildContext context) {
+      return DraggableScrollableSheet(
+        expand: false,
+        builder: (_, scrollController) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, -2),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Rate the Event',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    RatingBar.builder(
+                      initialRating: 0,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 6.0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.blueAccent.shade200,
+                      ),
+                      onRatingUpdate: (rating) {
+                        _rating = rating;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _feedbackController,
+                      decoration: InputDecoration(
+                        labelText: 'Comments',
+                        labelStyle: TextStyle(color: Colors.grey[700]),
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Rate the Event',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blueAccent.shade200),
+                          borderRadius: BorderRadius.circular(10),
                         ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
-                      const SizedBox(height: 16),
-                      RatingBar.builder(
-                        initialRating: 0,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemPadding:
-                            const EdgeInsets.symmetric(horizontal: 4.0),
-                        itemBuilder: (context, _) => const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        onRatingUpdate: (rating) {
-                          _rating = rating;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _feedbackController,
-                        decoration: const InputDecoration(
-                          labelText: 'Comments',
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
-                        ),
-                        maxLines: 3,
-                      ),
-                      const SizedBox(height: 16),
-                      _isSubmitting
-                          ? const CircularProgressIndicator()
-                          : ElevatedButton(
-                              onPressed: () => _submitFeedback(setState),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blueAccent,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 24),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: const Text(
-                                'Submit',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 20),
+                    _isSubmitting
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: () => _submitFeedback(setState),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent.shade200,
+                              elevation: 2,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 14, horizontal: 28),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
+                            child: const Text(
+                              'Submit Feedback',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -358,165 +374,167 @@ class EventCards extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           child: ColorFiltered(
             colorFilter: isSportsEvent
-                ? const ColorFilter.mode(
-                    Colors.white,
-                    BlendMode.saturation,
-                  )
-                : const ColorFilter.mode(
-                    Colors.transparent,
-                    BlendMode.multiply,
-                  ),
+          ? const ColorFilter.mode(
+              Colors.white,
+              BlendMode.saturation,
+            )
+          : const ColorFilter.mode(
+              Colors.transparent,
+              BlendMode.multiply,
+            ),
             child: Container(
               margin: const EdgeInsets.all(16),
               decoration: BoxDecoration(
+          color: AppThemes.getBackground(),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
+              ),
+              child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+            height: 109,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              image: DecorationImage(
+                image: NetworkImage(event.eventimage ?? ''),
+                fit: BoxFit.cover,
+              ),
+            ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                top: 16, left: 16, right: 16, bottom: 4),
+                  child: Text(
+              event.description ?? '',
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: AppThemes.brc_textcolor),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                horizontal: 16, vertical: 4),
+                  child: Text(
+              event.eventname ?? '',
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: AppThemes.brc_textcolor),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                horizontal: 16, vertical: 4),
+                  child: Text(
+              event.dateForHeading ?? '',
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: AppThemes.brc_textcolor),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+                ),
+                Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              width: 70,
+              height: 68,
+              decoration: BoxDecoration(
+                color: AppThemes.brc_textcolor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+              '${DateTime.parse(event.date ?? '').day}',
+              style: TextStyle(
                 color: AppThemes.getBackground(),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
+                fontSize: 26,
+                fontWeight: FontWeight.w700,
+              ),
+                  ),
+                  Text(
+              DateFormat('MMM')
+                  .format(DateTime.parse(event.date ?? '')),
+              style: TextStyle(
+                color: AppThemes.getBackground(),
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+              ),
                   ),
                 ],
               ),
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        height: 109,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                          ),
-                          image: DecorationImage(
-                            image: NetworkImage(event.eventimage ?? ''),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 16, left: 16, right: 16, bottom: 4),
-                              child: Text(
-                                event.description ?? '',
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppThemes.brc_textcolor),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 4),
-                              child: Text(
-                                event.eventname ?? '',
-                                style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppThemes.brc_textcolor),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 4),
-                              child: Text(
-                                event.dateForHeading ?? '',
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppThemes.brc_textcolor),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Container(
-                          width: 70,
-                          height: 68,
-                          decoration: BoxDecoration(
-                            color: AppThemes.brc_textcolor,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '${DateTime.parse(event.date ?? '').day}',
-                                style: TextStyle(
-                                  color: AppThemes.getBackground(),
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              Text(
-                                DateFormat('MMM')
-                                    .format(DateTime.parse(event.date ?? '')),
-                                style: TextStyle(
-                                  color: AppThemes.getBackground(),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 16.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => EventDetailsScreen(
-                            event: event,
-                          ),
-                        ));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppThemes.brc_textcolor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Center(
-                          child: Text(
-                            'VIEW DETAILS',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppThemes.brc_selectyourslot_text,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+            ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+            horizontal: 16.0, vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: isSportsEvent
+              ? null
+              : () {
+                  Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => EventDetailsScreen(
+                event: event,
+              ),
+                  ));
+                },
+                style: ElevatedButton.styleFrom(
+            backgroundColor: AppThemes.brc_textcolor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+                ),
+                child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Center(
+              child: Text(
+                'VIEW DETAILS',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppThemes.brc_selectyourslot_text,
+                ),
+              ),
+            ),
+                ),
+              ),
+            ),
+          ],
               ),
             ),
           ),

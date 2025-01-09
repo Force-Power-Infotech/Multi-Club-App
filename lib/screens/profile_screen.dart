@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     // Check if gender is female and memberNameFemale is empty
     if (profileData.memberNameFemale == '') {
-      return const Center(child: Text('No data available for spouse'));
+      return const Center(child: Text(''));
     }
     return FutureBuilder<ProfieviewAPI>(
       future: _profileData,
@@ -735,32 +735,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: AppThemes.brc_textcolor),
         ),
         // centerTitle: true,
-        actions: [
-          if (widget.memberId == globalmemberID)
-            IconButton(
-              icon: Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: Colors.white, // Background color for the square
-                  shape: BoxShape.rectangle, // Shape of the container
-                  borderRadius:
-                      BorderRadius.circular(4), // Optional: Rounded corners
-                ),
-                child: Icon(
-                  Icons.edit,
-                  size: 18,
-                  color: AppThemes.getBackground(),
-                ),
-              ),
-              onPressed: () {
-                // Add onPressed action for the edit profile icon
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => const ProfileEditScreen(),
-                ));
-              },
-            ),
-        ],
+        // actions: [
+        //   if (widget.memberId == globalmemberID)
+        //     IconButton(
+        //       icon: Container(
+        //         width: 20,
+        //         height: 20,
+        //         decoration: BoxDecoration(
+        //           color: Colors.white, // Background color for the square
+        //           shape: BoxShape.rectangle, // Shape of the container
+        //           borderRadius:
+        //               BorderRadius.circular(4), // Optional: Rounded corners
+        //         ),
+        //         child: Icon(
+        //           Icons.edit,
+        //           size: 18,
+        //           color: AppThemes.getBackground(),
+        //         ),
+        //       ),
+        //       onPressed: () {
+        //         // Add onPressed action for the edit profile icon
+        //         Navigator.of(context).push(MaterialPageRoute(
+        //           builder: (_) => const ProfileEditScreen(),
+        //         ));
+        //       },
+        //     ),
+        // ],
       ),
       body: RefreshIndicator(
         onRefresh: _refreshEvents,

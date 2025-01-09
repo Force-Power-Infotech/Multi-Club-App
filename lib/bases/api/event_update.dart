@@ -50,7 +50,7 @@ class EventUpdateAPI {
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
       'theaccesscode': "${accessCode}",
-      'member_id': 'TESTMJ',
+      'member_id': '${UserDataRepository.getMemberID()}',
       'event_id': eventid,
       'attainding_status': attainding_status
     });
