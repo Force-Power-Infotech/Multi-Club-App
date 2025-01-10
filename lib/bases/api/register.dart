@@ -23,7 +23,7 @@ class RegisterAPI {
   }
 
   static Future<RegisterAPI> directory(String email, String firstname,
-      String middlename, String lastname, String phonenumber) async {
+      String middlename, String lastname, String phonenumber, {required String panNumber, required String pincode, required String chapter}) async {
     Uri url = Uri.parse("${Webservice.rootURL}${Webservice.ws_user_register}");
     final request = http.MultipartRequest('POST', url);
 

@@ -19,6 +19,11 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _areaController = TextEditingController();
+  final TextEditingController _pincodeController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _panNumberController = TextEditingController();
+  final TextEditingController _chapterController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +150,69 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                               return null;
                             },
                           ),
+                          _buildTextField(
+                            controller: _areaController,
+                            labelText: 'Area',
+                            icon: Icons.location_on,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your area';
+                              }
+                              return null;
+                            },
+                          ),
+                          _buildTextField(
+                            controller: _pincodeController,
+                            labelText: 'Pincode',
+                            icon: Icons.pin_drop,
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your pincode';
+                              }
+                              if (value.length != 6) {
+                                return 'Pincode must be 6 digits';
+                              }
+                              return null;
+                            },
+                          ),
+                          _buildTextField(
+                            controller: _cityController,
+                            labelText: 'City',
+                            icon: Icons.location_city,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your city';
+                              }
+                              return null;
+                            },
+                          ),
+                          _buildTextField(
+                            controller: _panNumberController,
+                            labelText: 'PAN Number',
+                            icon: Icons.card_membership,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your PAN number';
+                              }
+                              if (!RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$')
+                                  .hasMatch(value)) {
+                                return 'Please enter a valid PAN number';
+                              }
+                              return null;
+                            },
+                          ),
+                          _buildTextField(
+                            controller: _chapterController,
+                            labelText: 'Chapter',
+                            icon: Icons.group,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your chapter';
+                              }
+                              return null;
+                            },
+                          ),
                           const SizedBox(height: 24.0),
                           ElevatedButton(
                             onPressed: () async {
@@ -159,9 +227,12 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                                     await RegisterAPI.directory(
                                   _emailController.text,
                                   _firstNameController.text,
-                                  _middleNameController.text,
-                                  _lastNameController.text,
+                                  _areaController.text,
+                                  _cityController.text,
                                   _phoneNumberController.text,
+                                  panNumber: _panNumberController.text,
+                                  pincode: _pincodeController.text,
+                                  chapter: _chapterController.text,
                                 );
 
                                 if (response.processStatus == 'YES') {

@@ -171,105 +171,79 @@ class _DirectoryState extends State<Directory> {
           Expanded(
             child: _isLoading
                 ? Center(child: CircularProgressIndicator(color: Colors.orange))
-                : ListView.builder(
-                    itemCount: filteredContacts.length,
-                    itemBuilder: (context, index) {
-                      final contact = filteredContacts[index];
-                      final memberDetails = ismillmams
-                          ? [
-                              if (contact.memberNameFemale != null)
-                                {
-                                  'name': contact.memberNameFemale!,
-                                  'gender': 'female',
-                                },
-                            ]
-                          : [
-                              if (contact.memberNameMale != null)
-                                {
-                                  'name': contact.memberNameMale!,
-                                  'imageUrl': contact.imageURLmale ?? '',
-                                  'gender': 'male',
-                                },
-                              if (contact.memberNameFemale != null &&
-                                  contact.memberNameFemale!.isNotEmpty)
-                                {
-                                  'name': contact.memberNameFemale!,
-                                  'imageUrl': contact.imageURLfemale ?? '',
-                                  'gender': 'female',
-                                },
-                            ];
-
-                      return Card(
-                        elevation: 2.0,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: memberDetails.map((member) {
-                              return GestureDetector(
-                                onTap: () {
-                                  if (!ismillmams) {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                            builder: (_) => ProfileScreen(
-                                                  memberId:
-                                                      contact.membershipCode ??
-                                                          '',
-                                                  gender: member['gender']!,
-                                                )));
-                                  }
-                                },
-                                child: Row(
-                                  children: [
-                                    if (!ismillmams)
-                                      CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          member['imageUrl'] ?? '',
-                                        ),
-                                        radius: 30,
-                                        backgroundColor: Colors.grey[200],
-                                      ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            member['name']!,
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                          const SizedBox(height: 4),
-                                          if (contact.city != null)
-                                            Text(
-                                              contact.city!,
-                                              style: TextStyle(
-                                                color: Colors.grey[600],
-                                                fontSize: 14,
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: SingleChildScrollView(
+                      child: DataTable(
+                        headingRowColor:
+                            MaterialStateProperty.all(Colors.grey[200]),
+                        dataRowColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          return states.contains(MaterialState.selected)
+                              ? Colors.grey[100]
+                              : null;
+                        }),
+                        columns: const [
+                          DataColumn(
+                            label: Text('No.',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          DataColumn(
+                            label: Text('Name',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                          DataColumn(
+                            label: Text('Location',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),
+                        ],
+                        rows: List<DataRow>.generate(
+                          filteredContacts.length,
+                          (index) {
+                            final contact = filteredContacts[index];
+                            return DataRow(
+                              cells: [
+                                DataCell(Text('${index + 1}')),
+                                DataCell(
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      if (contact.memberNameMale != null)
+                                        Text(contact.memberNameMale!),
+                                      if (contact.memberNameFemale != null)
+                                        Text(contact.memberNameFemale!),
+                                    ],
+                                  ),
+                                  onTap: !ismillmams
+                                      ? () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (_) => ProfileScreen(
+                                                memberId:
+                                                    contact.membershipCode ??
+                                                        '',
+                                                gender:
+                                                    contact.memberNameMale !=
+                                                            null
+                                                        ? 'male'
+                                                        : 'female',
                                               ),
                                             ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                          );
+                                        }
+                                      : null,
                                 ),
-                              );
-                            }).toList(),
-                          ),
+                                DataCell(
+                                  Text(contact.global ?? contact.city ?? ''),
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
           ),
         ],
@@ -277,163 +251,3 @@ class _DirectoryState extends State<Directory> {
     );
   }
 }
-
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:multi_club_app/bases/api/directory.dart';
-// import 'package:multi_club_app/bases/themes.dart';
-// import 'package:multi_club_app/screens/profile_screen.dart';
-
-// // Import your DirectoryAPI here if not imported already
-
-// class Directory extends StatefulWidget {
-//   const Directory({Key? key}) : super(key: key);
-
-//   @override
-//   _DirectoryState createState() => _DirectoryState();
-// }
-
-// class _DirectoryState extends State<Directory> {
-//   late TextEditingController _searchController;
-//   List<String> contacts = [];
-//   List<String> memberImageUrlArray = [];
-//   List<String> filteredContacts = []; // New list to store filtered contacts
-//   List<String> memberIdArray = []; // New list to store filtered contacts
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _searchController = TextEditingController();
-//     fetchDirectory();
-//   }
-
-//   @override
-//   void dispose() {
-//     _searchController.dispose();
-//     super.dispose();
-//   }
-
-//   void fetchDirectory() async {
-//     try {
-//       DirectoryAPI directoryData =
-//           await DirectoryAPI.directory('eventid', 'attending_status');
-
-//       setState(() {
-//         contacts = directoryData.memberNameArray ?? [];
-//         memberImageUrlArray = directoryData.memberImageUrlArray ?? [];
-//         memberIdArray = directoryData.memberIdArray ?? [];
-//         filteredContacts.addAll(contacts);
-//       });
-//     } catch (e) {
-//       print('Error fetching directory data: $e');
-//     }
-//   }
-
-//   void filterContacts(String query) {
-//     setState(() {
-//       // Filter contacts based on the search query
-//       filteredContacts = contacts
-//           .where(
-//               (contact) => contact.toLowerCase().contains(query.toLowerCase()))
-//           .toList();
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         leading: IconButton(
-//           onPressed: () {
-//             Navigator.of(context).pop();
-//           },
-//           icon: const Icon(
-//             Icons.arrow_back,
-//             color: AppThemes.brc_textcolor,
-//           ),
-//         ),
-//         backgroundColor: AppThemes.getBackground(),
-//         title: const Text(
-//           'Directory',
-//           style: TextStyle(
-//             fontSize: 15,
-//             fontWeight: FontWeight.w700,
-//             color: AppThemes.brc_textcolor,
-//           ),
-//         ),
-//         centerTitle: true,
-//       ),
-//       body: Column(
-//         children: [
-//           Padding(
-//             padding: const EdgeInsets.all(16.0),
-//             child: TextField(
-//               controller: _searchController,
-//               onChanged: filterContacts, // Call filterContacts on text change
-//               decoration: InputDecoration(
-//                 hintText: 'Search contacts',
-//                 prefixIcon: const Icon(Icons.search),
-//                 border: OutlineInputBorder(
-//                   borderRadius: BorderRadius.circular(8.0),
-//                 ),
-//               ),
-//             ),
-//           ),
-//           Expanded(
-//             child: ListView.builder(
-//               itemCount: filteredContacts.length,
-//               itemBuilder: (context, index) {
-//                 // Get the index from the filtered list
-//                 int originalIndex = contacts.indexOf(filteredContacts[index]);
-//                 // Ensure the index is valid
-//                 if (originalIndex >= 0 &&
-//                     originalIndex < memberImageUrlArray.length) {
-//                   return GestureDetector(
-//                     onTap: () {
-//                       // Open the profile screen with the correct memberId
-//                       Navigator.of(context).push(MaterialPageRoute(
-//                         builder: (_) => ProfileScreen(
-//                           memberId: memberIdArray[originalIndex],
-//                         ),
-//                       ));
-//                     },
-//                     child: Padding(
-//                       padding: const EdgeInsets.symmetric(
-//                           horizontal: 16.0, vertical: 4),
-//                       child: Row(
-//                         children: [
-//                           CircleAvatar(
-//                             backgroundImage: NetworkImage(
-//                               memberImageUrlArray[originalIndex],
-//                             ),
-//                             radius: 25,
-//                           ),
-//                           const SizedBox(width: 16),
-//                           Text(
-//                             filteredContacts[index],
-//                             style: const TextStyle(
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   );
-//                 } else {
-//                   // Return an empty widget if index is out of bounds
-//                   return SizedBox.shrink();
-//                 }
-//               },
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
