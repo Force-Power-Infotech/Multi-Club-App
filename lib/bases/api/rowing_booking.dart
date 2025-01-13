@@ -37,14 +37,14 @@ class RowingBookingAPI {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    data['booking_id'] = this.bookingId;
-    data['bk_date_format'] = this.bkDateFormat;
-    data['restaurent_name'] = this.restaurentName;
-    data['dress_code_file_link'] = this.dressCodeFileLink;
-    data['location_name'] = this.locationName;
-    data['location_on_map'] = this.locationOnMap;
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    data['booking_id'] = bookingId;
+    data['bk_date_format'] = bkDateFormat;
+    data['restaurent_name'] = restaurentName;
+    data['dress_code_file_link'] = dressCodeFileLink;
+    data['location_name'] = locationName;
+    data['location_on_map'] = locationOnMap;
     return data;
   }
 
@@ -67,12 +67,12 @@ class RowingBookingAPI {
       'facility_type_id': '5',
       'member_id': 'test001',
       'organization_id': Webservice.appNickname,
-      'theaccesscode': '${accessCode}'
+      'theaccesscode': '$accessCode'
     });
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
-    print('in api code ${responseString}');
+    print('in api code $responseString');
     return RowingBookingAPI.fromJson(jsonDecode(responseString));
   }
 }

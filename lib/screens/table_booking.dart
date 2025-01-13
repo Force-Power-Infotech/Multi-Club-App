@@ -11,7 +11,7 @@ import 'package:multi_club_app/screens/widgets/CalendarSection.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
 class TableBooking extends StatefulWidget {
-  const TableBooking({Key? key}) : super(key: key);
+  const TableBooking({super.key});
 
   @override
   _TableBookingState createState() => _TableBookingState();
@@ -37,7 +37,7 @@ class _TableBookingState extends State<TableBooking> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(const Duration(seconds: 2), () {
       if (meberID != null) {
-        print('tablebooking -- ${meberID}');
+        print('tablebooking -- $meberID');
       } else {
         print('tablebooking -- null');
       }
@@ -60,93 +60,89 @@ class _TableBookingState extends State<TableBooking> {
       String formattedDate = bookingDate.split(' ')[0];
       TimeSlotTableBooking? timeSlotData =
           await TimeSlotTableBooking.booking(formattedDate);
-      if (timeSlotData != null) {
-        List<Widget> rows = [];
+      List<Widget> rows = [];
 
-        if (selectedMealType == 'DINNER') {
-          List<TimingListDinnerArr>? timingList =
-              timeSlotData.timingListDinnerArr;
+      if (selectedMealType == 'DINNER') {
+        List<TimingListDinnerArr>? timingList =
+            timeSlotData.timingListDinnerArr;
 
-          if (timingList != null && timingList.isNotEmpty) {
-            for (int i = 0; i < timingList.length; i += 3) {
-              List<Widget> timeSlots = [];
-              for (int j = i; j < i + 3 && j < timingList.length; j++) {
-                TimingListDinnerArr slot = timingList[j];
-                timeSlots.add(
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CardWidget(
-                        time: slot.timeSlot ?? '',
-                        available: slot.status == 'AVAILABLE',
-                        isSelected: selectedTime == (slot.timeSlot ?? ''),
-                        onTap: () {
-                          handleCardTap(slot.timeSlot ?? '');
-                        },
-                      ),
+        if (timingList != null && timingList.isNotEmpty) {
+          for (int i = 0; i < timingList.length; i += 3) {
+            List<Widget> timeSlots = [];
+            for (int j = i; j < i + 3 && j < timingList.length; j++) {
+              TimingListDinnerArr slot = timingList[j];
+              timeSlots.add(
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CardWidget(
+                      time: slot.timeSlot ?? '',
+                      available: slot.status == 'AVAILABLE',
+                      isSelected: selectedTime == (slot.timeSlot ?? ''),
+                      onTap: () {
+                        handleCardTap(slot.timeSlot ?? '');
+                      },
                     ),
-                  ),
-                );
-              }
-              rows.add(
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.from(timeSlots),
                   ),
                 ),
               );
             }
-          } else {
-            return Text('No time slots available for $selectedMealType');
+            rows.add(
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.from(timeSlots),
+                ),
+              ),
+            );
           }
         } else {
-          List<TimingListArr>? timingList = timeSlotData.timingListArr;
+          return Text('No time slots available for $selectedMealType');
+        }
+      } else {
+        List<TimingListArr>? timingList = timeSlotData.timingListArr;
 
-          if (timingList != null && timingList.isNotEmpty) {
-            for (int i = 0; i < timingList.length; i += 3) {
-              List<Widget> timeSlots = [];
-              for (int j = i; j < i + 3 && j < timingList.length; j++) {
-                TimingListArr slot = timingList[j];
-                timeSlots.add(
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CardWidget(
-                        time: slot.timeSlot ?? '',
-                        available: slot.status == 'AVAILABLE',
-                        isSelected: selectedTime == (slot.timeSlot ?? ''),
-                        onTap: () {
-                          handleCardTap(slot.timeSlot ?? '');
-                        },
-                      ),
+        if (timingList != null && timingList.isNotEmpty) {
+          for (int i = 0; i < timingList.length; i += 3) {
+            List<Widget> timeSlots = [];
+            for (int j = i; j < i + 3 && j < timingList.length; j++) {
+              TimingListArr slot = timingList[j];
+              timeSlots.add(
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CardWidget(
+                      time: slot.timeSlot ?? '',
+                      available: slot.status == 'AVAILABLE',
+                      isSelected: selectedTime == (slot.timeSlot ?? ''),
+                      onTap: () {
+                        handleCardTap(slot.timeSlot ?? '');
+                      },
                     ),
-                  ),
-                );
-              }
-              rows.add(
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.from(timeSlots),
                   ),
                 ),
               );
             }
-          } else {
-            return Text('No time slots available for $selectedMealType');
+            rows.add(
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.from(timeSlots),
+                ),
+              ),
+            );
           }
+        } else {
+          return Text('No time slots available for $selectedMealType');
         }
-
-        return Column(children: List.from(rows));
-      } else {
-        return Text('No time slots available');
       }
-    } catch (error) {
+
+      return Column(children: List.from(rows));
+        } catch (error) {
       print('Error building time slots: $error');
-      return Text('Error building time slots');
+      return const Text('Error building time slots');
     }
   }
 
@@ -239,11 +235,11 @@ class _TableBookingState extends State<TableBooking> {
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                       vertical: 6.0,
                     ),
                   ),
@@ -269,7 +265,6 @@ class _TableBookingState extends State<TableBooking> {
                       setState(() {
                         selectedLocation = selectedLoc['loc_key'] ??
                             ''; // Provide a default value
-                        ;
                         print(selectedLocation);
                       });
                     });
@@ -282,7 +277,7 @@ class _TableBookingState extends State<TableBooking> {
                 ),
                 const SizedBox(height: 10),
                 if (isFetchingLocations)
-                  Center(child: CircularProgressIndicator())
+                  const Center(child: CircularProgressIndicator())
                 else
                   Container(
                     decoration: BoxDecoration(
@@ -293,7 +288,7 @@ class _TableBookingState extends State<TableBooking> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 3,
-                          offset: Offset(0, 6),
+                          offset: const Offset(0, 6),
                         ),
                       ],
                     ),
@@ -336,7 +331,7 @@ class _TableBookingState extends State<TableBooking> {
                               ),
                             );
                           } else {
-                            return SizedBox();
+                            return const SizedBox();
                           }
                         }).toList(),
                       ),
@@ -346,7 +341,7 @@ class _TableBookingState extends State<TableBooking> {
             ),
           ),
 
-          SeperationBar(),
+          const SeperationBar(),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Card(
@@ -386,6 +381,14 @@ class _TableBookingState extends State<TableBooking> {
                               // Call a function or pass data related to lunch
                               sendData(selectedMealType);
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: selectedMealType == 'LUNCH'
+                                  ? AppThemes.brc_background
+                                  : AppThemes.brc_textcolor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
                             child: Text(
                               'LUNCH',
                               style: TextStyle(
@@ -396,17 +399,9 @@ class _TableBookingState extends State<TableBooking> {
                                     : AppThemes.brc_tablebooking_dark_text,
                               ),
                             ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: selectedMealType == 'LUNCH'
-                                  ? AppThemes.brc_background
-                                  : AppThemes.brc_textcolor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
@@ -417,6 +412,14 @@ class _TableBookingState extends State<TableBooking> {
                               // Call a function or pass data related to dinner
                               sendData(selectedMealType);
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: selectedMealType == 'DINNER'
+                                  ? AppThemes.brc_background
+                                  : AppThemes.brc_textcolor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
                             child: Text(
                               'DINNER',
                               style: TextStyle(
@@ -425,14 +428,6 @@ class _TableBookingState extends State<TableBooking> {
                                 color: selectedMealType == 'DINNER'
                                     ? AppThemes.brc_textcolor
                                     : AppThemes.brc_tablebooking_dark_text,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: selectedMealType == 'DINNER'
-                                  ? AppThemes.brc_background
-                                  : AppThemes.brc_textcolor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
                               ),
                             ),
                           ),
@@ -471,7 +466,7 @@ class _TableBookingState extends State<TableBooking> {
           //     ],
           //   ),
           // ),
-          SeperationBar(),
+          const SeperationBar(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -494,18 +489,18 @@ class _TableBookingState extends State<TableBooking> {
                   future: buildTimeSlots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      return snapshot.data ?? SizedBox();
+                      return snapshot.data ?? const SizedBox();
                     }
                   },
                 ),
               ),
             ],
           ),
-          SeperationBar(),
+          const SeperationBar(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -562,14 +557,14 @@ class _TableBookingState extends State<TableBooking> {
                     try {
                       String? bookingDate = Booking
                           .toString(); // Replace 'Booking' with the actual booking date variable
-                      if (bookingDate != null && bookingDate.isNotEmpty) {
+                      if (bookingDate.isNotEmpty) {
                         setState(() {
                           isLoading =
                               true; // Set isLoading to true when button is pressed
                         });
                         // Make the booking request
                         TableBookingAPI booking = await TableBookingAPI.booking(
-                          selectedLocation!,
+                          selectedLocation,
                           bookingDate,
                           selectedMealType,
                           selectedTime,
@@ -577,7 +572,7 @@ class _TableBookingState extends State<TableBooking> {
                         );
                         // SportsBookingAPI sbooking =
                         //     await SportsBookingAPI.booking();
-                        print('after api the location ${selectedLocation}');
+                        print('after api the location $selectedLocation');
 
                         setState(() {
                           isLoading =
@@ -653,10 +648,10 @@ class _TableBookingState extends State<TableBooking> {
                       } else {
                         print('No booking date selected.');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content: Text(
                               'No booking date selected.',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppThemes.brc_textcolor,
                               ),
                             ),
@@ -681,14 +676,14 @@ class _TableBookingState extends State<TableBooking> {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Center(
                       child: isLoading
-                          ? CircularProgressIndicator(
+                          ? const CircularProgressIndicator(
                               // Show CircularProgressIndicator when isLoading is true
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 AppThemes
                                     .brc_textcolor, // Set the color of the spinner
                               ),
                             )
-                          : Text(
+                          : const Text(
                               // Show button text when isLoading is false
                               'Confirm Booking',
                               style: TextStyle(
@@ -744,13 +739,13 @@ class CardWidget extends StatefulWidget {
   final VoidCallback onTap; // Callback function to handle tap
 
   const CardWidget({
-    Key? key,
+    super.key,
     required this.time,
     required this.available,
     required this.isSelected, // Add this line
 
     required this.onTap, // Receive the callback function
-  }) : super(key: key);
+  });
 
   @override
   _CardWidgetState createState() => _CardWidgetState();
@@ -769,7 +764,7 @@ class _CardWidgetState extends State<CardWidget> {
               ? AppThemes.brc_textcolor
               : AppThemes.brc_not_available_bg,
           borderRadius: BorderRadius.circular(4),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: AppThemes.slider_button_off,
               spreadRadius: 0,
@@ -788,7 +783,7 @@ class _CardWidgetState extends State<CardWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
                 widget.time,
                 style: const TextStyle(

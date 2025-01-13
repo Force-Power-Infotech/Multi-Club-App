@@ -10,7 +10,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 String selectedOption = 'present'; // Default selected option
 
 class EventsScreen extends StatefulWidget {
-  const EventsScreen({Key? key}) : super(key: key);
+  const EventsScreen({super.key});
 
   @override
   _EventsScreenState createState() => _EventsScreenState();
@@ -205,27 +205,27 @@ class EventCards extends StatelessWidget {
 
   const EventCards({
     required this.event,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   void _showFeedbackModal(BuildContext context) {
-  double _rating = 0;
-  final TextEditingController _feedbackController = TextEditingController();
-  bool _isSubmitting = false;
+  double rating = 0;
+  final TextEditingController feedbackController = TextEditingController();
+  bool isSubmitting = false;
 
-  void _submitFeedback(StateSetter setState) async {
+  void submitFeedback(StateSetter setState) async {
     setState(() {
-      _isSubmitting = true;
+      isSubmitting = true;
     });
 
     try {
       final response = await FeedbackApi.directory(
-        _rating.toString(),
-        _feedbackController.text,
+        rating.toString(),
+        feedbackController.text,
       );
 
       setState(() {
-        _isSubmitting = false;
+        isSubmitting = false;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -242,7 +242,7 @@ class EventCards extends StatelessWidget {
       }
     } catch (error) {
       setState(() {
-        _isSubmitting = false;
+        isSubmitting = false;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -308,12 +308,12 @@ class EventCards extends StatelessWidget {
                         color: Colors.blueAccent.shade200,
                       ),
                       onRatingUpdate: (rating) {
-                        _rating = rating;
+                        rating = rating;
                       },
                     ),
                     const SizedBox(height: 20),
                     TextField(
-                      controller: _feedbackController,
+                      controller: feedbackController,
                       decoration: InputDecoration(
                         labelText: 'Comments',
                         labelStyle: TextStyle(color: Colors.grey[700]),
@@ -330,10 +330,10 @@ class EventCards extends StatelessWidget {
                       maxLines: 3,
                     ),
                     const SizedBox(height: 20),
-                    _isSubmitting
+                    isSubmitting
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
-                            onPressed: () => _submitFeedback(setState),
+                            onPressed: () => submitFeedback(setState),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blueAccent.shade200,
                               elevation: 2,

@@ -16,7 +16,7 @@ import 'package:multi_club_app/screens/termAndCondition.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({Key? key}) : super(key: key);
+  const SideMenu({super.key});
   void _launchURL(BuildContext context, String url) async {
     try {
       if (await canLaunch(url)) {
@@ -488,8 +488,7 @@ class RoundedImageButton extends StatelessWidget {
   final String url;
 
   const RoundedImageButton(
-      {Key? key, required this.imagePath, required this.url})
-      : super(key: key);
+      {super.key, required this.imagePath, required this.url});
 
   @override
   Widget build(BuildContext context) {

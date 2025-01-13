@@ -32,14 +32,14 @@ class PriviledgeAPI {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    data['name_array'] = this.nameArray;
-    data['image_url_array'] = this.imageUrlArray;
-    data['discount_array'] = this.discountArray;
-    data['location_url_array'] = this.locationUrlArray;
-    data['description_array'] = this.descriptionArray;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    data['name_array'] = nameArray;
+    data['image_url_array'] = imageUrlArray;
+    data['discount_array'] = discountArray;
+    data['location_url_array'] = locationUrlArray;
+    data['description_array'] = descriptionArray;
     return data;
   }
 
@@ -55,7 +55,7 @@ class PriviledgeAPI {
     }
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
-      'theaccesscode': '${accessCode}'
+      'theaccesscode': '$accessCode'
     });
 
     http.StreamedResponse response = await request.send();

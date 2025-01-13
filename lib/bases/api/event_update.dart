@@ -27,17 +27,17 @@ class EventUpdateAPI {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    data['event_id'] = this.eventId;
-    data['eventname'] = this.eventname;
-    data['event_datetime'] = this.eventDatetime;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    data['event_id'] = eventId;
+    data['eventname'] = eventname;
+    data['event_datetime'] = eventDatetime;
     return data;
   }
 
   static Future<EventUpdateAPI> updation(
-      String eventid, String attainding_status) async {
+      String eventid, String attaindingStatus) async {
     Uri url = Uri.parse(
         "${Webservice.rootURL}${Webservice.update_event_attaing_status_v3}?nickname=${Webservice.appNickname}");
     final request = http.MultipartRequest('POST', url);
@@ -50,10 +50,10 @@ class EventUpdateAPI {
     String memberID = await UserDataRepository.getMemberID() ?? '';
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
-      'theaccesscode': "${accessCode}",
+      'theaccesscode': "$accessCode",
       'member_id': memberID,
       'event_id': eventid,
-      'attainding_status': attainding_status
+      'attainding_status': attaindingStatus
     });
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();

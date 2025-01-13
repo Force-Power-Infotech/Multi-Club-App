@@ -13,7 +13,7 @@ import 'package:multi_club_app/screens/sports_booking.dart';
 import 'package:multi_club_app/screens/table_booking.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -162,8 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 5),
                             child: Text(
-                              'Hi ${meberID}!', // Use the meberID variable, if it's null, display an empty string
-                              style: TextStyle(
+                              'Hi $meberID!', // Use the meberID variable, if it's null, display an empty string
+                              style: const TextStyle(
                                 fontWeight:
                                     FontWeight.w600, // Make the text bold
                                 fontSize: 18, // Adjust the font size as needed
@@ -223,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             // Add any child widgets inside the box if needed
                             child: Center(
-                              child: Container(
+                              child: SizedBox(
                                 width: 52.7,
                                 height: 52.7,
                                 child: Stack(
@@ -468,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeScreenBottomIcon(
                 asset: 'assets/images/profilelogo.png',
                 label: 'profile',
-                wheretoGo: () => ProfileScreen(memberId: '', gender: 'male'),
+                wheretoGo: () => const ProfileScreen(memberId: '', gender: 'male'),
               ),
             ],
           ),
@@ -484,11 +484,11 @@ class HomeScreenBottomIcon extends StatelessWidget {
   final Widget Function() wheretoGo;
 
   const HomeScreenBottomIcon({
-    Key? key, // Corrected key parameter
+    super.key, // Corrected key parameter
     required this.asset,
     required this.label,
     required this.wheretoGo,
-  }) : super(key: key); // Corrected super call
+  }); // Corrected super call
 
   @override
   Widget build(BuildContext context) {
@@ -525,11 +525,11 @@ class HomeMenuButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const HomeMenuButton({
-    Key? key,
+    super.key,
     required this.asset,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

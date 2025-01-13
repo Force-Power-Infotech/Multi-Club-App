@@ -4,6 +4,8 @@ import 'package:multi_club_app/bases/themes.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 
 class PrivilegeListScreen extends StatefulWidget {
+  const PrivilegeListScreen({super.key});
+
   @override
   _PrivilegeListScreenState createState() => _PrivilegeListScreenState();
 }
@@ -189,7 +191,7 @@ class _PrivilegeListScreenState extends State<PrivilegeListScreen> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         color: Colors.black26,
                                         blurRadius: 8,
@@ -217,7 +219,7 @@ class _PrivilegeListScreenState extends State<PrivilegeListScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 16),
+                                const SizedBox(width: 16),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -225,23 +227,23 @@ class _PrivilegeListScreenState extends State<PrivilegeListScreen> {
                                     children: [
                                       Text(
                                         snapshot.data!.nameArray![index],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(height: 4),
+                                      const SizedBox(height: 4),
                                       Text(
                                         snapshot.data!.descriptionArray![index],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
                                         ),
                                       ),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       Text(
                                         "${snapshot.data!.discountArray![index]} OFF",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.red,
@@ -262,13 +264,13 @@ class _PrivilegeListScreenState extends State<PrivilegeListScreen> {
                     );
                   } else {
                     // Return a placeholder or empty container if data is missing
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                 },
               );
             } else {
               // Return a placeholder or empty container if no data
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
           }
         },

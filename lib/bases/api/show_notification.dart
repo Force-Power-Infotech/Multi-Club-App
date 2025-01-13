@@ -46,7 +46,7 @@ class ShowNotifications {
     }
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
-      'theaccesscode': '${accessCode}',
+      'theaccesscode': '$accessCode',
       'member_id': 'test001'
     });
 

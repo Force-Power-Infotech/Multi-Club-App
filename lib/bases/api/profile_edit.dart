@@ -62,9 +62,9 @@ class ProfileEditAPI {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
     return data;
   }
 
@@ -91,13 +91,13 @@ class ProfileEditAPI {
     if (imageFile != null && imageFile.existsSync()) {
       print('Image File: ${imageFile.path}');
 
-      request.files.add(await http.MultipartFile.fromBytes(
+      request.files.add(http.MultipartFile.fromBytes(
         'member_image',
         await imageFile.readAsBytes(),
         filename: imageFile.path.split('/').last,
       ));
     } else {
-      print('Image File: ${imageFile}');
+      print('Image File: $imageFile');
     }
     print('Request: $request');
     http.StreamedResponse response = await request.send();

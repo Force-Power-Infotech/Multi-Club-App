@@ -7,7 +7,7 @@ import 'package:multi_club_app/screens/home_screen_BRC.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
 
 class SplashScreenBRC extends StatefulWidget {
-  const SplashScreenBRC({Key? key}) : super(key: key);
+  const SplashScreenBRC({super.key});
 
   @override
   _SplashScreenBRCState createState() => _SplashScreenBRCState();

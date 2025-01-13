@@ -8,11 +8,11 @@ class MailButton extends StatelessWidget {
   final String body; // Optional: pre-filled body
 
   const MailButton({
-    Key? key,
+    super.key,
     required this.email,
     this.subject = "",
     this.body = "",
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class MailButton extends StatelessWidget {
           await launchUrl(uri);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Cannot open email app'),
             ),
           );

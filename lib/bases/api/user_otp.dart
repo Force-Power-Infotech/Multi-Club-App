@@ -170,7 +170,7 @@ class UserOtpAPI {
           return userOtp;
         } catch (e) {
           print('Error parsing JSON: $e');
-          throw FormatException('Invalid response format');
+          throw const FormatException('Invalid response format');
         }
       } else {
         // Handle non-200 responses

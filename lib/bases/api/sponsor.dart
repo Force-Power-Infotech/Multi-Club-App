@@ -21,11 +21,11 @@ class SponsorAPI {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    data['hyperlinks'] = this.hyperlinks;
-    data['images'] = this.images;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    data['hyperlinks'] = hyperlinks;
+    data['images'] = images;
     return data;
   }
 
@@ -41,7 +41,7 @@ class SponsorAPI {
     }
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
-      'theaccesscode': '${accessCode}',
+      'theaccesscode': '$accessCode',
     });
 
     http.StreamedResponse response = await request.send();

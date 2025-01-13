@@ -40,19 +40,19 @@ class TimeSlotRowingBookingAPI {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    if (this.bookingDateListArr != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    if (bookingDateListArr != null) {
       data['booking_date_list_arr'] =
-          this.bookingDateListArr?.map((v) => v.toJson()).toList();
+          bookingDateListArr?.map((v) => v.toJson()).toList();
     }
-    if (this.timingListArr != null) {
+    if (timingListArr != null) {
       data['timing_list_arr'] =
-          this.timingListArr?.map((v) => v.toJson()).toList();
+          timingListArr?.map((v) => v.toJson()).toList();
     }
-    data['allow_booking'] = this.allowBooking;
-    data['display_text'] = this.displayText;
+    data['allow_booking'] = allowBooking;
+    data['display_text'] = displayText;
     return data;
   }
 
@@ -67,7 +67,7 @@ class TimeSlotRowingBookingAPI {
       print('Access code not found');
     }
     request.fields.addAll({
-      'theaccesscode': '${accessCode}',
+      'theaccesscode': '$accessCode',
       'organization_id': Webservice.appNickname,
       'booking_location': '17',
       'member_id': '1',
@@ -107,13 +107,13 @@ class BookingDateListArr {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['full_date'] = this.fullDate;
-    data['date_value'] = this.dateValue;
-    data['day_name'] = this.dayName;
-    data['status'] = this.status;
-    data['hex_code'] = this.hexCode;
-    data['text'] = this.text;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['full_date'] = fullDate;
+    data['date_value'] = dateValue;
+    data['day_name'] = dayName;
+    data['status'] = status;
+    data['hex_code'] = hexCode;
+    data['text'] = text;
     return data;
   }
 }
@@ -162,20 +162,20 @@ class TimingListArr {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['time_slot'] = this.timeSlot;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['time_slot'] = timeSlot;
     data['time_slot_twenty_four_hour_format'] =
-        this.timeSlotTwentyFourHourFormat;
-    data['am_pm_val'] = this.amPmVal;
-    data['status'] = this.status;
-    data['facility_type_id'] = this.facilityTypeId;
-    data['hex_code'] = this.hexCode;
-    data['text'] = this.text;
-    data['action'] = this.action;
-    data['action_text'] = this.actionText;
-    data['action_data'] = this.actionData;
-    data['top_bg_hex_code'] = this.topBgHexCode;
-    data['meal_type'] = this.mealType;
+        timeSlotTwentyFourHourFormat;
+    data['am_pm_val'] = amPmVal;
+    data['status'] = status;
+    data['facility_type_id'] = facilityTypeId;
+    data['hex_code'] = hexCode;
+    data['text'] = text;
+    data['action'] = action;
+    data['action_text'] = actionText;
+    data['action_data'] = actionData;
+    data['top_bg_hex_code'] = topBgHexCode;
+    data['meal_type'] = mealType;
     return data;
   }
 }

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart'; // Add this import for date formatting and parsing
 
 class GalleryScreen extends StatefulWidget {
-  const GalleryScreen({Key? key}) : super(key: key);
+  const GalleryScreen({super.key});
 
   @override
   _GalleryScreenState createState() => _GalleryScreenState();
@@ -62,7 +62,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
             return const Center(child: Text('No data available'));
           } else {
             List<GalleryData> galleryData = snapshot.data!.galleryData!;
-            final appNickname = Webservice.appNickname;
+            const appNickname = Webservice.appNickname;
 
             if (appNickname == 'mm') {
               galleryData.sort(
@@ -162,10 +162,10 @@ class SectionWidget extends StatelessWidget {
   final List<GalleryData> galleryData;
 
   const SectionWidget({
-    Key? key,
+    super.key,
     required this.sectionTitle,
     required this.galleryData,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +206,7 @@ class SectionWidget extends StatelessWidget {
                           child: Center(
                             child: InteractiveViewer(
                               boundaryMargin:
-                                  EdgeInsets.all(20), // Optional: Adjust margin
+                                  const EdgeInsets.all(20), // Optional: Adjust margin
                               minScale: 0.1, // Optional: Minimum scale
                               maxScale: 4.0, // Optional: Maximum scale
                               constrained: false, // Allow over-zooming

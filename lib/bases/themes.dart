@@ -35,7 +35,7 @@ class AppThemes {
 
   // Constants for CSC theme
   static const Color csc_background = Color(0xFFAF1412);
-  static const Color csc_textcolor = Color(0xFFFFFFF);
+  static const Color csc_textcolor = Color(0x0fffffff);
 
   // Constants for CSC theme
   static const Color mm_background = Color(0xFFdc2228);

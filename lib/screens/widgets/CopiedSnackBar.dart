@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CopiedSnackBar extends SnackBar {
-  CopiedSnackBar({Key? key, required String message})
+  CopiedSnackBar({super.key, required String message})
       : super(
-          key: key,
           content: Row(
             children: [
               const Icon(Icons.content_copy),

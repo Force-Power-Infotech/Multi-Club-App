@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/themes.dart';
 
 class SwipeToCheck extends StatefulWidget {
+  const SwipeToCheck({super.key});
+
   @override
   _SwipeToCheckState createState() => _SwipeToCheckState();
 }
@@ -48,7 +50,7 @@ class _SwipeToCheckState extends State<SwipeToCheck> {
               top: 0,
               bottom: 0,
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 width: _dragPosition,
                 decoration: BoxDecoration(
                   color: AppThemes.brc_textcolor.withOpacity(0.2),
@@ -75,11 +77,11 @@ class _SwipeToCheckState extends State<SwipeToCheck> {
               child: Container(
                 width: 50,
                 height: 50,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppThemes.brc_textcolor,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.check,
                   color: Colors.red,
                 ),

@@ -11,7 +11,7 @@ import 'dart:io';
 import 'package:multi_club_app/screens/login_screen.dart';
 
 class ProfileEditScreen extends StatefulWidget {
-  const ProfileEditScreen({Key? key}) : super(key: key);
+  const ProfileEditScreen({super.key});
 
   @override
   _ProfileEditScreenState createState() => _ProfileEditScreenState();
@@ -343,7 +343,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.all(6.0),
+                                  padding: const EdgeInsets.all(6.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -589,7 +589,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                               ? profile.email
                                               : 'No email found, enter Your email',
                                           hintStyle:
-                                              TextStyle(color: Colors.grey),
+                                              const TextStyle(color: Colors.grey),
                                           border: InputBorder.none,
                                         ),
                                         style: const TextStyle(
@@ -627,10 +627,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                             hintText:
                                                 '${profile.officeAddress}',
                                             hintStyle:
-                                                TextStyle(color: Colors.grey),
+                                                const TextStyle(color: Colors.grey),
                                             border: InputBorder.none,
                                           ),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400,
                                             color: AppThemes
@@ -650,7 +650,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: AppThemes.getBackground(),
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(12),
                               bottomRight: Radius.circular(12),
                             ),
@@ -698,7 +698,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                             Navigator.of(context)
                                 .pop(); // Navigate back to the previous page
 
-                            print('API response: ${response}');
+                            print('API response: $response');
                           } catch (e) {
                             // Handle any errors
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -738,7 +738,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16.0, // Add some space between buttons
                       ),
                       if (_showDeleteButton)
@@ -771,7 +771,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                 );
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) => LoginScreen()),
+                                      builder: (context) => const LoginScreen()),
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(

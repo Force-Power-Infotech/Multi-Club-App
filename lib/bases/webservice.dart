@@ -1,4 +1,3 @@
-import 'package:multi_club_app/bases/app_constant.dart';
 
 class Webservice {
   static const String rootURL = "https://club.forcempower.com/";

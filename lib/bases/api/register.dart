@@ -23,7 +23,7 @@ class RegisterAPI {
   }
 
   static Future<RegisterAPI> directory(
-      String email, String member_name, String phone,
+      String email, String memberName, String phone,
       {required String panNumber,
       required String pincode,
       required String chapter,
@@ -36,7 +36,7 @@ class RegisterAPI {
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
       'nickname': Webservice.appNickname,
-      'member_name': member_name,
+      'member_name': memberName,
       'phone': phone,
       'email': email,
       'city': city,

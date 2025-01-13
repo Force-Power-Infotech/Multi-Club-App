@@ -9,7 +9,7 @@ class ColorItem {
 class ColorSelector extends StatefulWidget {
   final List<ColorItem> items;
 
-  const ColorSelector({required this.items});
+  const ColorSelector({super.key, required this.items});
 
   @override
   _ColorSelectorState createState() => _ColorSelectorState();

@@ -5,7 +5,7 @@ import 'package:multi_club_app/bases/themes.dart';
 class CalendarSection extends StatefulWidget {
   final Function(DateTime)? onDateSelected;
 
-  const CalendarSection({Key? key, this.onDateSelected}) : super(key: key);
+  const CalendarSection({super.key, this.onDateSelected});
 
   @override
   _CalendarSectionState createState() => _CalendarSectionState();
@@ -34,7 +34,7 @@ class _CalendarSectionState extends State<CalendarSection> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: -5,
                     blurRadius: 2,
-                    offset: Offset(0, 8),
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
@@ -60,7 +60,7 @@ class _CalendarSectionState extends State<CalendarSection> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: -5,
                     blurRadius: 2,
-                    offset: Offset(0, 8),
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),

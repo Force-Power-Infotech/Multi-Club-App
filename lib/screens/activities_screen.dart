@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/themes.dart';
 
 class ActivitiesScreen extends StatefulWidget {
-  const ActivitiesScreen({Key? key}) : super(key: key);
+  const ActivitiesScreen({super.key});
 
   @override
   _ActivitiesScreenState createState() => _ActivitiesScreenState();
@@ -133,10 +133,10 @@ class ActivitieCard extends StatelessWidget {
   final String label;
 
   const ActivitieCard({
-    Key? key,
+    super.key,
     required this.asset,
     required this.label,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ import 'package:multi_club_app/screens/otp_screen.dart'; // Import your OTP scre
 import 'package:multi_club_app/bases/api/citychaptername.dart';
 
 class RegisterInputScreen extends StatefulWidget {
-  const RegisterInputScreen({Key? key}) : super(key: key);
+  const RegisterInputScreen({super.key});
 
   @override
   _RegisterInputScreenState createState() => _RegisterInputScreenState();

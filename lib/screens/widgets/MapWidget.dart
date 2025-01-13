@@ -53,7 +53,7 @@ class MapWidget extends StatelessWidget {
   final String? googleMapsLink; // Make the link nullable
   final RegExp regex = RegExp(r'@(-?\d+\.\d+),(-?\d+\.\d+)');
 
-  MapWidget({this.googleMapsLink}); // Constructor
+  MapWidget({super.key, this.googleMapsLink}); // Constructor
 
   LatLng? extractLatLngFromLink(String? link) {
     if (link == null) return null;
@@ -100,7 +100,7 @@ class MapWidget extends StatelessWidget {
         children: [
           TileLayer(
             urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
+            subdomains: const ['a', 'b', 'c'],
           ),
           MarkerLayer(
             markers: [

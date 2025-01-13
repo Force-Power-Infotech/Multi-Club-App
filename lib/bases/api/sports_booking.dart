@@ -35,15 +35,15 @@ class SportsBookingAPI {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    data['booking_id'] = this.bookingId;
-    data['bk_date_format'] = this.bkDateFormat;
-    data['booking_show_text'] = this.bookingShowText;
-    data['release_option_status'] = this.releaseOptionStatus;
-    data['is_show_auto_delete_option'] = this.isShowAutoDeleteOption;
-    data['waitlist_info_text'] = this.waitlistInfoText;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    data['booking_id'] = bookingId;
+    data['bk_date_format'] = bkDateFormat;
+    data['booking_show_text'] = bookingShowText;
+    data['release_option_status'] = releaseOptionStatus;
+    data['is_show_auto_delete_option'] = isShowAutoDeleteOption;
+    data['waitlist_info_text'] = waitlistInfoText;
     return data;
   }
 
@@ -90,7 +90,7 @@ class SportsBookingAPI {
 
     http.StreamedResponse response = await request.send();
 
-    print('${request}');
+    print('$request');
     print(request.body);
 
     // http.StreamedResponse response = await request.send();

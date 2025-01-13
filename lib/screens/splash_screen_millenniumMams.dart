@@ -7,7 +7,7 @@ import 'package:multi_club_app/screens/login_screen.dart';
 import 'package:multi_club_app/screens/login_webview%20screen.dart';
 
 class SplashScreenmillenniumMams extends StatefulWidget {
-  const SplashScreenmillenniumMams({Key? key}) : super(key: key);
+  const SplashScreenmillenniumMams({super.key});
 
   @override
   _SplashScreenmillenniumMamsState createState() =>
@@ -66,7 +66,7 @@ class _SplashScreenmillenniumMamsState extends State<SplashScreenmillenniumMams>
         ));
       } else {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => LoginScreen(),
+          builder: (_) => const LoginScreen(),
         ));
       }
     });

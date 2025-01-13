@@ -7,6 +7,8 @@ class GalleryWebView extends StatelessWidget {
   final GlobalKey<CustomWebViewState> customWebViewKey =
       GlobalKey<CustomWebViewState>();
 
+  GalleryWebView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,11 +52,11 @@ class GalleryWebView extends StatelessWidget {
                     customWebViewKey.currentState?.refresh();
                   },
                   backgroundColor: AppThemes.brc_textcolor,
-                  child: const Icon(Icons.refresh_rounded, color: Colors.black),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
+                  child: const Icon(Icons.refresh_rounded, color: Colors.black),
                 ),
                 const SizedBox(width: 20), // Spacing between buttons
                 FloatingActionButton(
@@ -63,12 +65,12 @@ class GalleryWebView extends StatelessWidget {
                     customWebViewKey.currentState?.goBack();
                   },
                   backgroundColor: AppThemes.brc_textcolor,
-                  child: const Icon(Icons.arrow_back_ios_new_rounded,
-                      color: Colors.black),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
+                  child: const Icon(Icons.arrow_back_ios_new_rounded,
+                      color: Colors.black),
                 ),
               ],
             ),

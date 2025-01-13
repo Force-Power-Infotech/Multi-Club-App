@@ -4,7 +4,7 @@ import 'package:multi_club_app/bases/themes.dart';
 class PulsatingButton extends StatefulWidget {
   final VoidCallback onPressed;
 
-  const PulsatingButton({Key? key, required this.onPressed}) : super(key: key);
+  const PulsatingButton({super.key, required this.onPressed});
 
   @override
   _PulsatingButtonState createState() => _PulsatingButtonState();
@@ -61,25 +61,25 @@ class _PulsatingButtonState extends State<PulsatingButton>
           child: ElevatedButton(
             onPressed: widget.onPressed,
             style: ButtonStyle(
-              padding: MaterialStateProperty.all(EdgeInsets.zero),
-              backgroundColor: MaterialStateProperty.all(_colorAnimation.value),
-              elevation: MaterialStateProperty.all(0),
-              shape: MaterialStateProperty.all<OutlinedBorder>(
+              padding: WidgetStateProperty.all(EdgeInsets.zero),
+              backgroundColor: WidgetStateProperty.all(_colorAnimation.value),
+              elevation: WidgetStateProperty.all(0),
+              shape: WidgetStateProperty.all<OutlinedBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50.0),
                 ),
               ),
             ),
             child: Ink(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.transparent,
               ),
               child: _showText
-                  ? Container(
+                  ? SizedBox(
                       width: 80, // Adjust width as needed
                       height: 48, // Adjust height as needed
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           'Wish Them',
                           style: TextStyle(
@@ -89,7 +89,7 @@ class _PulsatingButtonState extends State<PulsatingButton>
                         ),
                       ),
                     )
-                  : Container(
+                  : SizedBox(
                       width: 80, // Adjust width as needed
                       height: 48, // Adjust height as needed
                       child: Padding(

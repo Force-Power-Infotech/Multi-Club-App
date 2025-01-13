@@ -10,7 +10,7 @@ import 'package:multi_club_app/screens/widgets/MapWidget.dart';
 class EventDetailsScreen extends StatelessWidget {
   final EventDetails event;
 
-  const EventDetailsScreen({required this.event, Key? key}) : super(key: key);
+  const EventDetailsScreen({required this.event, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +156,7 @@ class EventDetailsScreen extends StatelessWidget {
                       ),
                         Expanded(
                         child: Text(
-                          "${event.city ?? ''}",
+                          event.city ?? '',
                           style: const TextStyle(
                           color: AppThemes.brc_spotsbooking_hint_text,
                           fontSize: 14,
@@ -388,15 +388,15 @@ class EventDetailsScreen extends StatelessWidget {
                                         ElevatedButton(
                                           style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStateProperty.all(
+                                                WidgetStateProperty.all(
                                                     AppThemes.getBackground()),
                                             minimumSize:
-                                                MaterialStateProperty.all(
+                                                WidgetStateProperty.all(
                                                     const Size(100, 40)),
-                                            padding: MaterialStateProperty.all(
+                                            padding: WidgetStateProperty.all(
                                                 EdgeInsets.zero),
                                             textStyle:
-                                                MaterialStateProperty.all(
+                                                WidgetStateProperty.all(
                                                     const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
@@ -435,15 +435,15 @@ class EventDetailsScreen extends StatelessWidget {
                                         ElevatedButton(
                                           style: ButtonStyle(
                                             backgroundColor:
-                                                MaterialStateProperty.all(
+                                                WidgetStateProperty.all(
                                                     AppThemes.getBackground()),
                                             minimumSize:
-                                                MaterialStateProperty.all(
+                                                WidgetStateProperty.all(
                                                     const Size(100, 40)),
-                                            padding: MaterialStateProperty.all(
+                                            padding: WidgetStateProperty.all(
                                                 EdgeInsets.zero),
                                             textStyle:
-                                                MaterialStateProperty.all(
+                                                WidgetStateProperty.all(
                                                     const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
@@ -486,17 +486,17 @@ class EventDetailsScreen extends StatelessWidget {
                                           ElevatedButton(
                                             style: ButtonStyle(
                                               backgroundColor:
-                                                  MaterialStateProperty.all(
+                                                  WidgetStateProperty.all(
                                                       AppThemes
                                                           .getBackground()),
                                               minimumSize:
-                                                  MaterialStateProperty.all(
+                                                  WidgetStateProperty.all(
                                                       const Size(100, 40)),
                                               padding:
-                                                  MaterialStateProperty.all(
+                                                  WidgetStateProperty.all(
                                                       EdgeInsets.zero),
                                               textStyle:
-                                                  MaterialStateProperty.all(
+                                                  WidgetStateProperty.all(
                                                       const TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,

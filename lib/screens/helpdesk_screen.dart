@@ -5,7 +5,7 @@ import 'package:multi_club_app/bases/api/help_center.dart';
 import 'package:multi_club_app/bases/themes.dart';
 
 class HelpdeskScreen extends StatefulWidget {
-  const HelpdeskScreen({Key? key}) : super(key: key);
+  const HelpdeskScreen({super.key});
 
   @override
   _HelpdeskScreenState createState() => _HelpdeskScreenState();
@@ -72,9 +72,9 @@ class DepartmentInfo extends StatelessWidget {
   final HelpList department;
 
   const DepartmentInfo({
-    Key? key,
+    super.key,
     required this.department,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

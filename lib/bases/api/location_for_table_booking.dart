@@ -50,7 +50,7 @@ class LocationTableBooking {
     request.fields.addAll({
       'page_no': '1',
       'organization_id': Webservice.appNickname,
-      'theaccesscode': '${accessCode}'
+      'theaccesscode': '$accessCode'
     });
 
     http.StreamedResponse response = await request.send();

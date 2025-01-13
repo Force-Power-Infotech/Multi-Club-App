@@ -7,6 +7,8 @@ import 'package:multi_club_app/screens/widgets/PulsatingButton.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BirthdayAnniversaryScreen extends StatelessWidget {
+  const BirthdayAnniversaryScreen({super.key});
+
   void launchWhatsApp(
       BuildContext context, String phoneNumber, String message) async {
     final String whatsappUrl =
@@ -15,7 +17,7 @@ class BirthdayAnniversaryScreen extends StatelessWidget {
       await launch(whatsappUrl);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Could not launch WhatsApp'),
           duration: Duration(seconds: 3),
         ),
@@ -58,13 +60,13 @@ class BirthdayAnniversaryScreen extends StatelessWidget {
         future: DobAPI.details(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData ||
               snapshot.data!.data == null ||
               snapshot.data!.data!.isEmpty) {
-            return Center(
+            return const Center(
               child: Text(
                 'Nothing to show',
                 style: TextStyle(fontSize: 18),

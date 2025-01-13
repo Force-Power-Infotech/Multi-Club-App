@@ -4,7 +4,7 @@ import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+  const NotificationScreen({super.key});
 
   @override
   _NotificationScreenState createState() => _NotificationScreenState();
@@ -28,27 +28,25 @@ class _NotificationScreenState extends State<NotificationScreen> {
       // Fetch notifications from the API
       ShowNotifications? showNotifications =
           await ShowNotifications.getnotification();
-      if (showNotifications != null) {
-        // Filter notifications based on category
-        List<NotificationData> bookingAlerts = [];
-        List<NotificationData> clubAlerts = [];
+      // Filter notifications based on category
+      List<NotificationData> bookingAlerts = [];
+      List<NotificationData> clubAlerts = [];
 
-        showNotifications.notificationData?.forEach((notification) {
-          if (notification.category == 'DEFAULT') {
-            bookingAlerts.add(notification);
-          } else if (notification.category == 'Club Alerts') {
-            clubAlerts.add(notification);
-          }
-        });
+      showNotifications.notificationData?.forEach((notification) {
+        if (notification.category == 'DEFAULT') {
+          bookingAlerts.add(notification);
+        } else if (notification.category == 'Club Alerts') {
+          clubAlerts.add(notification);
+        }
+      });
 
-        setState(() {
-          notifications =
-              selectedOption == 'DEFAULT' ? bookingAlerts : clubAlerts;
-          isLoading = false; // Set loading to false when data is fetched
-        });
-        print('SUCCES fetching notifications: $notifications');
-      }
-    } catch (error) {
+      setState(() {
+        notifications =
+            selectedOption == 'DEFAULT' ? bookingAlerts : clubAlerts;
+        isLoading = false; // Set loading to false when data is fetched
+      });
+      print('SUCCES fetching notifications: $notifications');
+        } catch (error) {
       // Handle error if fetching notifications fails
       print('Error fetching notifications: $error');
       // Set loading to false even if there's an error
@@ -178,7 +176,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ],
           ),
           if (isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             ),
         ],
@@ -190,7 +188,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 class BookingAlertsBody extends StatelessWidget {
   final List<NotificationData> notifications;
 
-  const BookingAlertsBody({required this.notifications});
+  const BookingAlertsBody({super.key, required this.notifications});
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +208,7 @@ class BookingAlertsBody extends StatelessWidget {
 class ClubAlertsBody extends StatelessWidget {
   final List<NotificationData> notifications;
 
-  const ClubAlertsBody({required this.notifications});
+  const ClubAlertsBody({super.key, required this.notifications});
 
   @override
   Widget build(BuildContext context) {
@@ -230,14 +228,14 @@ class ClubAlertsBody extends StatelessWidget {
 class NotificationItem extends StatelessWidget {
   final NotificationData notification;
 
-  const NotificationItem({required this.notification});
+  const NotificationItem({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           color: AppThemes.brc_textcolor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,30 +273,30 @@ class NotificationItem extends StatelessWidget {
                       children: [
                         Text(
                           notification.title ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: AppThemes.brc_spotsbooking_hint_text,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         SizedBox(
                           width: double.infinity,
                           child: Text(
                             notification.description ?? '',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: AppThemes.brc_spotsbooking_hint_text,
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         SizedBox(
                           width: double.infinity,
                           child: Text(
                             notification.dateTime ?? '',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: AppThemes.brc_spotsbooking_hint_text,
@@ -313,7 +311,7 @@ class NotificationItem extends StatelessWidget {
             ],
           ),
         ),
-        SeperationBar()
+        const SeperationBar()
       ],
     );
   }

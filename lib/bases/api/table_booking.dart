@@ -68,9 +68,9 @@ class TableBookingAPI {
       'facility_type_id': '3',
       'member_id': 'test001',
       'organization_id': Webservice.appNickname,
-      'theaccesscode': '${accessCode}'
+      'theaccesscode': '$accessCode'
     });
-    print('in the api setting the getting location${bookinglocation}');
+    print('in the api setting the getting location$bookinglocation');
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();

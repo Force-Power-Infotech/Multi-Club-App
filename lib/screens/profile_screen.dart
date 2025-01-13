@@ -16,8 +16,7 @@ class ProfileScreen extends StatefulWidget {
   final String? memberId;
   final String gender; // Add gender parameter
 
-  const ProfileScreen({Key? key, required this.memberId, this.gender = 'male'})
-      : super(key: key);
+  const ProfileScreen({super.key, required this.memberId, this.gender = 'male'});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -1551,7 +1550,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ),
                                           Text(
-                                            '${profileData.officeAddress ?? ''}', // Replace with actual address
+                                            profileData.officeAddress ?? '', // Replace with actual address
                                             style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,

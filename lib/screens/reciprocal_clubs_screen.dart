@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/themes.dart';
 
 class ReciprocalClubsScreen extends StatefulWidget {
-  const ReciprocalClubsScreen({Key? key}) : super(key: key);
+  const ReciprocalClubsScreen({super.key});
 
   @override
   _ReciprocalClubsScreenState createState() => _ReciprocalClubsScreenState();
@@ -44,8 +44,8 @@ class reciprocalClubCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 16.0, left: 16),
+        const Padding(
+          padding: EdgeInsets.only(top: 16.0, left: 16),
           child: Text(
             'DHAKA',
             style: TextStyle(
@@ -66,7 +66,7 @@ class reciprocalClubCard extends StatelessWidget {
                   color: Colors.black.withOpacity(0.2), // Shadow color
                   spreadRadius: 1, // Spread radius
                   blurRadius: 4, // Blur radius
-                  offset: Offset(0, 3), // Shadow offset
+                  offset: const Offset(0, 3), // Shadow offset
                 ),
               ],
             ),
@@ -84,7 +84,7 @@ class reciprocalClubCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'DHAKA CLUB LTD.',
                         style: TextStyle(
                             color: AppThemes.brc_spotsbooking_hint_text,
@@ -131,13 +131,13 @@ class reciprocalClubCard extends StatelessWidget {
                                 padding: EdgeInsets.zero,
                                 color: AppThemes.brc_textcolor,
                                 iconSize: 11,
-                                icon: Icon(Icons.call),
+                                icon: const Icon(Icons.call),
                                 onPressed: () {
                                   // Add functionality for calling
                                 },
                               ),
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Container(
                               decoration: BoxDecoration(
                                 color: AppThemes.getBackground(),
@@ -149,7 +149,7 @@ class reciprocalClubCard extends StatelessWidget {
                                 padding: EdgeInsets.zero,
                                 color: AppThemes.brc_textcolor,
                                 iconSize: 11,
-                                icon: Icon(Icons.mail),
+                                icon: const Icon(Icons.mail),
                                 onPressed: () {
                                   // Add functionality for calling
                                 },
@@ -169,7 +169,7 @@ class reciprocalClubCard extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           color: AppThemes.brc_textcolor,
                           iconSize: 11,
-                          icon: Icon(Icons.language),
+                          icon: const Icon(Icons.language),
                           onPressed: () {
                             // Add functionality for calling
                           },

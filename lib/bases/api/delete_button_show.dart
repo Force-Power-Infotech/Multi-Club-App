@@ -16,9 +16,9 @@ class DeleteButtonShowApi {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['action'] = this.action;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['action'] = action;
     return data;
   }
 

@@ -5,6 +5,8 @@ import 'package:multi_club_app/bases/themes.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import the url_launcher package
 
 class CarouselSponsor extends StatefulWidget {
+  const CarouselSponsor({super.key});
+
   @override
   _CarouselSponsorState createState() => _CarouselSponsorState();
 }
@@ -34,16 +36,16 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
 
   void _startAutoScroll() {
     // Start auto-scrolling every 2 seconds
-    Future.delayed(Duration(seconds: 2), () async {
+    Future.delayed(const Duration(seconds: 2), () async {
       if (_pageController.hasClients) {
         final int nextPage = (_pageController.page?.round() ?? 0) + 1;
-        final SponsorAPI? sponsorData = await _sponsorFuture;
+        final SponsorAPI sponsorData = await _sponsorFuture;
         if (sponsorData != null && sponsorData.images != null) {
           final int itemCount = sponsorData.images!.length -
               1; // Adjust for skipping the first image
           _pageController.animateToPage(
             nextPage % itemCount,
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             curve: Curves.easeOut,
           );
         }
@@ -63,7 +65,7 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
       await launch(mapUrl);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Could not launch Map'),
           duration: Duration(seconds: 3), // Adjust as needed
         ),
@@ -77,7 +79,7 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
       future: _sponsorFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(), // or any loading indicator
           );
         } else if (snapshot.hasError) {
@@ -87,7 +89,7 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
         } else {
           // Check if snapshot has data
           if (snapshot.hasData && snapshot.data!.images != null) {
-            return Container(
+            return SizedBox(
               height: 190, // Adjust the height of the carousel as needed
               child: PageView.builder(
                 controller: _pageController,
@@ -107,7 +109,7 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
                           await launch(url);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('Could not launch URL'),
                               duration: Duration(seconds: 3),
                             ),
@@ -145,14 +147,14 @@ class _CarouselSponsorState extends State<CarouselSponsor> {
                     );
                   } else {
                     // Return a placeholder or empty container if data is missing
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                 },
               ),
             );
           } else {
             // Return a placeholder or empty container if no data
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }
         }
       },

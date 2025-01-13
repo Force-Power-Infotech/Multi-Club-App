@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Directory extends StatefulWidget {
-  const Directory({Key? key}) : super(key: key);
+  const Directory({super.key});
 
   @override
   _DirectoryState createState() => _DirectoryState();
@@ -131,7 +131,7 @@ class _DirectoryState extends State<Directory> {
                 contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: Icon(Icons.clear, color: Colors.grey),
+                        icon: const Icon(Icons.clear, color: Colors.grey),
                         onPressed: () {
                           _searchController.clear();
                           filterContacts('');
@@ -148,7 +148,7 @@ class _DirectoryState extends State<Directory> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   isExpanded: true,
-                  hint: Text('Select Chapter'),
+                  hint: const Text('Select Chapter'),
                   value: selectedFilter,
                   onChanged: (value) {
                     setState(() {
@@ -170,16 +170,16 @@ class _DirectoryState extends State<Directory> {
             ),
           Expanded(
             child: _isLoading
-                ? Center(child: CircularProgressIndicator(color: Colors.orange))
+                ? const Center(child: CircularProgressIndicator(color: Colors.orange))
                 : SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: SingleChildScrollView(
                       child: DataTable(
                         headingRowColor:
-                            MaterialStateProperty.all(Colors.grey[200]),
+                            WidgetStateProperty.all(Colors.grey[200]),
                         dataRowColor:
-                            MaterialStateProperty.resolveWith((states) {
-                          return states.contains(MaterialState.selected)
+                            WidgetStateProperty.resolveWith((states) {
+                          return states.contains(WidgetState.selected)
                               ? Colors.grey[100]
                               : null;
                         }),

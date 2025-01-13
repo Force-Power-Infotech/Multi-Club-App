@@ -70,7 +70,7 @@ class TimeSlotTableBooking {
       'member_id': 'test001',
       'selected_date': bookingtime,
       'organization_id': Webservice.appNickname,
-      'theaccesscode': '${accessCode}'
+      'theaccesscode': '$accessCode'
     });
 
     http.StreamedResponse response = await request.send();

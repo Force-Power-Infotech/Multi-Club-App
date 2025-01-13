@@ -6,7 +6,7 @@ import 'package:multi_club_app/screens/home_screen%20_madhuwan.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
 
 class SplashScreenMadhuban extends StatefulWidget {
-  const SplashScreenMadhuban({Key? key}) : super(key: key);
+  const SplashScreenMadhuban({super.key});
 
   @override
   _SplashScreenMadhubanState createState() => _SplashScreenMadhubanState();

@@ -27,7 +27,7 @@ import 'package:multi_club_app/screens/widgets/SponsorSlider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreenMadhuwan extends StatefulWidget {
-  const HomeScreenMadhuwan({Key? key}) : super(key: key);
+  const HomeScreenMadhuwan({super.key});
 
   @override
   _HomeScreenMadhuwanState createState() => _HomeScreenMadhuwanState();
@@ -102,7 +102,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
       await launch(whatsappUrl);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Could not launch WhatsApp'),
           duration: Duration(seconds: 3), // Adjust as needed
         ),
@@ -125,7 +125,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
       key: _scaffoldKey,
 
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight +
+        preferredSize: const Size.fromHeight(kToolbarHeight +
             80), // Add extra height for the red bar and padding
         child: Column(
           children: [
@@ -202,7 +202,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                 future: SponsorAPI.details(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
@@ -258,7 +258,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
           } else if (snapshot.hasData) {
             final profileData = snapshot.data!.data?.first;
             if (profileData == null) {
-              return Center(child: Text('No profile data available'));
+              return const Center(child: Text('No profile data available'));
             }
 
             String imageUrl = profileData.maleImageURL ??
@@ -305,7 +305,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
                                       builder: (_) => ProfileScreen(
-                                          memberId: '${globalmemberID}',
+                                          memberId: '$globalmemberID',
                                           gender: 'male'),
                                     ));
                                   },
@@ -352,7 +352,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
-                                      return CircularProgressIndicator(); // Show a loading indicator while waiting for data
+                                      return const CircularProgressIndicator(); // Show a loading indicator while waiting for data
                                     } else if (snapshot.hasError) {
                                       return Text('Error: ${snapshot.error}');
                                     } else {
@@ -407,7 +407,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            EventsScreen()), // Replace EventScreen() with your actual screen
+                                            const EventsScreen()), // Replace EventScreen() with your actual screen
                                   );
                                 },
                                 child: Text(
@@ -455,7 +455,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                 );
                               } else {
                                 // Handle case where eventAPI or eventAPI.eventDetails is null
-                                return Center(
+                                return const Center(
                                   child: Text('No events available'),
                                 );
                               }
@@ -511,7 +511,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return Center(
+                                    return const Center(
                                         child: CircularProgressIndicator());
                                   } else if (snapshot.hasError) {
                                     return Center(
@@ -520,7 +520,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                   } else if (!snapshot.hasData ||
                                       snapshot.data!.data == null ||
                                       snapshot.data!.data!.isEmpty) {
-                                    return Center(
+                                    return const Center(
                                       child: Text(
                                         'Nothing to show',
                                         style: TextStyle(fontSize: 18),
@@ -546,11 +546,11 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                 vertical: 8.0),
                                             child: GestureDetector(
                                               onTap: () {
-                                                print('${id}');
+                                                print(id);
                                                 Navigator.of(context)
                                                     .push(MaterialPageRoute(
                                                   builder: (_) => ProfileScreen(
-                                                      memberId: '${id}',
+                                                      memberId: id,
                                                       gender: 'male'),
                                                 ));
                                               },
@@ -644,7 +644,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 16),
+                                                  const SizedBox(width: 16),
                                                   PulsatingButton(
                                                     onPressed: () {
                                                       if (contact.isEmpty) {
@@ -740,7 +740,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
               ],
             );
           } else {
-            return Center(child: Text('No profile data found'));
+            return const Center(child: Text('No profile data found'));
           }
         },
       ),
@@ -777,7 +777,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(
                       20), // Adjust the top left corner radius as needed
                   topRight: Radius.circular(
@@ -807,7 +807,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                         asset: 'assets/images/profilelogo.png',
                         label: 'Profile',
                         wheretoGo: () => ProfileScreen(
-                            memberId: '${globalmemberID}', gender: 'male'),
+                            memberId: '$globalmemberID', gender: 'male'),
                       ),
                     ],
                   ),
@@ -826,8 +826,8 @@ class home_event_card extends StatelessWidget {
 
   const home_event_card({
     required this.event,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -865,7 +865,7 @@ class home_event_card extends StatelessWidget {
                     children: [
                       Text(
                         "${event.eventname}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
@@ -874,7 +874,7 @@ class home_event_card extends StatelessWidget {
                       ),
                       Text(
                         "${event.dateForHeading}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                         ),
                         maxLines: 1,
@@ -882,7 +882,7 @@ class home_event_card extends StatelessWidget {
                       ),
                       Text(
                         "${event.description}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
                         ),
@@ -937,11 +937,11 @@ class HomeScreenBottomIcon extends StatelessWidget {
   final Widget Function() wheretoGo;
 
   const HomeScreenBottomIcon({
-    Key? key, // Corrected key parameter
+    super.key, // Corrected key parameter
     required this.asset,
     required this.label,
     required this.wheretoGo,
-  }) : super(key: key); // Corrected super call
+  }); // Corrected super call
 
   @override
   Widget build(BuildContext context) {
@@ -978,11 +978,11 @@ class HomeMenuButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const HomeMenuButton({
-    Key? key,
+    super.key,
     required this.asset,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

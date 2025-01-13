@@ -40,12 +40,8 @@ class UserDataRepository {
       var box = await Hive.openBox(_boxName);
       var userDataMap = box.get('user_data_key') as Map<String, dynamic>;
       print(userDataMap);
-      if (userDataMap != null) {
-        return userDataMap['memberImageUrl'] as String?;
-      } else {
-        return null;
-      }
-    } catch (e) {
+      return userDataMap['memberImageUrl'] as String?;
+        } catch (e) {
       print('Error retrieving access code: $e');
       return null;
     }

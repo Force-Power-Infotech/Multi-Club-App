@@ -5,7 +5,7 @@ import 'package:multi_club_app/screens/table_booking.dart';
 import 'package:multi_club_app/screens/widgets/CalendarSection.dart';
 
 class SportsBooking extends StatefulWidget {
-  const SportsBooking({Key? key}) : super(key: key);
+  const SportsBooking({super.key});
 
   @override
   _SportsBookingState createState() => _SportsBookingState();
@@ -38,7 +38,7 @@ class _SportsBookingState extends State<SportsBooking> {
       ),
       body: ListView(
         children: [
-          CalendarSection(),
+          const CalendarSection(),
           const SeperationBar(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -55,7 +55,7 @@ class _SportsBookingState extends State<SportsBooking> {
                         color: Colors.grey.withOpacity(0.5), // Shadow color
                         spreadRadius: 1, // Spread radius
                         blurRadius: 7, // Blur radius
-                        offset: Offset(0, 3), // Shadow offset
+                        offset: const Offset(0, 3), // Shadow offset
                       ),
                     ],
                     color: AppThemes.brc_textcolor, // Background color
@@ -437,8 +437,7 @@ class _SportsBookingState extends State<SportsBooking> {
                             try {
                               String? bookingDate = "2024-04-25";
                               //     .toString(); // Replace 'Booking' with the actual booking date variable
-                              if (bookingDate != null &&
-                                  bookingDate.isNotEmpty) {
+                              if (bookingDate.isNotEmpty) {
                                 setState(() {
                                   isLoading =
                                       true; // Set isLoading to true when button is pressed
@@ -489,10 +488,10 @@ class _SportsBookingState extends State<SportsBooking> {
                               } else {
                                 print('No booking date selected.');
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content: Text(
                                       'No booking date selected.',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppThemes.brc_textcolor,
                                       ),
                                     ),
@@ -517,14 +516,14 @@ class _SportsBookingState extends State<SportsBooking> {
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             child: Center(
                               child: isLoading
-                                  ? CircularProgressIndicator(
+                                  ? const CircularProgressIndicator(
                                       // Show CircularProgressIndicator when isLoading is true
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                         AppThemes
                                             .brc_textcolor, // Set the color of the spinner
                                       ),
                                     )
-                                  : Text(
+                                  : const Text(
                                       // Show button text when isLoading is false
                                       'Confirm Booking',
                                       style: TextStyle(
@@ -554,10 +553,10 @@ class CardWidget extends StatelessWidget {
   final bool available;
 
   const CardWidget({
-    Key? key,
+    super.key,
     required this.time,
     required this.available,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -572,7 +571,7 @@ class CardWidget extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 0,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -580,7 +579,7 @@ class CardWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.only(top: 8), // Adjust padding as needed
+            padding: const EdgeInsets.only(top: 8), // Adjust padding as needed
             child: Text(
               time,
               style: const TextStyle(

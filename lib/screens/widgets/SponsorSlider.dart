@@ -4,6 +4,8 @@ import 'package:multi_club_app/bases/api/sponsor.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import url_launcher package
 
 class SlideshowWidget extends StatefulWidget {
+  const SlideshowWidget({super.key});
+
   @override
   _SlideshowWidgetState createState() => _SlideshowWidgetState();
 }
@@ -41,7 +43,7 @@ class _SlideshowWidgetState extends State<SlideshowWidget> {
   }
 
   void startSlideshow() {
-    Timer.periodic(Duration(seconds: 2), (Timer timer) {
+    Timer.periodic(const Duration(seconds: 2), (Timer timer) {
       if (_pageController.hasClients &&
           _pageController.position.maxScrollExtent > 0) {
         if (_currentPageIndex < _imagePaths.length - 1) {
@@ -51,7 +53,7 @@ class _SlideshowWidgetState extends State<SlideshowWidget> {
         }
         _pageController.animateToPage(
           _currentPageIndex,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
       }
@@ -62,7 +64,7 @@ class _SlideshowWidgetState extends State<SlideshowWidget> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: Container(
+      child: SizedBox(
         height: 30, // Height of the container
         child: PageView.builder(
           controller: _pageController,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/themes.dart';
 
 class SettingScreen extends StatefulWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+  const SettingScreen({super.key});
 
   @override
   _SettingScreenState createState() => _SettingScreenState();
@@ -36,7 +36,7 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: ListView(
         children: [
-          SizedBox(height: 20), // Add some space at the top
+          const SizedBox(height: 20), // Add some space at the top
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
@@ -55,7 +55,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               'Reminder',
                               style: TextStyle(
                                 fontSize: 20,
@@ -65,12 +65,12 @@ class _SettingScreenState extends State<SettingScreen> {
                             SliderButton(), // Include the SliderButton widget here
                           ],
                         ),
-                        SizedBox(height: 20), // Add space between columns
+                        const SizedBox(height: 20), // Add space between columns
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               'Notification',
                               style: TextStyle(
                                 fontSize: 20,
@@ -87,9 +87,9 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
             ),
           ),
-          SizedBox(height: 400), // Add space between columns
+          const SizedBox(height: 400), // Add space between columns
 
-          Align(
+          const Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: EdgeInsets.only(bottom: 20),
@@ -110,6 +110,8 @@ class _SettingScreenState extends State<SettingScreen> {
 }
 
 class SliderButton extends StatefulWidget {
+  const SliderButton({super.key});
+
   @override
   _SliderButtonState createState() => _SliderButtonState();
 }
@@ -136,12 +138,12 @@ class _SliderButtonState extends State<SliderButton> {
         child: Stack(
           children: [
             AnimatedAlign(
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               alignment: _isOn ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
                 width: 49,
                 height: 49,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),

@@ -23,7 +23,7 @@ import 'package:multi_club_app/screens/widgets/SponsorSlider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreenMillenniumMams extends StatefulWidget {
-  const HomeScreenMillenniumMams({Key? key}) : super(key: key);
+  const HomeScreenMillenniumMams({super.key});
 
   @override
   _HomeScreenMillenniumMamsState createState() =>
@@ -265,8 +265,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(10.0),
-                                        child: imageUrl != null &&
-                                                imageUrl.isNotEmpty
+                                        child: imageUrl.isNotEmpty
                                             ? Image.network(
                                                 imageUrl,
                                                 fit: BoxFit.cover,
@@ -503,7 +502,7 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
                         asset: 'assets/images/profilelogo.png',
                         label: 'Profile',
                         wheretoGo: () => ProfileScreen(
-                            memberId: '${globalmemberID}', gender: 'male'),
+                            memberId: '$globalmemberID', gender: 'male'),
                       ),
                     ],
                   ),
@@ -522,8 +521,8 @@ class home_event_card extends StatelessWidget {
 
   const home_event_card({
     required this.event,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -633,11 +632,11 @@ class HomeScreenBottomIcon extends StatelessWidget {
   final Widget Function() wheretoGo;
 
   const HomeScreenBottomIcon({
-    Key? key, // Corrected key parameter
+    super.key, // Corrected key parameter
     required this.asset,
     required this.label,
     required this.wheretoGo,
-  }) : super(key: key); // Corrected super call
+  }); // Corrected super call
 
   @override
   Widget build(BuildContext context) {
@@ -674,11 +673,11 @@ class HomeMenuButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const HomeMenuButton({
-    Key? key,
+    super.key,
     required this.asset,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

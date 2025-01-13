@@ -151,7 +151,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             content: Text(
                               'WELCOME 🙏 ${user.firstname} ${user.lastname}',
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: AppThemes.brc_textcolor),
+                              style: const TextStyle(color: AppThemes.brc_textcolor),
                             ),
                             backgroundColor: AppThemes.brc_otp_success,
                             behavior: SnackBarBehavior.floating,
@@ -162,7 +162,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           SnackBar(
                             content: Text(
                               '${user.processMessage}',
-                              style: TextStyle(color: AppThemes.brc_textcolor),
+                              style: const TextStyle(color: AppThemes.brc_textcolor),
                             ),
                             backgroundColor: AppThemes.brc_otp_error,
                             behavior: SnackBarBehavior.floating,

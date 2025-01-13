@@ -75,15 +75,15 @@ class DobAPI {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data?.add(new Data.fromJson(v));
+        data?.add(Data.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
     if (this.data != null) {
       data['data'] = this.data?.map((v) => v.toJson()).toList();
     }
@@ -137,13 +137,13 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['member_id'] = this.memberId;
-    data['member_name'] = this.memberName;
-    data['member_dob'] = this.memberDob;
-    data['member_contact'] = this.memberContact;
-    data['member_mail'] = this.memberMail;
-    data['image_url'] = this.imageUrl;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['member_id'] = memberId;
+    data['member_name'] = memberName;
+    data['member_dob'] = memberDob;
+    data['member_contact'] = memberContact;
+    data['member_mail'] = memberMail;
+    data['image_url'] = imageUrl;
     return data;
   }
 }

@@ -4,7 +4,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 class CustomWebView extends StatefulWidget {
   final String initialUrl;
 
-  const CustomWebView({Key? key, required this.initialUrl}) : super(key: key);
+  const CustomWebView({super.key, required this.initialUrl});
 
   @override
   CustomWebViewState createState() => CustomWebViewState();

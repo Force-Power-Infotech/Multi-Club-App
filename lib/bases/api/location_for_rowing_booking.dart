@@ -25,11 +25,11 @@ class LocationRowingBookingAPI {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    if (this.locationData != null) {
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    if (locationData != null) {
       data['location_data'] =
-          this.locationData?.map((v) => v.toJson()).toList();
+          locationData?.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -45,7 +45,7 @@ class LocationRowingBookingAPI {
       print('Access code not found');
     }
     request.fields.addAll({
-      'theaccesscode': '${accessCode}',
+      'theaccesscode': '$accessCode',
       'organization_id': Webservice.appNickname,
       'page_no': '39'
     });

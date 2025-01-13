@@ -18,35 +18,35 @@ class CityChapterNameAPI {
     if (json['city'] != null) {
       city = <City>[];
       json['city'].forEach((v) {
-        city!.add(new City.fromJson(v));
+        city!.add(City.fromJson(v));
       });
     }
     if (json['chapter'] != null) {
       chapter = <Chapter>[];
       json['chapter'].forEach((v) {
-        chapter!.add(new Chapter.fromJson(v));
+        chapter!.add(Chapter.fromJson(v));
       });
     }
     if (json['country'] != null) {
       country = <Country>[];
       json['country'].forEach((v) {
-        country!.add(new Country.fromJson(v));
+        country!.add(Country.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['process_status'] = this.processStatus;
-    data['process_message'] = this.processMessage;
-    if (this.city != null) {
-      data['city'] = this.city!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['process_status'] = processStatus;
+    data['process_message'] = processMessage;
+    if (city != null) {
+      data['city'] = city!.map((v) => v.toJson()).toList();
     }
-    if (this.chapter != null) {
-      data['chapter'] = this.chapter!.map((v) => v.toJson()).toList();
+    if (chapter != null) {
+      data['chapter'] = chapter!.map((v) => v.toJson()).toList();
     }
-    if (this.country != null) {
-      data['country'] = this.country!.map((v) => v.toJson()).toList();
+    if (country != null) {
+      data['country'] = country!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -76,8 +76,8 @@ class City {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['city'] = this.city;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['city'] = city;
     return data;
   }
 }
@@ -92,8 +92,8 @@ class Chapter {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['chapter'] = this.chapter;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['chapter'] = chapter;
     return data;
   }
 }
@@ -108,8 +108,8 @@ class Country {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['country'] = this.country;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['country'] = country;
     return data;
   }
 }

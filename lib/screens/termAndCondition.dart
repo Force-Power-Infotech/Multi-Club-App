@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/themes.dart';
 
 class TermAndCondition extends StatefulWidget {
-  const TermAndCondition({Key? key}) : super(key: key);
+  const TermAndCondition({super.key});
 
   @override
   _TermAndConditionState createState() => _TermAndConditionState();
@@ -22,7 +22,7 @@ class _TermAndConditionState extends State<TermAndCondition>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
 
     _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -40,7 +40,7 @@ class _TermAndConditionState extends State<TermAndCondition>
     );
 
     _slideAnimation =
-        Tween<Offset>(begin: Offset(0, 0.5), end: Offset(0, 0)).animate(
+        Tween<Offset>(begin: const Offset(0, 0.5), end: const Offset(0, 0)).animate(
       CurvedAnimation(
         parent: _controller,
         curve: Curves.easeInOut,
@@ -62,7 +62,7 @@ class _TermAndConditionState extends State<TermAndCondition>
       appBar: AppBar(
         backgroundColor: AppThemes.getBackground(),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppThemes.brc_textcolor),
+          icon: const Icon(Icons.arrow_back, color: AppThemes.brc_textcolor),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -101,7 +101,7 @@ class _TermAndConditionState extends State<TermAndCondition>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   "Terms & Conditions for the Application",
                                   style: TextStyle(
                                     fontSize: 22,
@@ -109,13 +109,13 @@ class _TermAndConditionState extends State<TermAndCondition>
                                     color: AppThemes.brc_spotsbooking_hint_text,
                                   ),
                                 ),
-                                SizedBox(height: 16.0),
+                                const SizedBox(height: 16.0),
                                 ..._buildTermsList(),
                               ],
                             ),
                           ),
                         ),
-                        SizedBox(height: 20.0),
+                        const SizedBox(height: 20.0),
                         Row(
                           children: [
                             Checkbox(
@@ -126,7 +126,7 @@ class _TermAndConditionState extends State<TermAndCondition>
                                 });
                               },
                             ),
-                            Text(
+                            const Text(
                               "I agree to the terms and conditions",
                               style: TextStyle(
                                 fontSize: 16,
@@ -171,7 +171,7 @@ class _TermAndConditionState extends State<TermAndCondition>
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "• ",
               style: TextStyle(
                 fontSize: 16,
@@ -181,7 +181,7 @@ class _TermAndConditionState extends State<TermAndCondition>
             Expanded(
               child: Text(
                 term,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   color: AppThemes.brc_spotsbooking_hint_text,
                 ),

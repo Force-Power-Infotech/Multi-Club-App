@@ -124,7 +124,7 @@ class ProfieviewAPI {
         'id': memberId,
         'organization_id': Webservice.appNickname
       });
-      print('mmmmmm${memberId}');
+      print('mmmmmm$memberId');
     } else {
       String? localMemberID = await UserDataRepository.getMemberID();
       if (localMemberID != null) {
@@ -205,7 +205,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['membership_code'] = membershipCode;
     data['member_name_male'] = memberNameMale;
     data['member_male_phone'] = memberMalePhone;

@@ -7,7 +7,7 @@ import 'package:multi_club_app/screens/widgets/CalendarSection.dart';
 import 'package:multi_club_app/screens/widgets/SeparationBar.dart';
 
 class RowingBooking extends StatefulWidget {
-  const RowingBooking({Key? key}) : super(key: key);
+  const RowingBooking({super.key});
 
   @override
   _RowingBookingState createState() => _RowingBookingState();
@@ -51,64 +51,57 @@ class _RowingBookingState extends State<RowingBooking> {
       TimeSlotRowingBookingAPI? timeSlotData =
           await TimeSlotRowingBookingAPI.slots(formattedDate);
 
-      if (timeSlotData != null) {
-        List<Widget> rows = [];
-        List<TimingListArr>? timingList = timeSlotData.timingListArr;
+      List<Widget> rows = [];
+      List<TimingListArr>? timingList = timeSlotData.timingListArr;
 
-        if (timingList != null && timingList.isNotEmpty) {
-          for (int i = 0; i < timingList.length; i += 3) {
-            List<Widget> timeSlots = [];
-            for (int j = i; j < i + 3 && j < timingList.length; j++) {
-              TimingListArr slot = timingList[j];
-              // final color = '0xFF${slot.hexCode?.replaceAll('#', '')}';
-              final hexCode = slot.hexCode?.replaceAll('#', '') ??
-                  '000000'; // Replace '#' if exists
-              final color = int.tryParse('0xFF$hexCode') ??
-                  0xFF000000; // Parse as hexadecimal
+      if (timingList != null && timingList.isNotEmpty) {
+        for (int i = 0; i < timingList.length; i += 3) {
+          List<Widget> timeSlots = [];
+          for (int j = i; j < i + 3 && j < timingList.length; j++) {
+            TimingListArr slot = timingList[j];
+            // final color = '0xFF${slot.hexCode?.replaceAll('#', '')}';
+            final hexCode = slot.hexCode?.replaceAll('#', '') ??
+                '000000'; // Replace '#' if exists
+            final color = int.tryParse('0xFF$hexCode') ??
+                0xFF000000; // Parse as hexadecimal
 
-              timeSlots.add(
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CardWidget(
-                      time: slot.timeSlot ?? '',
-                      available: slot.status == 'AVAILABLE',
-                      isSelected: selectedTime == (slot.timeSlot ?? ''),
-                      boxcolor: Color(color),
-                      onTap: () {
-                        handleCardTap(slot.timeSlot ?? '');
-                      },
-                    ),
+            timeSlots.add(
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CardWidget(
+                    time: slot.timeSlot ?? '',
+                    available: slot.status == 'AVAILABLE',
+                    isSelected: selectedTime == (slot.timeSlot ?? ''),
+                    boxcolor: Color(color),
+                    onTap: () {
+                      handleCardTap(slot.timeSlot ?? '');
+                    },
                   ),
-                ),
-              );
-              print('this show what color is coming${color}');
-            }
-            rows.add(
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.from(timeSlots),
                 ),
               ),
             );
+            print('this show what color is coming${color}');
           }
+          rows.add(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.from(timeSlots),
+              ),
+            ),
+          );
         }
-
-        return Column(
-          children: rows,
-        );
-      } else {
-        // Handle case where timeSlotData is null
-        return Center(
-          child: Text('No time slot data available.'),
-        );
       }
-    } catch (error) {
+
+      return Column(
+        children: rows,
+      );
+        } catch (error) {
       // Handle error while fetching time slots
       print('Error fetching time slots: $error');
-      return Center(
+      return const Center(
         child: Text('Error fetching time slots.'),
       );
     }
@@ -192,7 +185,7 @@ class _RowingBookingState extends State<RowingBooking> {
                         color: Colors.grey.withOpacity(0.5), // Shadow color
                         spreadRadius: 1, // Spread radius
                         blurRadius: 7, // Blur radius
-                        offset: Offset(0, 3), // Shadow offset
+                        offset: const Offset(0, 3), // Shadow offset
                       ),
                     ],
                     color: AppThemes.brc_textcolor, // Background color
@@ -256,8 +249,8 @@ class _RowingBookingState extends State<RowingBooking> {
                           children: [
                             // Show spinner if location data is loading
                             if (isLoading)
-                              Padding(
-                                padding: const EdgeInsets.all(32.0),
+                              const Padding(
+                                padding: EdgeInsets.all(32.0),
                                 child: CircularProgressIndicator(),
                               ),
                             // Show list once location data is loaded
@@ -333,7 +326,7 @@ class _RowingBookingState extends State<RowingBooking> {
 
               // Slots grid
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -358,11 +351,11 @@ class _RowingBookingState extends State<RowingBooking> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return CircularProgressIndicator();
+                            return const CircularProgressIndicator();
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else {
-                            return snapshot.data ?? SizedBox();
+                            return snapshot.data ?? const SizedBox();
                           }
                         },
                       ),
@@ -421,8 +414,7 @@ class _RowingBookingState extends State<RowingBooking> {
                               try {
                                 String? bookingDate = Booking
                                     .toString(); // Replace 'Booking' with the actual booking date variable
-                                if (bookingDate != null &&
-                                    bookingDate.isNotEmpty) {
+                                if (bookingDate.isNotEmpty) {
                                   setState(() {
                                     isLoading =
                                         true; // Set isLoading to true when button is pressed
@@ -478,10 +470,10 @@ class _RowingBookingState extends State<RowingBooking> {
                                 } else {
                                   print('No booking date selected.');
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content: Text(
                                         'No booking date selected.',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: AppThemes.brc_textcolor,
                                         ),
                                       ),
@@ -495,7 +487,15 @@ class _RowingBookingState extends State<RowingBooking> {
                                 print('Error during booking: $error');
                               }
                             }
-                          : null, // Disable button if checkbox is not checked
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isChecked
+                            ? AppThemes.brc_bottom_icon
+                            : AppThemes.brc_not_available_bottom_bg,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ), // Disable button if checkbox is not checked
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         child: Center(
@@ -507,14 +507,6 @@ class _RowingBookingState extends State<RowingBooking> {
                               color: AppThemes.brc_textcolor,
                             ),
                           ),
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isChecked
-                            ? AppThemes.brc_bottom_icon
-                            : AppThemes.brc_not_available_bottom_bg,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
                         ),
                       ),
                     ),
@@ -861,14 +853,14 @@ class CardWidget extends StatefulWidget {
   final VoidCallback onTap; // Callback function to handle tap
 
   const CardWidget({
-    Key? key,
+    super.key,
     required this.time,
     required this.available,
     required this.isSelected, // Add this line
 
     required this.onTap,
     required this.boxcolor, // Receive the callback function
-  }) : super(key: key);
+  });
 
   @override
   _CardWidgetState createState() => _CardWidgetState();
@@ -887,7 +879,7 @@ class _CardWidgetState extends State<CardWidget> {
               ? AppThemes.brc_textcolor
               : AppThemes.brc_not_available_bg,
           borderRadius: BorderRadius.circular(4),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: AppThemes.slider_button_off,
               spreadRadius: 0,
@@ -906,7 +898,7 @@ class _CardWidgetState extends State<CardWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
                 widget.time,
                 style: const TextStyle(
