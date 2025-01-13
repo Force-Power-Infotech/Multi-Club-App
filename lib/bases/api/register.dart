@@ -43,7 +43,8 @@ class RegisterAPI {
       'pincode': pincode,
       'area': area,
       'chapter': chapter,
-      'address': address
+      'address': address,
+      'pan_number': panNumber
     });
     print(request.fields);
     http.StreamedResponse response = await request.send();
