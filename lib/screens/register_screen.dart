@@ -4,6 +4,7 @@ import 'package:multi_club_app/bases/api/register.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/otp_screen.dart'; // Import your OTP screen
+import 'package:multi_club_app/bases/api/citychaptername.dart';
 
 class RegisterInputScreen extends StatefulWidget {
   const RegisterInputScreen({Key? key}) : super(key: key);
@@ -21,9 +22,33 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _areaController = TextEditingController();
   final TextEditingController _pincodeController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
   final TextEditingController _panNumberController = TextEditingController();
-  final TextEditingController _chapterController = TextEditingController();
+
+  String? selectedCity;
+  String? selectedChapter;
+  String? selectedCountry;
+  CityChapterNameAPI? apiData;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    try {
+      apiData = await CityChapterNameAPI.citychapter();
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading data: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,31 +122,16 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                         children: [
                           _buildTextField(
                             controller: _firstNameController,
-                            labelText: 'First Name',
+                            labelText: 'Full Name',
                             icon: Icons.person,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your first name';
+                                return 'Please enter your Full name';
                               }
                               return null;
                             },
                           ),
-                          _buildTextField(
-                            controller: _middleNameController,
-                            labelText: 'Middle Name',
-                            icon: Icons.person_outline,
-                          ),
-                          _buildTextField(
-                            controller: _lastNameController,
-                            labelText: 'Last Name',
-                            icon: Icons.person,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your last name';
-                              }
-                              return null;
-                            },
-                          ),
+                         
                           _buildTextField(
                             controller: _phoneNumberController,
                             labelText: 'Phone Number',
@@ -176,17 +186,13 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                               return null;
                             },
                           ),
-                          _buildTextField(
-                            controller: _cityController,
-                            labelText: 'City',
-                            icon: Icons.location_city,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your city';
-                              }
-                              return null;
-                            },
-                          ),
+                          if (isLoading)
+                            const Center(child: CircularProgressIndicator())
+                          else ...[
+                            _buildCountryDropdown(),
+                            _buildCityDropdown(),
+                            _buildChapterDropdown(),
+                          ],
                           _buildTextField(
                             controller: _panNumberController,
                             labelText: 'PAN Number',
@@ -198,17 +204,6 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                               if (!RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$')
                                   .hasMatch(value)) {
                                 return 'Please enter a valid PAN number';
-                              }
-                              return null;
-                            },
-                          ),
-                          _buildTextField(
-                            controller: _chapterController,
-                            labelText: 'Chapter',
-                            icon: Icons.group,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your chapter';
                               }
                               return null;
                             },
@@ -227,12 +222,14 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                                     await RegisterAPI.directory(
                                   _emailController.text,
                                   _firstNameController.text,
-                                  _areaController.text,
-                                  _cityController.text,
                                   _phoneNumberController.text,
                                   panNumber: _panNumberController.text,
                                   pincode: _pincodeController.text,
-                                  chapter: _chapterController.text,
+                                  chapter: selectedChapter!,
+                                  area: _areaController.text,
+                                  city: selectedCity!,
+                                  address: _areaController.text,
+                                  
                                 );
 
                                 if (response.processStatus == 'YES') {
@@ -333,6 +330,90 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
           ),
         ),
         validator: validator,
+      ),
+    );
+  }
+
+  Widget _buildCityDropdown() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: DropdownButtonFormField<String>(
+        value: selectedCity,
+        isExpanded: true,
+        decoration: InputDecoration(
+          labelText: 'City',
+          prefixIcon: Icon(Icons.location_city, color: AppThemes.getBackground()),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        items: apiData?.city?.map((City city) {
+          return DropdownMenuItem<String>(
+            value: city.city,
+            child: Text(
+              city.city ?? '',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          );
+        }).toList() ?? [],
+        onChanged: (String? value) {
+          setState(() {
+            selectedCity = value;
+          });
+        },
+        menuMaxHeight: 300,
+        validator: (value) => value == null ? 'Please select a city' : null,
+      ),
+    );
+  }
+
+  Widget _buildChapterDropdown() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: DropdownButtonFormField<String>(
+        value: selectedChapter,
+        decoration: InputDecoration(
+          labelText: 'Chapter',
+          prefixIcon: Icon(Icons.group, color: AppThemes.getBackground()),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        items: apiData?.chapter?.map((Chapter chapter) {
+          return DropdownMenuItem<String>(
+            value: chapter.chapter,
+            child: Text(chapter.chapter ?? ''),
+          );
+        }).toList() ?? [],
+        onChanged: (String? value) {
+          setState(() {
+            selectedChapter = value;
+          });
+        },
+        validator: (value) => value == null ? 'Please select a chapter' : null,
+      ),
+    );
+  }
+
+  Widget _buildCountryDropdown() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: DropdownButtonFormField<String>(
+        value: selectedCountry,
+        decoration: InputDecoration(
+          labelText: 'Country',
+          prefixIcon: Icon(Icons.public, color: AppThemes.getBackground()),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        items: apiData?.country?.map((Chapter country) {
+          return DropdownMenuItem<String>(
+            value: country.chapter,
+            child: Text(country.chapter ?? ''),
+          );
+        }).toList() ?? [],
+        onChanged: (String? value) {
+          setState(() {
+            selectedCountry = value;
+          });
+        },
+        validator: (value) => value == null ? 'Please select a country' : null,
       ),
     );
   }

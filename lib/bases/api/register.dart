@@ -22,19 +22,28 @@ class RegisterAPI {
     return data;
   }
 
-  static Future<RegisterAPI> directory(String email, String firstname,
-      String middlename, String lastname, String phonenumber, {required String panNumber, required String pincode, required String chapter}) async {
+  static Future<RegisterAPI> directory(
+      String email, String member_name, String phone,
+      {required String panNumber,
+      required String pincode,
+      required String chapter,
+      required String area,
+      required String city,
+      required String address}) async {
     Uri url = Uri.parse("${Webservice.rootURL}${Webservice.ws_user_register}");
     final request = http.MultipartRequest('POST', url);
 
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
       'nickname': Webservice.appNickname,
-      'first_name': firstname,
-      'middle_name': middlename,
-      'last_name': lastname,
-      'phone': phonenumber,
-      'email': email
+      'member_name': member_name,
+      'phone': phone,
+      'email': email,
+      'city': city,
+      'pincode': pincode,
+      'area': area,
+      'chapter': chapter,
+      'address': address
     });
     print(request.fields);
     http.StreamedResponse response = await request.send();

@@ -193,7 +193,7 @@ class _DirectoryState extends State<Directory> {
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                           DataColumn(
-                            label: Text('Location',
+                            label: Text('Class',
                                 style: TextStyle(fontWeight: FontWeight.bold)),
                           ),
                         ],
@@ -236,7 +236,7 @@ class _DirectoryState extends State<Directory> {
                                       : null,
                                 ),
                                 DataCell(
-                                  Text(contact.global ?? contact.city ?? ''),
+                                  Text(contact.classs?? ''),
                                 ),
                               ],
                             );

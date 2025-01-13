@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:multi_club_app/bases/api/event_details.dart';
 import 'package:multi_club_app/bases/api/event_update.dart';
 import 'package:multi_club_app/bases/themes.dart';
@@ -153,14 +154,30 @@ class EventDetailsScreen extends StatelessWidget {
                               : AppThemes.getBackground(),
                         ),
                       ),
-                      Text(
-                        "${event.city ?? ''}",
-                        style: const TextStyle(
+                        Expanded(
+                        child: Text(
+                          "${event.city ?? ''}",
+                          style: const TextStyle(
                           color: AppThemes.brc_spotsbooking_hint_text,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
+                        ),
+                        IconButton(
+                        icon: const Icon(Icons.copy),
+                        onPressed: () {
+                          // Copy the city text to clipboard
+                          if (event.city != null && event.city!.isNotEmpty) {
+                          Clipboard.setData(ClipboardData(text: event.city!));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Copied to clipboard')),
+                          );
+                          }
+                        },
+                        color: AppThemes.brc_spotsbooking_hint_text,
+                        ),
                     ],
                   ),
                 ],

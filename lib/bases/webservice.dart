@@ -35,4 +35,5 @@ class Webservice {
   static const String ws_user_register = "ws_user_register.php";
   static const String ws_disable_delete = "ws_disable_delete.php";
   static const String ws_active_inactive = "ws_active_inactive.php";
+  static const String user_regd_city_api = "user_regd_city_api.php";
 }
