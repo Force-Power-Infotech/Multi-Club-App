@@ -23,6 +23,7 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
   final TextEditingController _areaController = TextEditingController();
   final TextEditingController _pincodeController = TextEditingController();
   final TextEditingController _panNumberController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   String? selectedCity;
   String? selectedChapter;
@@ -131,7 +132,6 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                               return null;
                             },
                           ),
-                         
                           _buildTextField(
                             controller: _phoneNumberController,
                             labelText: 'Phone Number',
@@ -156,6 +156,17 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                               if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
                                   .hasMatch(value)) {
                                 return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                          ),
+                          _buildTextField(
+                            controller: _addressController,
+                            labelText: 'Address',
+                            icon: Icons.home,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your address';
                               }
                               return null;
                             },
@@ -228,8 +239,7 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
                                   chapter: selectedChapter!,
                                   area: _areaController.text,
                                   city: selectedCity!,
-                                  address: _areaController.text,
-                                  
+                                  address: _addressController.text,
                                 );
 
                                 if (response.processStatus == 'YES') {
@@ -342,19 +352,21 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
         isExpanded: true,
         decoration: InputDecoration(
           labelText: 'City',
-          prefixIcon: Icon(Icons.location_city, color: AppThemes.getBackground()),
+          prefixIcon:
+              Icon(Icons.location_city, color: AppThemes.getBackground()),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         items: apiData?.city?.map((City city) {
-          return DropdownMenuItem<String>(
-            value: city.city,
-            child: Text(
-              city.city ?? '',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-          );
-        }).toList() ?? [],
+              return DropdownMenuItem<String>(
+                value: city.city,
+                child: Text(
+                  city.city ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              );
+            }).toList() ??
+            [],
         onChanged: (String? value) {
           setState(() {
             selectedCity = value;
@@ -377,11 +389,12 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         items: apiData?.chapter?.map((Chapter chapter) {
-          return DropdownMenuItem<String>(
-            value: chapter.chapter,
-            child: Text(chapter.chapter ?? ''),
-          );
-        }).toList() ?? [],
+              return DropdownMenuItem<String>(
+                value: chapter.chapter,
+                child: Text(chapter.chapter ?? ''),
+              );
+            }).toList() ??
+            [],
         onChanged: (String? value) {
           setState(() {
             selectedChapter = value;
@@ -402,12 +415,13 @@ class _RegisterInputScreenState extends State<RegisterInputScreen> {
           prefixIcon: Icon(Icons.public, color: AppThemes.getBackground()),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
-        items: apiData?.country?.map((Chapter country) {
-          return DropdownMenuItem<String>(
-            value: country.chapter,
-            child: Text(country.chapter ?? ''),
-          );
-        }).toList() ?? [],
+        items: apiData?.country?.map((Country country) {
+              return DropdownMenuItem<String>(
+                value: country.country,
+                child: Text(country.country ?? ''),
+              );
+            }).toList() ??
+            [],
         onChanged: (String? value) {
           setState(() {
             selectedCountry = value;

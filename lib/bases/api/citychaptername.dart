@@ -7,7 +7,7 @@ class CityChapterNameAPI {
   String? processMessage;
   List<City>? city;
   List<Chapter>? chapter;
-  List<Chapter>? country;
+  List<Country>? country;
 
   CityChapterNameAPI(
       {this.processStatus, this.processMessage, this.city, this.chapter});
@@ -27,6 +27,12 @@ class CityChapterNameAPI {
         chapter!.add(new Chapter.fromJson(v));
       });
     }
+    if (json['country'] != null) {
+      country = <Country>[];
+      json['country'].forEach((v) {
+        country!.add(new Country.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -39,11 +45,15 @@ class CityChapterNameAPI {
     if (this.chapter != null) {
       data['chapter'] = this.chapter!.map((v) => v.toJson()).toList();
     }
+    if (this.country != null) {
+      data['country'] = this.country!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 
   static Future<CityChapterNameAPI> citychapter() async {
-    Uri url = Uri.parse("${Webservice.rootURL}${Webservice.user_regd_city_api}");
+    Uri url =
+        Uri.parse("${Webservice.rootURL}${Webservice.user_regd_city_api}");
     final request = http.MultipartRequest('POST', url);
 
     request.fields.addAll({
@@ -87,7 +97,8 @@ class Chapter {
     return data;
   }
 }
-class Country{
+
+class Country {
   String? country;
 
   Country({this.country});

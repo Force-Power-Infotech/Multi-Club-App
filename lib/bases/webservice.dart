@@ -32,7 +32,7 @@ class Webservice {
   static const String sponsor = "sponsor_api.php";
   static const String gallery = "gallery_api.php";
   static const String feedback = "feedback_api.php";
-  static const String ws_user_register = "ws_user_register.php";
+  static const String ws_user_register = "new_user_regd_api.php";
   static const String ws_disable_delete = "ws_disable_delete.php";
   static const String ws_active_inactive = "ws_active_inactive.php";
   static const String user_regd_city_api = "user_regd_city_api.php";
