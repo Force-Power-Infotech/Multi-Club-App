@@ -41,12 +41,15 @@ class EventAPI {
     } else {
       print('Access code not found');
     }
+        String memberID = await UserDataRepository.getMemberID() ?? '';
+
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
       // 'theaccesscode': "${accessCode}",
       'theaccesscode': "BmP1",
       'the_event_type': 'All',
-      'filter_type': 'All'
+      'memberid': memberID
+      // 'filter_type': 'All'
     });
 
     http.StreamedResponse response = await request.send();
@@ -78,6 +81,8 @@ class EventDetails {
   String? eventType;
   String? status;
   String? city;
+  String? attendingStatus;
+  String? registered;
 
   EventDetails(
       {this.eventid,
@@ -100,7 +105,9 @@ class EventDetails {
       this.link,
       this.status,
       this.city,
-      this.eventType});
+      this.eventType,
+      this.attendingStatus,
+      this.registered});
 
   EventDetails.fromJson(Map<String, dynamic> json) {
     eventid = json['eventid'];
@@ -124,6 +131,8 @@ class EventDetails {
     eventType = json['event_type'];
     status = json['status'];
     city = json['city'];
+    attendingStatus = json['attending_status'];
+    registered = json['registered'];
   }
 
   Map<String, dynamic> toJson() {
@@ -149,6 +158,8 @@ class EventDetails {
     data['event_type'] = eventType;
     data['status'] = status;
     data['city'] = city;
+    data['attending_status'] = attendingStatus;
+    data['registered'] = registered;
     return data;
   }
 }

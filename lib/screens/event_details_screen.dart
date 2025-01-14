@@ -120,66 +120,70 @@ class EventDetailsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 8.0, left: 0, right: 8, bottom: 8),
-                        child: Icon(
-                          Icons.location_on,
-                          color: Webservice.appNickname == 'forcempower'
-                              ? AppThemes.getBackground()
-                              : AppThemes.getBackground(),
-                        ),
-                      ),
-                      Text(
-                        "${event.venue}",
-                        style: const TextStyle(
-                          color: AppThemes.brc_spotsbooking_hint_text,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 8.0, left: 0, right: 8, bottom: 8),
-                        child: Icon(
-                          Icons.location_city,
-                          color: Webservice.appNickname == 'forcempower'
-                              ? AppThemes.getBackground()
-                              : AppThemes.getBackground(),
-                        ),
-                      ),
-                        Expanded(
-                        child: Text(
-                          event.city ?? '',
-                          style: const TextStyle(
-                          color: AppThemes.brc_spotsbooking_hint_text,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                  if (event.attendingStatus == 'YES')
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8.0, left: 0, right: 8, bottom: 8),
+                          child: Icon(
+                            Icons.location_on,
+                            color: Webservice.appNickname == 'forcempower'
+                                ? AppThemes.getBackground()
+                                : AppThemes.getBackground(),
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
+                        Text(
+                          "${event.venue}",
+                          style: const TextStyle(
+                            color: AppThemes.brc_spotsbooking_hint_text,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (event.attendingStatus == 'YES')
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8.0, left: 0, right: 8, bottom: 8),
+                          child: Icon(
+                            Icons.location_city,
+                            color: Webservice.appNickname == 'forcempower'
+                                ? AppThemes.getBackground()
+                                : AppThemes.getBackground(),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            event.city ?? '',
+                            style: const TextStyle(
+                              color: AppThemes.brc_spotsbooking_hint_text,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         IconButton(
-                        icon: const Icon(Icons.copy),
-                        onPressed: () {
-                          // Copy the city text to clipboard
-                          if (event.city != null && event.city!.isNotEmpty) {
-                          Clipboard.setData(ClipboardData(text: event.city!));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Copied to clipboard')),
-                          );
-                          }
-                        },
-                        color: AppThemes.brc_spotsbooking_hint_text,
+                          icon: const Icon(Icons.copy),
+                          onPressed: () {
+                            // Copy the city text to clipboard
+                            if (event.city != null && event.city!.isNotEmpty) {
+                              Clipboard.setData(
+                                  ClipboardData(text: event.city!));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Copied to clipboard')),
+                              );
+                            }
+                          },
+                          color: AppThemes.brc_spotsbooking_hint_text,
                         ),
-                    ],
-                  ),
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -315,7 +319,7 @@ class EventDetailsScreen extends StatelessWidget {
                 ),
               // if (Webservice.appNickname == 'madhuban' &&
               //     Webservice.appNickname == 'millmams')
-              if (event.status == 'present')
+              if (event.status == 'present' && event.registered !='true')
                 Padding(
                   padding: const EdgeInsets.only(
                       top: 8.0, left: 4.0, right: 4, bottom: 32),
@@ -395,9 +399,8 @@ class EventDetailsScreen extends StatelessWidget {
                                                     const Size(100, 40)),
                                             padding: WidgetStateProperty.all(
                                                 EdgeInsets.zero),
-                                            textStyle:
-                                                WidgetStateProperty.all(
-                                                    const TextStyle(
+                                            textStyle: WidgetStateProperty.all(
+                                                const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             )),
@@ -442,9 +445,8 @@ class EventDetailsScreen extends StatelessWidget {
                                                     const Size(100, 40)),
                                             padding: WidgetStateProperty.all(
                                                 EdgeInsets.zero),
-                                            textStyle:
-                                                WidgetStateProperty.all(
-                                                    const TextStyle(
+                                            textStyle: WidgetStateProperty.all(
+                                                const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             )),
@@ -492,9 +494,8 @@ class EventDetailsScreen extends StatelessWidget {
                                               minimumSize:
                                                   WidgetStateProperty.all(
                                                       const Size(100, 40)),
-                                              padding:
-                                                  WidgetStateProperty.all(
-                                                      EdgeInsets.zero),
+                                              padding: WidgetStateProperty.all(
+                                                  EdgeInsets.zero),
                                               textStyle:
                                                   WidgetStateProperty.all(
                                                       const TextStyle(
