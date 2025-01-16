@@ -68,7 +68,7 @@ class _SplashScreenmillenniumMamsState extends State<SplashScreenmillenniumMams>
       if (platformVersion.appVersion != null && 
           currentVersion != platformVersion.appVersion) {
         if (mounted) {
-          showUpdateDialog(platformVersion);
+          showUpdateDialog(context, platformVersion);
         }
         return false;
       }
@@ -79,32 +79,76 @@ class _SplashScreenmillenniumMamsState extends State<SplashScreenmillenniumMams>
     }
   }
 
-  void showUpdateDialog(AppVersionData versionData) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: AlertDialog(
-            title: const Text('Update Required'),
-            content: Text('Please update the app to version ${versionData.appVersion} to continue.'),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  if (versionData.playStoreLink != null) {
-                    await launchUrl(Uri.parse(versionData.playStoreLink!));
-                  }
-                  SystemNavigator.pop();
-                },
-                child: const Text('Update Now'),
-              ),
-            ],
+ void showUpdateDialog(BuildContext context, AppVersionData versionData) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return WillPopScope(
+        onWillPop: () async => false,
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
           ),
-        );
-      },
-    );
-  }
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.update,
+                  size: 50,
+                  color: AppThemes.getBackground(),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Update Required',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Please update the app to version ${versionData.appVersion} to continue.',
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (versionData.playStoreLink != null) {
+                      final Uri url = Uri.parse(versionData.playStoreLink!);
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Could not open the link.')),
+                        );
+                      }
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:AppThemes.getBackground(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  ),
+                  child: const Text(
+                    'Update Now',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
 
   @override
   void initState() {
