@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:multi_club_app/bases/api/firebase_messaging_service.dart';
@@ -13,6 +12,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'firebase_options.dart';
+
+const String APP_VERSION = "1.0.0"; // Change this to match your current app version
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'high_importance_channel', // id
@@ -36,58 +37,15 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
 }
 
-Future<void> main() async {
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
-    
-    // Initialize Firebase first
-    // await Firebase.initializeApp(
-    //   options: DefaultFirebaseOptions.currentPlatform,
-    // );
-    
-    // Initialize Hive
-    await Hive.initFlutter();
-    await Hive.openBox('UserData');
-    
-    // Initialize notifications
-    // await _initializeFlutterLocalNotifications();
-    
-    // Initialize Firebase Messaging
-    // await FirebaseMessagingService.initialize();
-    
-    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    
-    runApp(const MyApp());
-  } catch (e) {
-    log("Error during initialization: $e");
-    // You might want to show an error screen here
-    runApp(MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text("Error initializing app: $e"),
-        ),
-      ),
-    ));
-  }
-}
-
 Future<void> _initializeFlutterLocalNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('notification_icon');
 
   const DarwinInitializationSettings initializationSettingsDarwin =
       DarwinInitializationSettings(
     requestAlertPermission: true,
     requestSoundPermission: true,
     requestBadgePermission: true,
-    requestProvisionalPermission: false,
-    requestCriticalPermission: false,
-    defaultPresentAlert: true,
-    defaultPresentSound: true,
-    defaultPresentBadge: true,
-    defaultPresentBanner: true,
-    defaultPresentList: true,
-    notificationCategories: <DarwinNotificationCategory>[],
   );
 
   const InitializationSettings initializationSettings = InitializationSettings(
@@ -97,12 +55,50 @@ Future<void> _initializeFlutterLocalNotifications() async {
 
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
+    onDidReceiveNotificationResponse: (NotificationResponse response) async {
+      if (response.payload != null) {
+        log('Notification payload: ${response.payload}');
+      }
+    },
   );
 
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Hive first
+  await Hive.initFlutter();
+  await Hive.openBox('UserData');
+
+  // Then initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Now get FCM token
+  try {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    if (fcmToken != null) {
+      await UserDataRepository.saveFirebaseToken(fcmToken);
+      print('FCM Token: $fcmToken');
+    }
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      UserDataRepository.saveFirebaseToken(newToken);
+      print('FCM Token Refreshed: $newToken');
+    });
+  } catch (e) {
+    print('Error initializing FCM: $e');
+  }
+
+  await _initializeFlutterLocalNotifications();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -115,9 +111,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    super.initState(); // Move super.initState() to the top
-    
-    // _initializeMessaging();
+    super.initState();
+    _initializeMessaging();
   }
 
   Future<void> _initializeMessaging() async {
@@ -147,7 +142,7 @@ class _MyAppState extends State<MyApp> {
               channel.id,
               channel.name,
               channelDescription: channel.description,
-              icon: '@mipmap/ic_launcher',
+              icon: 'notification_icon',
             ),
           ),
         );

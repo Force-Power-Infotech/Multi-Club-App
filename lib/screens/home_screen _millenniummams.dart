@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/api/birthday_today.dart';
@@ -32,6 +33,7 @@ class HomeScreenMillenniumMams extends StatefulWidget {
 
 class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
   late Future<ProfieviewAPI> _profileData;
+  bool isNotificationPermissionGranted = false;
 
   // Define a global variable to store the username
   String? globalUsername;
@@ -76,13 +78,88 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
     }
   }
 
+  Future<void> _refreshData() async {
+    setState(() {
+      _profileData = ProfieviewAPI.list(); // Refresh profile data
+    });
+    await memberID();
+    await accessMemberIdFromHive();
+    await profilimg();
+  }
+
   @override
   void initState() {
     super.initState();
     memberID();
-    WidgetsBinding.instance.addPostFrameCallback(
-        (_) => accessMemberIdFromHive()); // Call the method here
-    _profileData = ProfieviewAPI.list(); // Fetch profile data from API
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      accessMemberIdFromHive();
+      checkAndRequestNotificationPermission();
+    });
+    _profileData = ProfieviewAPI.list();
+  }
+
+  Future<void> checkAndRequestNotificationPermission() async {
+    final messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await messaging.getNotificationSettings();
+
+    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+      showNotificationPermissionDialog();
+    } else {
+      setState(() {
+        isNotificationPermissionGranted = true;
+      });
+    }
+  }
+
+  void showNotificationPermissionDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // User must tap a button to close dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enable Notifications'),
+          content: const Text(
+              'Please enable notifications to stay updated with latest events and announcements.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ask Again Later'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Show again after a delay
+                Future.delayed(const Duration(minutes: 5), () {
+                  if (mounted && !isNotificationPermissionGranted) {
+                    showNotificationPermissionDialog();
+                  }
+                });
+              },
+            ),
+            TextButton(
+              child: const Text('Enable'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                final messaging = FirebaseMessaging.instance;
+                NotificationSettings settings = await messaging.requestPermission(
+                  alert: true,
+                  badge: true,
+                  sound: true,
+                );
+                
+                if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+                  setState(() {
+                    isNotificationPermissionGranted = true;
+                  });
+                } else {
+                  if (mounted) {
+                    // Show dialog again if permission not granted
+                    showNotificationPermissionDialog();
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   bool homeClicked = false;
@@ -186,274 +263,277 @@ class _HomeScreenMillenniumMamsState extends State<HomeScreenMillenniumMams> {
 
       // Body and other widgets
 
-      body: FutureBuilder<ProfieviewAPI>(
-        future: _profileData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            final profileData = snapshot.data!.data?.first;
-            if (profileData == null) {
-              return const Center(child: Text('No profile data available'));
-            }
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: FutureBuilder<ProfieviewAPI>(
+          future: _profileData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              final profileData = snapshot.data!.data?.first;
+              if (profileData == null) {
+                return const Center(child: Text('No profile data available'));
+              }
 
-            String imageUrl = profileData.maleImageURL ??
-                ''; // Placeholder, replace with actual logic
+              String imageUrl = profileData.maleImageURL ??
+                  ''; // Placeholder, replace with actual logic
 
-            print(imageUrl);
-            return ListView(
-              children: [
-                Column(
-                  children: [
-                    // First rectangle section
+              print(imageUrl);
+              return ListView(
+                children: [
+                  Column(
+                    children: [
+                      // First rectangle section
 
-                    Stack(
-                      children: [
-                        // Second rectangle section
-                        Container(
-                          height: 140, // Set the height as needed
-                          color:
-                              AppThemes.brc_textcolor, // Change color as needed
-                        ),
-                        Container(
-                          height: 50, // Set the height as needed
+                      Stack(
+                        children: [
+                          // Second rectangle section
+                          Container(
+                            height: 140, // Set the height as needed
+                            color:
+                                AppThemes.brc_textcolor, // Change color as needed
+                          ),
+                          Container(
+                            height: 50, // Set the height as needed
 
-                          decoration: BoxDecoration(
-                            color: AppThemes.getBackground(),
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(
-                                  10), // Adjust the top left corner radius as needed
-                              bottomRight: Radius.circular(
-                                  10), // Adjust the top right corner radius as needed
+                            decoration: BoxDecoration(
+                              color: AppThemes.getBackground(),
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(
+                                    10), // Adjust the top left corner radius as needed
+                                bottomRight: Radius.circular(
+                                    10), // Adjust the top right corner radius as needed
+                              ),
+                            ), // Change color as needed
+                          ),
+                          // Image
+                          Positioned(
+                            top: 15,
+                            left: 0,
+                            right: 0, // Align image horizontally to the center
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (_) => ProfileScreen(
+                                            memberId: '$globalmemberID',
+                                            gender: 'male'),
+                                      ));
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppThemes.brc_bottom_icon
+                                                  .withOpacity(0.5),
+                                              spreadRadius: 2,
+                                              blurRadius: 5,
+                                              offset: const Offset(0, 7),
+                                            ),
+                                          ],
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: imageUrl.isNotEmpty
+                                              ? Image.network(
+                                                  imageUrl,
+                                                  fit: BoxFit.cover,
+                                                  width: 76,
+                                                  height: 75,
+                                                  // Show a placeholder while the image is loading
+                                                  loadingBuilder: (context, child,
+                                                      loadingProgress) {
+                                                    if (loadingProgress == null) {
+                                                      return child;
+                                                    } else {
+                                                      // Optionally, you can return a loading indicator while the image is loading
+                                                      return const Center(
+                                                        child:
+                                                            CircularProgressIndicator(),
+                                                      );
+                                                    }
+                                                  },
+                                                  // Handle image loading errors
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: Colors
+                                                          .grey, // Grey color for the circle
+                                                      width: 76,
+                                                      height: 75,
+                                                      child: const Icon(
+                                                        Icons.person,
+                                                        color: Colors.white,
+                                                        size: 50,
+                                                      ),
+                                                    );
+                                                  },
+                                                )
+                                              : Container(
+                                                  color: Colors
+                                                      .grey, // Grey color for the circle
+                                                  width: 76,
+                                                  height: 75,
+                                                  child: const Icon(
+                                                    Icons.person,
+                                                    color: Colors.white,
+                                                    size: 50,
+                                                  ),
+                                                ),
+                                        )),
+                                  ),
+
+                                  const SizedBox(height: 10),
+                                  // Add space between the profile image and the text
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 5),
+                                    child: Text(
+                                      'Hi ${globalUsername ?? ''}!', // Use the meberID variable, if it's null, display an empty string
+                                      style: const TextStyle(
+                                        fontWeight:
+                                            FontWeight.w600, // Make the text bold
+                                        fontSize:
+                                            18, // Adjust the font size as needed
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ), // Change color as needed
-                        ),
-                        // Image
-                        Positioned(
-                          top: 15,
-                          left: 0,
-                          right: 0, // Align image horizontally to the center
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Column(
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 0, bottom: 10), // Add padding only at the top
+                    child: Container(
+                      color: AppThemes.brc_textcolor,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                              height:
+                                  15), // Add space above the first line of text
+
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                const Text(
+                                  'Upcoming Events', // Text above the boxes
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ), // Adjust font size as needed
+                                ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (_) => ProfileScreen(
-                                          memberId: '$globalmemberID',
-                                          gender: 'male'),
-                                    ));
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const EventsScreen()), // Replace EventScreen() with your actual screen
+                                    );
                                   },
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: AppThemes.brc_bottom_icon
-                                                .withOpacity(0.5),
-                                            spreadRadius: 2,
-                                            blurRadius: 5,
-                                            offset: const Offset(0, 7),
-                                          ),
-                                        ],
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        child: imageUrl.isNotEmpty
-                                            ? Image.network(
-                                                imageUrl,
-                                                fit: BoxFit.cover,
-                                                width: 76,
-                                                height: 75,
-                                                // Show a placeholder while the image is loading
-                                                loadingBuilder: (context, child,
-                                                    loadingProgress) {
-                                                  if (loadingProgress == null) {
-                                                    return child;
-                                                  } else {
-                                                    // Optionally, you can return a loading indicator while the image is loading
-                                                    return const Center(
-                                                      child:
-                                                          CircularProgressIndicator(),
-                                                    );
-                                                  }
-                                                },
-                                                // Handle image loading errors
-                                                errorBuilder: (context, error,
-                                                    stackTrace) {
-                                                  return Container(
-                                                    color: Colors
-                                                        .grey, // Grey color for the circle
-                                                    width: 76,
-                                                    height: 75,
-                                                    child: const Icon(
-                                                      Icons.person,
-                                                      color: Colors.white,
-                                                      size: 50,
-                                                    ),
-                                                  );
-                                                },
-                                              )
-                                            : Container(
-                                                color: Colors
-                                                    .grey, // Grey color for the circle
-                                                width: 76,
-                                                height: 75,
-                                                child: const Icon(
-                                                  Icons.person,
-                                                  color: Colors.white,
-                                                  size: 50,
-                                                ),
-                                              ),
-                                      )),
-                                ),
-
-                                const SizedBox(height: 10),
-                                // Add space between the profile image and the text
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 5),
                                   child: Text(
-                                    'Hi ${globalUsername ?? ''}!', // Use the meberID variable, if it's null, display an empty string
-                                    style: const TextStyle(
-                                      fontWeight:
-                                          FontWeight.w600, // Make the text bold
-                                      fontSize:
-                                          18, // Adjust the font size as needed
-                                    ),
+                                    'Show more', // Text above the boxes
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppThemes
+                                            .getBackground()), // Adjust font size as needed
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 0, bottom: 10), // Add padding only at the top
-                  child: Container(
-                    color: AppThemes.brc_textcolor,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                            height:
-                                15), // Add space above the first line of text
-
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Upcoming Events', // Text above the boxes
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ), // Adjust font size as needed
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const EventsScreen()), // Replace EventScreen() with your actual screen
-                                  );
-                                },
-                                child: Text(
-                                  'Show more', // Text above the boxes
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppThemes
-                                          .getBackground()), // Adjust font size as needed
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        FutureBuilder<EventAPI>(
-                          future: EventAPI.details(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child:
-                                    CircularProgressIndicator(), // Show loading indicator while fetching data
-                              );
-                            } else if (snapshot.hasError) {
-                              return Center(
-                                child: Text(
-                                    'Error: ${snapshot.error}'), // Show error message if fetching data fails
-                              );
-                            } else {
-                              // Data has been successfully fetched
-                              final eventAPI = snapshot.data;
-
-                              // Check if eventAPI or eventAPI.eventDetails is null before accessing it
-                              if (eventAPI != null &&
-                                  eventAPI.eventDetails != null) {
-                                // Filter the events based on the 'status'
-                                List<EventDetails> filteredEvents = eventAPI
-                                    .eventDetails!
-                                    .where((event) =>
-                                        event.status ==
-                                        'present') // Adjust this condition based on your actual status logic
-                                    .toList();
-
-                                if (filteredEvents.isEmpty) {
-                                  // No events with the desired status, show 'No upcoming events'
-                                  return const Center(
-                                    child: Text('No upcoming events'),
-                                  );
-                                }
-
-                                // Show the first three events (or fewer if there are less than 3)
-                                List<EventDetails> firstThreeEvents =
-                                    filteredEvents.take(3).toList();
-
-                                return Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Column(
-                                    children: firstThreeEvents.map((event) {
-                                      return home_event_card(event: event);
-                                    }).toList(),
-                                  ),
+                          FutureBuilder<EventAPI>(
+                            future: EventAPI.details(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child:
+                                      CircularProgressIndicator(), // Show loading indicator while fetching data
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text(
+                                      'Error: ${snapshot.error}'), // Show error message if fetching data fails
                                 );
                               } else {
-                                // Handle case where eventAPI or eventAPI.eventDetails is null
-                                return const Center(
-                                  child: Text('No events available'),
-                                );
-                              }
-                            }
-                          },
-                        ),
+                                // Data has been successfully fetched
+                                final eventAPI = snapshot.data;
 
-                        const SizedBox(
-                            height:
-                                50), // Add space above the first line of text
-                      ],
+                                // Check if eventAPI or eventAPI.eventDetails is null before accessing it
+                                if (eventAPI != null &&
+                                    eventAPI.eventDetails != null) {
+                                  // Filter the events based on the 'status'
+                                  List<EventDetails> filteredEvents = eventAPI
+                                      .eventDetails!
+                                      .where((event) =>
+                                          event.status ==
+                                          'present') // Adjust this condition based on your actual status logic
+                                      .toList();
+
+                                  if (filteredEvents.isEmpty) {
+                                    // No events with the desired status, show 'No upcoming events'
+                                    return const Center(
+                                      child: Text('No upcoming events'),
+                                    );
+                                  }
+
+                                  // Show the first three events (or fewer if there are less than 3)
+                                  List<EventDetails> firstThreeEvents =
+                                      filteredEvents.take(3).toList();
+
+                                  return Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Column(
+                                      children: firstThreeEvents.map((event) {
+                                        return home_event_card(event: event);
+                                      }).toList(),
+                                    ),
+                                  );
+                                } else {
+                                  // Handle case where eventAPI or eventAPI.eventDetails is null
+                                  return const Center(
+                                    child: Text('No events available'),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+
+                          const SizedBox(
+                              height:
+                                  50), // Add space above the first line of text
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            );
-          } else {
-            return const Center(child: Text('No profile data found'));
-          }
-        },
+                ],
+              );
+            } else {
+              return const Center(child: Text('No profile data found'));
+            }
+          },
+        ),
       ),
       bottomNavigationBar: Container(
         child: Column(

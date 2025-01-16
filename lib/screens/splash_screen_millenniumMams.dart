@@ -1,10 +1,17 @@
+import 'dart:developer';
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+import 'package:http/http.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/screens/home_screen%20_millenniummams.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
 import 'package:multi_club_app/screens/login_webview%20screen.dart';
+import 'package:multi_club_app/bases/api/latestversion.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SplashScreenmillenniumMams extends StatefulWidget {
   const SplashScreenmillenniumMams({super.key});
@@ -41,6 +48,64 @@ class _SplashScreenmillenniumMamsState extends State<SplashScreenmillenniumMams>
     }
   }
 
+  Future<bool> checkAppVersion() async {
+    try {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String currentVersion = packageInfo.version;
+      log('Current version: $currentVersion');
+      
+      LatestVersionAPI response = await LatestVersionAPI.details();
+      if (response.appVersionData == null || response.appVersionData!.isEmpty) {
+        return true;
+      }
+
+      // Get version data based on platform
+      String deviceType = Platform.isAndroid ? "ANDROID" : "IOS";
+      AppVersionData? platformVersion = response.appVersionData!
+          .firstWhere((element) => element.deviceType == deviceType,
+                     orElse: () => AppVersionData());
+
+      if (platformVersion.appVersion != null && 
+          currentVersion != platformVersion.appVersion) {
+        if (mounted) {
+          showUpdateDialog(platformVersion);
+        }
+        return false;
+      }
+      return true;
+    } catch (e) {
+      log('Version check error: $e');
+      return true;
+    }
+  }
+
+  void showUpdateDialog(AppVersionData versionData) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: const Text('Update Required'),
+            content: Text('Please update the app to version ${versionData.appVersion} to continue.'),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  if (versionData.playStoreLink != null) {
+                    await launchUrl(Uri.parse(versionData.playStoreLink!));
+                  }
+                  SystemNavigator.pop();
+                },
+                child: const Text('Update Now'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,15 +124,19 @@ class _SplashScreenmillenniumMamsState extends State<SplashScreenmillenniumMams>
 
     _controller.forward();
 
-    Future.delayed(const Duration(seconds: 2), () {
-      if (meberID != null) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => const HomeScreenMillenniumMams(),
-        ));
-      } else {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
-        ));
+    Future.delayed(const Duration(seconds: 2), () async {
+      bool isVersionValid = await checkAppVersion();
+      if (isVersionValid && mounted) {
+      // if (mounted) {
+        if (meberID != null) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => const HomeScreenMillenniumMams(),
+          ));
+        } else {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => const LoginScreen(),
+          ));
+        }
       }
     });
   }

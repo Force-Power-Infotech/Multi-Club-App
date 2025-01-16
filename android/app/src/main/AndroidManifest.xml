@@ -3,6 +3,9 @@
         android:label="Millennium Mams'"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notification_icon" /> <!-- Use your icon name -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
