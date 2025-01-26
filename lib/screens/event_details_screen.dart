@@ -44,580 +44,458 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
   }
 
+  Widget _buildInfoRow(IconData icon, String text, {bool showCopy = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppThemes.getBackground().withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, color: AppThemes.getBackground(), size: 20),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[800],
+                height: 1.4,
+              ),
+            ),
+          ),
+          if (showCopy)
+            IconButton(
+              icon: Icon(Icons.copy_rounded, color: AppThemes.getBackground()),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: text));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Copied to clipboard'),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                );
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop(); // Navigate back to the previous page
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: AppThemes.brc_textcolor,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.9),
+            shape: BoxShape.circle,
           ),
-          color: Colors.white, // Set the color to white
-        ),
-        backgroundColor: Webservice.appNickname == 'forcempower'
-            ? AppThemes.getBackground()
-            : AppThemes.getBackground(),
-        title: const Text(
-          "Event Details", // Use event name in the title
-          style: TextStyle(
-            color: AppThemes.brc_textcolor,
-            fontWeight: FontWeight.w700,
-            fontSize: 15,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+            onPressed: () => Navigator.pop(context),
+            color: Colors.black87,
           ),
         ),
-        centerTitle: true,
       ),
       body: SmartRefresher(
         controller: _refreshController,
         onRefresh: _refreshEventDetails,
-        child: ListView(
-          children: [
-            ClipRRect(
-              // borderRadius: BorderRadius.circular(8),
-              child: _buildImageWidget(_event.eventimage),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppThemes.brc_textcolor,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${_event.eventname}",
-                      style: const TextStyle(
-                        color: AppThemes.brc_spotsbooking_hint_text,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0, left: 0, right: 8, bottom: 8),
-                          child: Image.asset(
-                            'assets/images/calendar_clock.png',
-                            width: 24,
-                            height: 24,
-                            color: Webservice.appNickname == 'forcempower'
-                                ? AppThemes.getBackground()
-                                : AppThemes.getBackground(),
-                          ),
-                        ),
-                        Text(
-                          "${_event.dateForHeading}",
-                          style: const TextStyle(
-                            color: AppThemes.brc_spotsbooking_hint_text,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0, left: 0, right: 8, bottom: 8),
-                          child: Image.asset(
-                            'assets/images/Time Icon 1.png',
-                            width: 24,
-                            height: 24,
-                            color: Webservice.appNickname == 'forcempower'
-                                ? AppThemes.getBackground()
-                                : AppThemes.getBackground(),
-                          ),
-                        ),
-                        Text(
-                          "${_event.time}",
-                          style: const TextStyle(
-                            color: AppThemes.brc_spotsbooking_hint_text,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    if (_event.attendingStatus == 'YES')
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8.0, left: 0, right: 8, bottom: 8),
-                            child: Icon(
-                              Icons.location_on,
-                              color: Webservice.appNickname == 'forcempower'
-                                  ? AppThemes.getBackground()
-                                  : AppThemes.getBackground(),
-                            ),
-                          ),
-                          Text(
-                            "${_event.venue}",
-                            style: const TextStyle(
-                              color: AppThemes.brc_spotsbooking_hint_text,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    if (_event.attendingStatus == 'YES')
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8.0, left: 0, right: 8, bottom: 8),
-                            child: Icon(
-                              Icons.location_city,
-                              color: Webservice.appNickname == 'forcempower'
-                                  ? AppThemes.getBackground()
-                                  : AppThemes.getBackground(),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              _event.city ?? '',
-                              style: const TextStyle(
-                                color: AppThemes.brc_spotsbooking_hint_text,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.copy),
-                            onPressed: () {
-                              // Copy the city text to clipboard
-                              if (_event.city != null && _event.city!.isNotEmpty) {
-                                Clipboard.setData(
-                                    ClipboardData(text: _event.city!));
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Copied to clipboard')),
-                                );
-                              }
-                            },
-                            color: AppThemes.brc_spotsbooking_hint_text,
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppThemes.brc_textcolor,
-                  borderRadius: BorderRadius.circular(4),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'ABOUT THE EVENT',
-                      style: TextStyle(
-                        color: AppThemes.brc_spotsbooking_hint_text,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      "${_event.description}",
-                      style: const TextStyle(
-                        color: AppThemes.brc_spotsbooking_hint_text,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                if (Webservice.appNickname != 'madhuban' &&
-                    Webservice.appNickname != 'millmams')
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 8.0, left: 4.0, right: 4, bottom: 32),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Add onPressed action for confirming booking
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppThemes.brc_bottom_icon,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Center(
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                'assets/images/forward_icon.png',
-                                width: 24,
-                                height: 24,
-                                color: AppThemes.brc_textcolor,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Text(
-                                  'Share',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppThemes.brc_textcolor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Hero Image with Gradient Overlay
+              Stack(
+                children: [
+                  _buildImageWidget(_event.eventimage),
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.5),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                if (Webservice.appNickname != 'madhuban' &&
-                    Webservice.appNickname != 'millmams')
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 8.0, left: 4.0, right: 4, bottom: 32),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Add onPressed action for confirming booking
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppThemes.brc_bottom_icon,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Center(
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                'assets/images/forward_icon.png',
-                                width: 24,
-                                height: 24,
-                                color: AppThemes.brc_textcolor,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Text(
-                                  'Locate',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppThemes.brc_textcolor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                // if (Webservice.appNickname == 'madhuban' &&
-                //     Webservice.appNickname == 'millmams')
-                if (_event.status == 'present' && _event.registered !='true')
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 8.0, left: 4.0, right: 4, bottom: 32),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (BuildContext context) {
-                            return SingleChildScrollView(
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      // Top Bar
-                                      // Rectangular Bar at middle
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 100.0),
-                                        child: Container(
-                                          height:
-                                              8, // Adjust the height as needed
-                                          width: 80, // Adjust the width as needed
-                                          decoration: BoxDecoration(
-                                            color: AppThemes.getBackground(),
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      // Event Name
-                                      // Row(
-                                      //   children: [
-                                      //     Text(
-                                      //       '${event.eventname}',
-                                      //       style: const TextStyle(
-                                      //         fontWeight: FontWeight.bold,
-                                      //       ),
-                                      //     ),
-                                      //   ],
-                                      // ),
-                                      const SizedBox(height: 16),
+                ],
+              ),
 
-                                      const SizedBox(height: 16),
-                                      // Text "Going to attend the event"
-                                      const Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          'Going to attend the event ?',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+              // Content Section
+              Transform.translate(
+                offset: const Offset(0, -30),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _event.eventname ?? '',
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _buildInfoRow(Icons.calendar_today_rounded, _event.dateForHeading ?? ''),
+                            _buildInfoRow(Icons.access_time_rounded, _event.time ?? ''),
+                            if (_event.attendingStatus == 'YES') ...[
+                              _buildInfoRow(Icons.location_on_rounded, _event.venue ?? ''),
+                              _buildInfoRow(Icons.location_city_rounded, _event.city ?? '', showCopy: true),
+                            ],
+                          ],
+                        ),
+                      ),
+
+                      // Description Section
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'About',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              _event.description ?? '',
+                              style: TextStyle(
+                                color: Colors.grey[800],
+                                fontSize: 15,
+                                height: 1.6,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Registration Button
+                      if (_event.status == 'present' && _event.registered != 'true')
+                        Container(
+                          margin: const EdgeInsets.all(20),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return SingleChildScrollView(
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                        bottom:
+                                            MediaQuery.of(context).viewInsets.bottom,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            // Top Bar
+                                            // Rectangular Bar at middle
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 100.0),
+                                              child: Container(
+                                                height:
+                                                    8, // Adjust the height as needed
+                                                width: 80, // Adjust the width as needed
+                                                decoration: BoxDecoration(
+                                                  color: AppThemes.getBackground(),
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            // Event Name
+                                            // Row(
+                                            //   children: [
+                                            //     Text(
+                                            //       '${event.eventname}',
+                                            //       style: const TextStyle(
+                                            //         fontWeight: FontWeight.bold,
+                                            //       ),
+                                            //     ),
+                                            //   ],
+                                            // ),
+                                            const SizedBox(height: 16),
+
+                                            const SizedBox(height: 16),
+                                            // Text "Going to attend the event"
+                                            const Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                'Going to attend the event ?',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            // Options Row
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                ElevatedButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        WidgetStateProperty.all(
+                                                            AppThemes.getBackground()),
+                                                    minimumSize:
+                                                        WidgetStateProperty.all(
+                                                            const Size(100, 40)),
+                                                    padding: WidgetStateProperty.all(
+                                                        EdgeInsets.zero),
+                                                    textStyle: WidgetStateProperty.all(
+                                                        const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold,
+                                                    )),
+                                                  ),
+                                                  onPressed: () async {
+                                                    try {
+                                                      // Call the API with 'YES' status
+                                                      EventUpdateAPI apiResponse =
+                                                          await EventUpdateAPI.updation(
+                                                              "${_event.eventid}", 'YES');
+                                                      
+                                                      // Refresh event details first
+                                                      await _refreshEventDetails();
+                                                      
+                                                      if (mounted) {  // Check if widget is still mounted
+                                                          // Close the bottom sheet
+                                                          Navigator.pop(context);
+                                                          
+                                                          // Show snackbar only if widget is still mounted
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                              SnackBar(
+                                                                  content: Text(
+                                                                      '${apiResponse.processMessage}',
+                                                                      textAlign: TextAlign.center,
+                                                                      style: const TextStyle(
+                                                                          color: AppThemes.brc_textcolor),
+                                                                  ),
+                                                                  backgroundColor: AppThemes.brc_otp_success,
+                                                                  behavior: SnackBarBehavior.floating,
+                                                              ),
+                                                          );
+                                                      }
+                                                  } catch (e) {
+                                                      if (mounted) {  // Check if widget is still mounted
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                              const SnackBar(
+                                                                  content: Text('Failed to update status'),
+                                                              ),
+                                                          );
+                                                      }
+                                                  }
+                                                  },
+                                                  child: const Text(
+                                                    'YES',
+                                                    style: TextStyle(
+                                                        color: AppThemes.brc_textcolor),
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        WidgetStateProperty.all(
+                                                            AppThemes.getBackground()),
+                                                    minimumSize:
+                                                        WidgetStateProperty.all(
+                                                            const Size(100, 40)),
+                                                    padding: WidgetStateProperty.all(
+                                                        EdgeInsets.zero),
+                                                    textStyle: WidgetStateProperty.all(
+                                                        const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold,
+                                                    )),
+                                                  ),
+                                                  onPressed: () async {
+                                                    try {
+                                                      // Call the API with 'NO' status
+                                                      EventUpdateAPI apiResponse =
+                                                          await EventUpdateAPI.updation(
+                                                              "${_event.eventid}", 'NO');
+                                                      
+                                                      // Refresh event details first
+                                                      await _refreshEventDetails();
+                                                      
+                                                      if (mounted) {  // Check if widget is still mounted
+                                                          // Close the bottom sheet
+                                                          Navigator.pop(context);
+                                                          
+                                                          // Show snackbar only if widget is still mounted
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                              SnackBar(
+                                                                  content: Text(
+                                                                      '${apiResponse.processMessage}',
+                                                                      textAlign: TextAlign.center,
+                                                                      style: const TextStyle(
+                                                                          color: AppThemes.brc_textcolor),
+                                                                  ),
+                                                                  backgroundColor: AppThemes.brc_otp_success,
+                                                                  behavior: SnackBarBehavior.floating,
+                                                              ),
+                                                          );
+                                                      }
+                                                  } catch (e) {
+                                                      if (mounted) {  // Check if widget is still mounted
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                              const SnackBar(
+                                                                  content: Text('Failed to update status'),
+                                                              ),
+                                                          );
+                                                      }
+                                                  }
+                                                  },
+                                                  child: const Text(
+                                                    'NO',
+                                                    style: TextStyle(
+                                                        color: AppThemes.brc_textcolor),
+                                                  ),
+                                                ),
+                                                if (Webservice.appNickname ==
+                                                        'madhuban' &&
+                                                    Webservice.appNickname !=
+                                                        'millmams')
+                                                  ElevatedButton(
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          WidgetStateProperty.all(
+                                                              AppThemes
+                                                                  .getBackground()),
+                                                      minimumSize:
+                                                          WidgetStateProperty.all(
+                                                              const Size(100, 40)),
+                                                      padding: WidgetStateProperty.all(
+                                                          EdgeInsets.zero),
+                                                      textStyle:
+                                                          WidgetStateProperty.all(
+                                                              const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                      )),
+                                                    ),
+                                                    onPressed: () async {
+                                                      try {
+                                                        // Call the API with 'YES' status
+                                                        EventUpdateAPI apiResponse =
+                                                            await EventUpdateAPI.updation(
+                                                                "${_event.eventid}",
+                                                                'NOT SURE');
+                                                        // Refresh event details first
+                                                        await _refreshEventDetails();
+                                                            
+                                                        if (mounted) {  // Check if widget is still mounted
+                                                            // Close the bottom sheet
+                                                            Navigator.pop(context);
+                                                            
+                                                            // Show snackbar only if widget is still mounted
+                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                SnackBar(
+                                                                    content: Text(
+                                                                        '${apiResponse.processMessage}',
+                                                                        textAlign: TextAlign.center,
+                                                                        style: const TextStyle(
+                                                                            color: AppThemes.brc_textcolor),
+                                                                    ),
+                                                                    backgroundColor: AppThemes.brc_otp_success,
+                                                                    behavior: SnackBarBehavior.floating,
+                                                                ),
+                                                            );
+                                                        }
+                                                    } catch (e) {
+                                                        if (mounted) {  // Check if widget is still mounted
+                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                const SnackBar(
+                                                                    content: Text('Failed to update status'),
+                                                                ),
+                                                            );
+                                                        }
+                                                    }
+                                                    },
+                                                    child: const Text(
+                                                      'NOT SURE',
+                                                      style: TextStyle(
+                                                          color:
+                                                              AppThemes.brc_textcolor),
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      const SizedBox(height: 16),
-                                      // Options Row
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          ElevatedButton(
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  WidgetStateProperty.all(
-                                                      AppThemes.getBackground()),
-                                              minimumSize:
-                                                  WidgetStateProperty.all(
-                                                      const Size(100, 40)),
-                                              padding: WidgetStateProperty.all(
-                                                  EdgeInsets.zero),
-                                              textStyle: WidgetStateProperty.all(
-                                                  const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              )),
-                                            ),
-                                            onPressed: () async {
-                                              // Call the API with 'YES' status
-                                              EventUpdateAPI apiResponse =
-                                                  await EventUpdateAPI.updation(
-                                                      "${_event.eventid}", 'YES');
-                                              // Refresh event details after registration
-                                              await _refreshEventDetails();
-                                              // call event detail api
-                                              // Show a snackbar based on the API response
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    '${apiResponse.processMessage}',
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                        color: AppThemes
-                                                            .brc_textcolor),
-                                                  ),
-                                                  backgroundColor:
-                                                      AppThemes.brc_otp_success,
-                                                  behavior:
-                                                      SnackBarBehavior.floating,
-                                                ),
-                                              );
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text(
-                                              'YES',
-                                              style: TextStyle(
-                                                  color: AppThemes.brc_textcolor),
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  WidgetStateProperty.all(
-                                                      AppThemes.getBackground()),
-                                              minimumSize:
-                                                  WidgetStateProperty.all(
-                                                      const Size(100, 40)),
-                                              padding: WidgetStateProperty.all(
-                                                  EdgeInsets.zero),
-                                              textStyle: WidgetStateProperty.all(
-                                                  const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              )),
-                                            ),
-                                            onPressed: () async {
-                                              // Call the API with 'YES' status
-                                              EventUpdateAPI apiResponse =
-                                                  await EventUpdateAPI.updation(
-                                                      "${_event.eventid}", 'NO');
-                                              // Refresh event details after registration
-                                              await _refreshEventDetails();
-                                              // Show a snackbar based on the API response
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    '${apiResponse.processMessage}',
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                        color: AppThemes
-                                                            .brc_textcolor),
-                                                  ),
-                                                  backgroundColor:
-                                                      AppThemes.brc_otp_success,
-                                                  behavior:
-                                                      SnackBarBehavior.floating,
-                                                ),
-                                              );
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text(
-                                              'NO',
-                                              style: TextStyle(
-                                                  color: AppThemes.brc_textcolor),
-                                            ),
-                                          ),
-                                          if (Webservice.appNickname ==
-                                                  'madhuban' &&
-                                              Webservice.appNickname !=
-                                                  'millmams')
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    WidgetStateProperty.all(
-                                                        AppThemes
-                                                            .getBackground()),
-                                                minimumSize:
-                                                    WidgetStateProperty.all(
-                                                        const Size(100, 40)),
-                                                padding: WidgetStateProperty.all(
-                                                    EdgeInsets.zero),
-                                                textStyle:
-                                                    WidgetStateProperty.all(
-                                                        const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                )),
-                                              ),
-                                              onPressed: () async {
-                                                // Call the API with 'YES' status
-                                                EventUpdateAPI apiResponse =
-                                                    await EventUpdateAPI.updation(
-                                                        "${_event.eventid}",
-                                                        'NOT SURE');
-                                                // Refresh event details after registration
-                                                await _refreshEventDetails();
-                                                // Show a snackbar based on the API response
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      '${apiResponse.processMessage}',
-                                                      textAlign: TextAlign.center,
-                                                      style: const TextStyle(
-                                                          color: AppThemes
-                                                              .brc_textcolor),
-                                                    ),
-                                                    backgroundColor:
-                                                        AppThemes.brc_otp_success,
-                                                    behavior:
-                                                        SnackBarBehavior.floating,
-                                                  ),
-                                                );
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text(
-                                                'NOT SURE',
-                                                style: TextStyle(
-                                                    color:
-                                                        AppThemes.brc_textcolor),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppThemes.getBackground(),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              minimumSize: const Size(double.infinity, 54),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                            );
-                          },
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppThemes.brc_bottom_icon,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Center(
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                                child: Text(
-                                  'Register',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppThemes.brc_textcolor,
-                                  ),
-                                ),
+                            ),
+                            child: const Text(
+                              'Register Now',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                    ],
                   ),
-              ],
-            ),
-          ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
