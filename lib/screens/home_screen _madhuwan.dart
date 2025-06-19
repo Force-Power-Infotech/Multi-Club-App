@@ -394,39 +394,67 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                           gender: 'male'),
                                     ));
                                   },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: AppThemes.brc_bottom_icon
-                                              .withOpacity(0.5),
-                                          spreadRadius: 2,
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 7),
-                                        ),
-                                      ],
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                    child: imageUrl.isNotEmpty
-                                        ? Image.network(
-                                            imageUrl,
-                                            fit: BoxFit.cover,
-                                            width: 76,
-                                            height: 75,
-                                          )
-                                        : Container(
-                                            color: Colors
-                                                .grey, // Grey color for the circle
-                                            width: 75,
-                                            height: 75,
-                                            child: const Icon(
-                                              Icons.person,
-                                              color: Colors.white,
-                                              size: 50,
-                                            ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    child: Container(
+                                      width: 76,
+                                      height: 76,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppThemes.brc_bottom_icon
+                                                .withOpacity(0.2),
+                                            spreadRadius: 2,
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 4),
                                           ),
+                                        ],
+                                      ),
+                                      child: imageUrl.isNotEmpty
+                                          ? Image.network(
+                                              imageUrl,
+                                              fit: BoxFit.cover,
+                                              width: 76,
+                                              height: 76,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Container(
+                                                  color: Colors.grey[300],
+                                                  alignment: Alignment.center,
+                                                  child: const Icon(
+                                                    Icons.broken_image,
+                                                    color: Colors.grey,
+                                                    size: 40,
+                                                  ),
+                                                );
+                                              },
+                                              loadingBuilder: (context, child,
+                                                  loadingProgress) {
+                                                if (loadingProgress == null)
+                                                  return child;
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation(
+                                                            AppThemes
+                                                                .brc_bottom_icon),
+                                                  ),
+                                                );
+                                              },
+                                            )
+                                          : Container(
+                                              color: Colors.grey[300],
+                                              alignment: Alignment.center,
+                                              child: const Icon(
+                                                Icons.person,
+                                                color: Colors.white,
+                                                size: 40,
+                                              ),
+                                            ),
+                                    ),
                                   ),
                                 ),
 
