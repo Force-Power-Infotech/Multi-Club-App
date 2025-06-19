@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:multi_club_app/bases/api/birthday_today.dart';
 import 'package:multi_club_app/bases/api/event_details.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
@@ -7,6 +8,7 @@ import 'package:multi_club_app/bases/api/sponsor.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:multi_club_app/screens/BirthdayAnniversaryScreen.dart';
 import 'package:multi_club_app/screens/PrivilegeListScreen.dart';
 import 'package:multi_club_app/screens/contact_us.dart';
@@ -119,6 +121,79 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     return null;
   }
 
+  // QR Code generation method
+  String generateQRData() {
+    // Get current date and time
+    final now = DateTime.now();
+    final fiveMinLater = now.add(Duration(minutes: 5));
+
+    // Format date and time as required (yyyy-MM-dd#HH:mm)
+    final formatter = DateFormat('yyyy-MM-dd#HH:mm');
+    final currentDateTimeFormatted = formatter.format(now);
+    final futureDateTimeFormatted = formatter.format(fiveMinLater);
+
+    // Split the formatted string to get date and time parts
+    final currentParts = currentDateTimeFormatted.split('#');
+    final futureParts = futureDateTimeFormatted.split('#');
+
+    // Format: <current_date>#<current_time>#<current_date>#<current_time+5min>#<member_id>
+    String qrData =
+        '${currentParts[0]}#${currentParts[1]}#${futureParts[0]}#${futureParts[1]}#$globalmemberID';
+
+    print('Generated QR data: $qrData');
+    return qrData;
+  }
+
+  // Show QR code in a dialog
+  void showQRDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Your Access QR Code'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 250,
+                height: 250,
+                child: QrImageView(
+                  data: generateQRData(),
+                  version: QrVersions.auto,
+                  backgroundColor: Colors.white,
+                  padding: EdgeInsets.all(16),
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Valid for 5 minutes',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[700],
+                ),
+              ),
+              Text(
+                'Member ID: $globalmemberID',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,6 +240,16 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
               ),
               centerTitle: true,
               actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.qr_code,
+                    color: AppThemes.brc_textcolor,
+                  ),
+                  onPressed: () {
+                    // Show QR code dialog
+                    showQRDialog(context);
+                  },
+                ),
                 IconButton(
                   icon: const Icon(
                     Icons.notifications,
