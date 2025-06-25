@@ -52,7 +52,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
 
   String _getPassImage(String? passType) {
     if (_showQRAnimation) {
-      return 'assets/images/qrlogo.gif';
+      return 'assets/images/qrlogo2.gif';
     } else {
       switch (passType) {
         case 'GoldenPass':
@@ -924,10 +924,10 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                 offset: const Offset(0, 4),
               ),
             ],
-            border: Border.all(
-              color: _getBorderColor(globalPass),
-              width: 4,
-            ),
+            // border: Border.all(
+            //   color: _getBorderColor(globalPass),
+            //   width: 4,
+            // ),
           ),
           child: ClipOval(
             child: Image.asset(
