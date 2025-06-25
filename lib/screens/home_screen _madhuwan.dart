@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -5,6 +7,7 @@ import 'package:multi_club_app/bases/api/birthday_today.dart';
 import 'package:multi_club_app/bases/api/event_details.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/api/sponsor.dart';
+import 'package:multi_club_app/bases/api/user_otp.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
@@ -36,12 +39,40 @@ class HomeScreenMadhuwan extends StatefulWidget {
 }
 
 class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
+  Color _getBorderColor(String? passType) {
+    switch (passType) {
+      case 'GoldenPass':
+        return const Color(0xFFFFD700);
+      case 'TogetherPass':
+        return const Color(0xFF3B82F6);
+      default:
+        return Colors.white;
+    }
+  }
+
+  String _getPassImage(String? passType) {
+    if (_showQRAnimation) {
+      return 'assets/images/qrlogo.gif';
+    } else {
+      switch (passType) {
+        case 'GoldenPass':
+          return 'assets/images/goldenpass.gif';
+        case 'TogetherPass':
+          return 'assets/images/togetherpass.gif';
+        default:
+          return 'assets/images/qrlogo.gif'; // still gif for regular users
+      }
+    }
+  }
+
   late Future<ProfieviewAPI> _profileData;
 
   // Define a global variable to store the username
   String? globalUsername;
   String? globalImg;
+  String? globalPass;
   String? globalmemberID;
+  bool _showQRAnimation = true;
 
 // In your accessMemberIdFromHive method
   Future<void> accessMemberIdFromHive() async {
@@ -82,6 +113,16 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     }
   }
 
+  Future<void> getUserData() async {
+    UserOtpAPI? user = await UserDataRepository.getUserData();
+    if (user != null && user.pass != null) {
+      log('pass ${user.pass}');
+      globalPass = user.pass;
+    } else {
+      log('pass not found');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -89,6 +130,15 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
         (_) => accessMemberIdFromHive()); // Call the method here
     _profileData = ProfieviewAPI.list(); // Fetch profile data from API
     memberID();
+    if (globalPass == 'GoldenPass' || globalPass == 'TogetherPass') {
+      Future.delayed(const Duration(seconds: 5), () {
+        if (mounted) {
+          setState(() {
+            _showQRAnimation = false;
+          });
+        }
+      });
+    }
   }
 
   bool homeClicked = false;
@@ -859,7 +909,6 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
       ),
       floatingActionButton: GestureDetector(
         onTap: () {
-          // Navigate to your QR page
           showQRDialog(context);
         },
         child: Container(
@@ -867,19 +916,23 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
           width: 64,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: AppThemes.brc_blocked_color.withOpacity(0.6),
+                color: AppThemes.brc_blocked_color.withOpacity(0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
-            border: Border.all(color: Colors.white, width: 4),
+            border: Border.all(
+              color: _getBorderColor(globalPass),
+              width: 4,
+            ),
           ),
           child: ClipOval(
             child: Image.asset(
-              'assets/images/qrlogo.gif',
-              fit: BoxFit.cover, // Ensures full coverage of the circular area
+              _getPassImage(globalPass),
+              fit: BoxFit.cover,
               width: 64,
               height: 64,
             ),

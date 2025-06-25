@@ -41,6 +41,7 @@ class UserOtpAPI {
   String? courseHandicapWhite;
   String? courseHandicapYellow;
   String? courseHandicapRed;
+  String? pass;
 
   UserOtpAPI({
     this.processStatus,
@@ -79,6 +80,7 @@ class UserOtpAPI {
     this.courseHandicapWhite,
     this.courseHandicapYellow,
     this.courseHandicapRed,
+    this.pass,
   });
 
   // void saveUserData(UserOtpAPI userData) async {
@@ -125,6 +127,7 @@ class UserOtpAPI {
       'course_handicap_white': courseHandicapWhite,
       // 'course_handicap_yellow': courseHandicapYellow,
       'course_handicap_red': courseHandicapRed,
+      'pass': pass,
     };
   }
 
@@ -184,6 +187,7 @@ class UserOtpAPI {
       courseHandicapWhite: json['course_handicap_white'],
       courseHandicapYellow: json['course_handicap_yellow'],
       courseHandicapRed: json['course_handicap_red'],
+      pass: json['pass'],
     );
   }
 }
