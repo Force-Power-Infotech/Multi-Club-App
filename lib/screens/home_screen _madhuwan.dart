@@ -100,8 +100,8 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
       BuildContext context, String phoneNumber, String message) async {
     final String whatsappUrl =
         "whatsapp://send?phone=$phoneNumber&text=${Uri.encodeFull(message)}";
-    if (await canLaunch(whatsappUrl)) {
-      await launch(whatsappUrl);
+    if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
+      await launchUrl(Uri.parse(whatsappUrl));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
