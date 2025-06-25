@@ -104,7 +104,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
       await launch(whatsappUrl);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Could not launch WhatsApp'),
           duration: Duration(seconds: 3), // Adjust as needed
         ),
@@ -125,7 +125,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
   String generateQRData() {
     // Get current date and time
     final now = DateTime.now();
-    final fiveMinLater = now.add(Duration(minutes: 5));
+    final fiveMinLater = now.add(const Duration(minutes: 5));
 
     // Format date and time as required (yyyy-MM-dd#HH:mm)
     final formatter = DateFormat('yyyy-MM-dd#HH:mm');
@@ -150,7 +150,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Your Access QR Code'),
+          title: const Text('Your Access QR Code'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -161,10 +161,10 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                   data: generateQRData(),
                   version: QrVersions.auto,
                   backgroundColor: Colors.white,
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Valid for 5 minutes',
                 style: TextStyle(
@@ -186,7 +186,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -200,7 +200,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
       key: _scaffoldKey,
 
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight +
+        preferredSize: const Size.fromHeight(kToolbarHeight +
             80), // Add extra height for the red bar and padding
         child: Column(
           children: [
@@ -240,16 +240,16 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
               ),
               centerTitle: true,
               actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.qr_code,
-                    color: AppThemes.brc_textcolor,
-                  ),
-                  onPressed: () {
-                    // Show QR code dialog
-                    showQRDialog(context);
-                  },
-                ),
+                // IconButton(
+                //   icon: const Icon(
+                //     Icons.qr_code,
+                //     color: AppThemes.brc_textcolor,
+                //   ),
+                //   onPressed: () {
+                //     // Show QR code dialog
+                //     showQRDialog(context);
+                //   },
+                // ),
                 IconButton(
                   icon: const Icon(
                     Icons.notifications,
@@ -287,7 +287,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                 future: SponsorAPI.details(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
@@ -343,7 +343,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
           } else if (snapshot.hasData) {
             final profileData = snapshot.data!.data?.first;
             if (profileData == null) {
-              return Center(child: Text('No profile data available'));
+              return const Center(child: Text('No profile data available'));
             }
 
             String imageUrl = profileData.maleImageURL ??
@@ -433,7 +433,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                   loadingProgress) {
                                                 if (loadingProgress == null)
                                                   return child;
-                                                return Center(
+                                                return const Center(
                                                   child:
                                                       CircularProgressIndicator(
                                                     strokeWidth: 2,
@@ -465,7 +465,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
-                                      return CircularProgressIndicator(); // Show a loading indicator while waiting for data
+                                      return const CircularProgressIndicator(); // Show a loading indicator while waiting for data
                                     } else if (snapshot.hasError) {
                                       return Text('Error: ${snapshot.error}');
                                     } else {
@@ -520,7 +520,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            EventsScreen()), // Replace EventScreen() with your actual screen
+                                            const EventsScreen()), // Replace EventScreen() with your actual screen
                                   );
                                 },
                                 child: Text(
@@ -568,7 +568,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                 );
                               } else {
                                 // Handle case where eventAPI or eventAPI.eventDetails is null
-                                return Center(
+                                return const Center(
                                   child: Text('No events available'),
                                 );
                               }
@@ -624,7 +624,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return Center(
+                                    return const Center(
                                         child: CircularProgressIndicator());
                                   } else if (snapshot.hasError) {
                                     return Center(
@@ -633,7 +633,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                   } else if (!snapshot.hasData ||
                                       snapshot.data!.data == null ||
                                       snapshot.data!.data!.isEmpty) {
-                                    return Center(
+                                    return const Center(
                                       child: Text(
                                         'Nothing to show',
                                         style: TextStyle(fontSize: 18),
@@ -757,7 +757,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 16),
+                                                  const SizedBox(width: 16),
                                                   PulsatingButton(
                                                     onPressed: () {
                                                       if (contact.isEmpty) {
@@ -853,82 +853,103 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
               ],
             );
           } else {
-            return Center(child: Text('No profile data found'));
+            return const Center(child: Text('No profile data found'));
           }
         },
       ),
-      bottomNavigationBar: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Padding(
-            //   padding: const EdgeInsets.only(bottom: 8.0),
-            //   child: Container(
-            //     height: 30, // Height of the red bar
-            //     decoration: BoxDecoration(
-            //       color: Colors.transparent, // Red color for the bar
-            //       borderRadius: BorderRadius.circular(5), // Round edges
-            //       image: DecorationImage(
-            //         image: AssetImage(
-            //             'assets/images/demo-logo.png'), // Path to your image asset
-            //         fit: BoxFit
-            //             .contain, // Cover the entire container with the image
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // SlideshowWidget(),
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: AppThemes.brc_bottom_icon.withOpacity(0.2),
-                    spreadRadius: 0,
-                    blurRadius: 10,
-                    offset: const Offset(0, -3),
-                  ),
-                ],
+      floatingActionButton: GestureDetector(
+        onTap: () {
+          // Navigate to your QR page
+          showQRDialog(context);
+        },
+        child: Container(
+          height: 64,
+          width: 64,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: AppThemes.brc_blocked_color.withOpacity(0.6),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(
-                      20), // Adjust the top left corner radius as needed
-                  topRight: Radius.circular(
-                      20), // Adjust the top right corner radius as needed
-                ),
-                child: BottomAppBar(
-                  color: AppThemes.brc_textcolor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      HomeScreenBottomIcon(
-                        asset: 'assets/images/home.png',
-                        label: 'Home',
-                        wheretoGo: () => const HomeScreenMadhuwan(),
-                      ),
-                      HomeScreenBottomIcon(
-                        asset: 'assets/images/mybooking.png',
-                        label: 'Events',
-                        wheretoGo: () => const EventsScreen(),
-                      ),
-                      HomeScreenBottomIcon(
-                        asset: 'assets/images/Frame.png',
-                        label: 'Directory',
-                        wheretoGo: () => const Directory(),
-                      ),
-                      HomeScreenBottomIcon(
-                        asset: 'assets/images/profilelogo.png',
-                        label: 'Profile',
-                        wheretoGo: () => ProfileScreen(
-                            memberId: '${globalmemberID}', gender: 'male'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            ],
+            border: Border.all(color: Colors.white, width: 4),
+          ),
+          child: ClipOval(
+            child: Image.asset(
+              'assets/images/qrlogo.gif',
+              fit: BoxFit.cover, // Ensures full coverage of the circular area
+              width: 64,
+              height: 64,
             ),
-          ],
+          ),
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      bottomNavigationBar: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppThemes.brc_bottom_icon.withOpacity(0.2),
+                      blurRadius: 12,
+                      offset: const Offset(0, -2),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  child: BottomAppBar(
+                    color: AppThemes.brc_textcolor,
+                    shape: const CircularNotchedRectangle(),
+                    notchMargin: 8,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const SizedBox(width: 10),
+                        HomeScreenBottomIcon(
+                          asset: 'assets/images/home.png',
+                          label: 'Home',
+                          wheretoGo: () => const HomeScreenMadhuwan(),
+                        ),
+                        HomeScreenBottomIcon(
+                          asset: 'assets/images/mybooking.png',
+                          label: 'Events',
+                          wheretoGo: () => const EventsScreen(),
+                        ),
+                        const SizedBox(width: 60), // Space for QR button
+                        HomeScreenBottomIcon(
+                          asset: 'assets/images/Frame.png',
+                          label: 'Directory',
+                          wheretoGo: () => const Directory(),
+                        ),
+                        HomeScreenBottomIcon(
+                          asset: 'assets/images/profilelogo.png',
+                          label: 'Profile',
+                          wheretoGo: () => ProfileScreen(
+                            memberId: globalmemberID,
+                            gender: 'male',
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -978,7 +999,7 @@ class home_event_card extends StatelessWidget {
                     children: [
                       Text(
                         "${event.eventname}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
@@ -987,7 +1008,7 @@ class home_event_card extends StatelessWidget {
                       ),
                       Text(
                         "${event.dateForHeading}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                         ),
                         maxLines: 1,
@@ -995,7 +1016,7 @@ class home_event_card extends StatelessWidget {
                       ),
                       Text(
                         "${event.description}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
                         ),
@@ -1050,37 +1071,44 @@ class HomeScreenBottomIcon extends StatelessWidget {
   final Widget Function() wheretoGo;
 
   const HomeScreenBottomIcon({
-    Key? key, // Corrected key parameter
+    super.key,
     required this.asset,
     required this.label,
     required this.wheretoGo,
-  }) : super(key: key); // Corrected super call
+  });
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Column(
-        children: [
-          Image.asset(
-            asset,
-            width: 20,
-            height: 20,
-            color: AppThemes.brc_bottom_icon, // Used correct color property
-          ),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-      onPressed: () {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) => wheretoGo(), // Corrected function call
+          builder: (_) => wheretoGo(),
         ));
       },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              asset,
+              width: 22,
+              height: 22,
+              color: AppThemes.brc_bottom_icon,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
