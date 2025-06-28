@@ -148,17 +148,54 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   void launchWhatsApp(
       BuildContext context, String phoneNumber, String message) async {
-    final String whatsappUrl =
-        "whatsapp://send?phone=$phoneNumber&text=${Uri.encodeFull(message)}";
-    if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
-      await launchUrl(Uri.parse(whatsappUrl));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Could not launch WhatsApp'),
-          duration: Duration(seconds: 3), // Adjust as needed
-        ),
+    // Format phone number: remove non-digits and ensure country code
+    String formattedNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+    if (!formattedNumber.startsWith('91')) {
+      formattedNumber = '91$formattedNumber';
+    }
+
+    // Create both types of URLs for maximum compatibility
+    final Uri whatsappUri = Uri.parse(
+        'whatsapp://send?phone=$formattedNumber&text=${Uri.encodeComponent(message)}');
+    final Uri webWhatsappUri = Uri.parse(
+        'https://wa.me/$formattedNumber?text=${Uri.encodeComponent(message)}');
+
+    try {
+      // First try the WhatsApp deep link
+      bool launched = await launchUrl(
+        whatsappUri,
+        mode: LaunchMode.externalApplication,
       );
+
+      if (!launched) {
+        // If deep link fails, try web URL
+        launched = await launchUrl(
+          webWhatsappUri,
+          mode: LaunchMode.externalApplication,
+        );
+
+        if (!launched) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                    'WhatsApp is not installed. Please install WhatsApp to continue.'),
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'Could not open WhatsApp. Please check if WhatsApp is installed.'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
