@@ -944,59 +944,100 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
           }
         },
       ),
-      // No floating action button when globalPass is null
-
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: AppThemes.brc_bottom_icon.withOpacity(0.2),
-              blurRadius: 12,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-          child: BottomAppBar(
-            color: AppThemes.brc_textcolor,
-            height: 60,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  HomeScreenBottomIcon(
-                    asset: 'assets/images/home.png',
-                    label: 'Home',
-                    wheretoGo: () => const HomeScreenMadhuwan(),
-                  ),
-                  HomeScreenBottomIcon(
-                    asset: 'assets/images/mybooking.png',
-                    label: 'Events',
-                    wheretoGo: () => const EventsScreen(),
-                  ),
-                  HomeScreenBottomIcon(
-                    asset: 'assets/images/Frame.png',
-                    label: 'Directory',
-                    wheretoGo: () => const Directory(),
-                  ),
-                  HomeScreenBottomIcon(
-                    asset: 'assets/images/profilelogo.png',
-                    label: 'Profile',
-                    wheretoGo: () => ProfileScreen(
-                      memberId: globalmemberID,
-                      gender: 'male',
+      floatingActionButton: globalPass == 'None'
+          ? null
+          : GestureDetector(
+              onTap: () {
+                showQRDialog(context);
+              },
+              child: Container(
+                height: 64,
+                width: 64,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppThemes.brc_blocked_color.withOpacity(0.3),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    _getPassImage(globalPass),
+                    fit: BoxFit.cover,
+                    width: 64,
+                    height: 64,
                   ),
-                ],
+                ),
               ),
             ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      bottomNavigationBar: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppThemes.brc_bottom_icon.withOpacity(0.2),
+                      blurRadius: 12,
+                      offset: const Offset(0, -2),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  ),
+                  child: BottomAppBar(
+                    color: AppThemes.brc_textcolor,
+                    shape: const CircularNotchedRectangle(),
+                    notchMargin: 8,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const SizedBox(width: 10),
+                        HomeScreenBottomIcon(
+                          asset: 'assets/images/home.png',
+                          label: 'Home',
+                          wheretoGo: () => const HomeScreenMadhuwan(),
+                        ),
+                        HomeScreenBottomIcon(
+                          asset: 'assets/images/mybooking.png',
+                          label: 'Events',
+                          wheretoGo: () => const EventsScreen(),
+                        ),
+                        const SizedBox(width: 60), // Space for QR button
+                        HomeScreenBottomIcon(
+                          asset: 'assets/images/Frame.png',
+                          label: 'Directory',
+                          wheretoGo: () => const Directory(),
+                        ),
+                        HomeScreenBottomIcon(
+                          asset: 'assets/images/profilelogo.png',
+                          label: 'Profile',
+                          wheretoGo: () => ProfileScreen(
+                            memberId: globalmemberID,
+                            gender: 'male',
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
+        ],
       ),
     );
   }
@@ -1133,24 +1174,23 @@ class HomeScreenBottomIcon extends StatelessWidget {
           builder: (_) => wheretoGo(),
         ));
       },
-      child: SizedBox(
-        height: 56,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
               asset,
-              width: 20,
-              height: 20,
+              width: 22,
+              height: 22,
               color: AppThemes.brc_bottom_icon,
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 4),
             Text(
               label,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 10,
+                fontSize: 11.5,
                 fontWeight: FontWeight.w500,
               ),
             ),
