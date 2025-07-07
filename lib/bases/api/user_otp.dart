@@ -133,7 +133,7 @@ class UserOtpAPI {
 
   static Future<UserOtpAPI> login(String username, String otp) async {
     Uri url = Uri.parse(
-        "${Webservice.rootURL}${Webservice.userOtpAPI}?nickname=${Webservice.appNickname}");
+        "https://club.forcempower.com/MADHUBAN/ws_member_confirm_otp_v4.php");
     final request = http.MultipartRequest('POST', url);
     request.fields.addAll({
       'user_name': username,
