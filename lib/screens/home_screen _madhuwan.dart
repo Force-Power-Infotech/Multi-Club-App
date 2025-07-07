@@ -10,25 +10,18 @@ import 'package:multi_club_app/bases/api/sponsor.dart';
 import 'package:multi_club_app/bases/api/user_otp.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
-import 'package:multi_club_app/bases/webservice.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:multi_club_app/screens/BirthdayAnniversaryScreen.dart';
 import 'package:multi_club_app/screens/PrivilegeListScreen.dart';
-import 'package:multi_club_app/screens/contact_us.dart';
 import 'package:multi_club_app/screens/directory.dart';
 import 'package:multi_club_app/screens/event_details_screen.dart';
 import 'package:multi_club_app/screens/events_screen.dart';
-import 'package:multi_club_app/screens/helpdesk_screen.dart';
 import 'package:multi_club_app/screens/notification_screen.dart';
 import 'package:multi_club_app/screens/profile_screen.dart';
-import 'package:multi_club_app/screens/rowing_booking.dart';
 import 'package:multi_club_app/screens/side_menu.dart';
-import 'package:multi_club_app/screens/sports_booking.dart';
-import 'package:multi_club_app/screens/table_booking.dart';
 import 'package:multi_club_app/screens/widgets/CaroselSponsor.dart';
 import 'package:multi_club_app/screens/widgets/CarouselWidget.dart';
 import 'package:multi_club_app/screens/widgets/PulsatingButton.dart';
-import 'package:multi_club_app/screens/widgets/SponsorSlider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreenMadhuwan extends StatefulWidget {
@@ -130,7 +123,8 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
         (_) => accessMemberIdFromHive()); // Call the method here
     _profileData = ProfieviewAPI.list(); // Fetch profile data from API
     memberID();
-    if (globalPass == 'GoldenPass' || globalPass == 'TogetherPass') {
+    getUserData(); // Make sure to call getUserData
+    if (globalPass == 'TogetherPass') {
       Future.delayed(const Duration(seconds: 5), () {
         if (mounted) {
           setState(() {
@@ -944,100 +938,94 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
           }
         },
       ),
-      floatingActionButton: globalPass == 'None'
-          ? null
-          : GestureDetector(
-              onTap: () {
-                showQRDialog(context);
-              },
-              child: Container(
-                height: 64,
-                width: 64,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppThemes.brc_blocked_color.withOpacity(0.3),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: ClipOval(
-                  child: Image.asset(
-                    _getPassImage(globalPass),
-                    fit: BoxFit.cover,
-                    width: 64,
-                    height: 64,
-                  ),
-                ),
-              ),
+      floatingActionButton: globalPass == 'TogetherPass' ? GestureDetector(
+        onTap: () {
+          showQRDialog(context);
+        },
+        child: Container(
+          height: 64,
+          width: 64,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            border: Border.all(
+              color: const Color(0xFF3B82F6),
+              width: 2,
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      bottomNavigationBar: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppThemes.brc_bottom_icon.withOpacity(0.2),
-                      blurRadius: 12,
-                      offset: const Offset(0, -2),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(24),
-                    topRight: Radius.circular(24),
-                  ),
-                  child: BottomAppBar(
-                    color: AppThemes.brc_textcolor,
-                    shape: const CircularNotchedRectangle(),
-                    notchMargin: 8,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const SizedBox(width: 10),
-                        HomeScreenBottomIcon(
-                          asset: 'assets/images/home.png',
-                          label: 'Home',
-                          wheretoGo: () => const HomeScreenMadhuwan(),
-                        ),
-                        HomeScreenBottomIcon(
-                          asset: 'assets/images/mybooking.png',
-                          label: 'Events',
-                          wheretoGo: () => const EventsScreen(),
-                        ),
-                        const SizedBox(width: 60), // Space for QR button
-                        HomeScreenBottomIcon(
-                          asset: 'assets/images/Frame.png',
-                          label: 'Directory',
-                          wheretoGo: () => const Directory(),
-                        ),
-                        HomeScreenBottomIcon(
-                          asset: 'assets/images/profilelogo.png',
-                          label: 'Profile',
-                          wheretoGo: () => ProfileScreen(
-                            memberId: globalmemberID,
-                            gender: 'male',
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                      ],
-                    ),
-                  ),
-                ),
+            boxShadow: [
+              BoxShadow(
+                color: AppThemes.brc_blocked_color.withOpacity(0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
-        ],
+          child: ClipOval(
+            child: Image.asset(
+              _showQRAnimation ? 'assets/images/qrlogo2.gif' : 'assets/images/togetherpass.gif',
+              fit: BoxFit.cover,
+              width: 64,
+              height: 64,
+            ),
+          ),
+        ),
+      ) : null,
+
+      floatingActionButtonLocation: globalPass == 'TogetherPass' 
+          ? FloatingActionButtonLocation.centerDocked 
+          : null,
+
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: AppThemes.brc_bottom_icon.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+          child: BottomAppBar(
+            color: AppThemes.brc_textcolor,
+            shape: globalPass == 'TogetherPass' ? const CircularNotchedRectangle() : null,
+            notchMargin: 8,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                HomeScreenBottomIcon(
+                  asset: 'assets/images/home.png',
+                  label: 'Home',
+                  wheretoGo: () => const HomeScreenMadhuwan(),
+                ),
+                HomeScreenBottomIcon(
+                  asset: 'assets/images/mybooking.png',
+                  label: 'Events',
+                  wheretoGo: () => const EventsScreen(),
+                ),
+                if (globalPass == 'TogetherPass') 
+                  const SizedBox(width: 60),
+                HomeScreenBottomIcon(
+                  asset: 'assets/images/Frame.png',
+                  label: 'Directory',
+                  wheretoGo: () => const Directory(),
+                ),
+                HomeScreenBottomIcon(
+                  asset: 'assets/images/profilelogo.png',
+                  label: 'Profile',
+                  wheretoGo: () => ProfileScreen(
+                    memberId: globalmemberID,
+                    gender: 'male',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
