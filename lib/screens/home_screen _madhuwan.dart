@@ -664,7 +664,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text(
-                                'Recent Birthdays ', // Text above the boxes
+                                'Birthday Pass', // Text above the boxes
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -938,41 +938,45 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
           }
         },
       ),
-      floatingActionButton: globalPass == 'TogetherPass' ? GestureDetector(
-        onTap: () {
-          showQRDialog(context);
-        },
-        child: Container(
-          height: 64,
-          width: 64,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            border: Border.all(
-              color: const Color(0xFF3B82F6),
-              width: 2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppThemes.brc_blocked_color.withOpacity(0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+      floatingActionButton: globalPass == 'TogetherPass'
+          ? GestureDetector(
+              onTap: () {
+                showQRDialog(context);
+              },
+              child: Container(
+                height: 64,
+                width: 64,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  border: Border.all(
+                    color: const Color(0xFF3B82F6),
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppThemes.brc_blocked_color.withOpacity(0.3),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    _showQRAnimation
+                        ? 'assets/images/qrlogo2.gif'
+                        : 'assets/images/togetherpass.gif',
+                    fit: BoxFit.cover,
+                    width: 64,
+                    height: 64,
+                  ),
+                ),
               ),
-            ],
-          ),
-          child: ClipOval(
-            child: Image.asset(
-              _showQRAnimation ? 'assets/images/qrlogo2.gif' : 'assets/images/togetherpass.gif',
-              fit: BoxFit.cover,
-              width: 64,
-              height: 64,
-            ),
-          ),
-        ),
-      ) : null,
+            )
+          : null,
 
-      floatingActionButtonLocation: globalPass == 'TogetherPass' 
-          ? FloatingActionButtonLocation.centerDocked 
+      floatingActionButtonLocation: globalPass == 'TogetherPass'
+          ? FloatingActionButtonLocation.centerDocked
           : null,
 
       bottomNavigationBar: Container(
@@ -992,7 +996,9 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
           ),
           child: BottomAppBar(
             color: AppThemes.brc_textcolor,
-            shape: globalPass == 'TogetherPass' ? const CircularNotchedRectangle() : null,
+            shape: globalPass == 'TogetherPass'
+                ? const CircularNotchedRectangle()
+                : null,
             notchMargin: 8,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -1007,8 +1013,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                   label: 'Events',
                   wheretoGo: () => const EventsScreen(),
                 ),
-                if (globalPass == 'TogetherPass') 
-                  const SizedBox(width: 60),
+                if (globalPass == 'TogetherPass') const SizedBox(width: 60),
                 HomeScreenBottomIcon(
                   asset: 'assets/images/Frame.png',
                   label: 'Directory',
