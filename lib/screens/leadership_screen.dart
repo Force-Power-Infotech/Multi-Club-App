@@ -53,7 +53,7 @@ class _LeadershipScreenState extends State<LeadershipScreen> {
                 items: <String>[
                   'Executive Committee',
                   'General Committee',
-                  'Special Invite',
+                  'Special Invitee',
                   'Advisory Committee'
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
