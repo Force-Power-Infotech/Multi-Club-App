@@ -24,11 +24,18 @@ class PriviledgeAPI {
   PriviledgeAPI.fromJson(Map<String, dynamic> json) {
     processStatus = json['process_status'];
     processMessage = json['process_message'];
-    nameArray = json['name_array'].cast<String>();
-    imageUrlArray = json['image_url_array'].cast<String>();
-    discountArray = json['discount_array'].cast<String>();
-    locationUrlArray = json['location_url_array'].cast<String>();
-    descriptionArray = json['description_array'].cast<String>();
+    nameArray = json['name_array']?.cast<String>();
+    imageUrlArray = json['image_url_array']?.cast<String>();
+    discountArray = json['discount_array']?.cast<String>();
+    locationUrlArray = json['location_url_array']?.cast<String>();
+    descriptionArray = json['description_array']?.cast<String>();
+  }
+
+  bool get hasData {
+    return nameArray != null &&
+        nameArray!.isNotEmpty &&
+        imageUrlArray != null &&
+        imageUrlArray!.isNotEmpty;
   }
 
   Map<String, dynamic> toJson() {

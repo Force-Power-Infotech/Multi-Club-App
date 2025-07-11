@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_club_app/bases/api/birthday_today.dart';
 import 'package:multi_club_app/bases/api/event_details.dart';
+import 'package:multi_club_app/bases/api/priviledge.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/api/sponsor.dart';
 import 'package:multi_club_app/bases/api/user_otp.dart';
@@ -200,6 +201,15 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
       return userData['firstname'];
     }
     return null;
+  }
+
+  Future<bool> checkPrivilegeDataExists() async {
+    try {
+      final privilegeAPI = await PriviledgeAPI.details();
+      return privilegeAPI.hasData;
+    } catch (e) {
+      return false;
+    }
   }
 
   // QR Code generation method
@@ -876,40 +886,60 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                         const SizedBox(
                             height:
                                 15), // Add space above the first line of text
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Privilege', // Text above the boxes
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ), // Adjust font size as needed
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            PrivilegeListScreen()), // Replace EventScreen() with your actual screen
-                                  );
-                                },
-                                child: Text(
-                                  'Show more', // Text above the boxes
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppThemes
-                                          .getBackground()), // Adjust font size as needed
+                        FutureBuilder<bool>(
+                          future: checkPrivilegeDataExists(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const SizedBox.shrink();
+                            }
+
+                            final hasPrivilegeData = snapshot.data ?? false;
+                            if (!hasPrivilegeData) {
+                              return const SizedBox.shrink();
+                            }
+
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Privilege',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PrivilegeListScreen()),
+                                          );
+                                        },
+                                        child: Text(
+                                          'Show more',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppThemes.getBackground()),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                                CarouselWidget(),
+                              ],
+                            );
+                          },
                         ),
-                        CarouselWidget(),
                         const SizedBox(
                             height:
                                 15), // Add space above the first line of text
