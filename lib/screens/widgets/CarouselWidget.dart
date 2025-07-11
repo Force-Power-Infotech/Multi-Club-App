@@ -34,17 +34,22 @@ class _CarouselWidgetState extends State<CarouselWidget> {
     // Start auto-scrolling every 3 seconds
     Future.delayed(Duration(seconds: 3), () async {
       if (_pageController.hasClients) {
-        final int nextPage = (_pageController.page?.round() ?? 0) + 1;
         final PriviledgeAPI? priviledgeData = await _priviledgeFuture;
-        if (priviledgeData != null && priviledgeData.imageUrlArray != null) {
-          final int itemCount = priviledgeData.imageUrlArray!.length;
+        final int itemCount = priviledgeData?.imageUrlArray?.length ?? 0;
+
+        // Only scroll if there are items
+        if (itemCount > 0) {
+          final int nextPage = (_pageController.page?.round() ?? 0) + 1;
           _pageController.animateToPage(
             nextPage % itemCount,
             duration: Duration(milliseconds: 500),
             curve: Curves.easeOut,
           );
         }
-        _startAutoScroll();
+
+        if (mounted) {
+          _startAutoScroll();
+        }
       }
     });
   }

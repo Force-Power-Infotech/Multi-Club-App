@@ -9,14 +9,28 @@ import 'package:url_launcher/url_launcher.dart';
 class BirthdayAnniversaryScreen extends StatelessWidget {
   void launchWhatsApp(
       BuildContext context, String phoneNumber, String message) async {
-    final String whatsappUrl =
-        "whatsapp://send?phone=$phoneNumber&text=${Uri.encodeFull(message)}";
-    if (await canLaunch(whatsappUrl)) {
-      await launch(whatsappUrl);
-    } else {
+    // Format phone number - add country code if not present
+    String formattedNumber = phoneNumber;
+    if (!phoneNumber.startsWith('+')) {
+      formattedNumber = '+91${phoneNumber.replaceAll(RegExp(r'[^\d]'), '')}';
+    }
+
+    final Uri whatsappUri = Uri.parse(
+        "whatsapp://send?phone=${formattedNumber.replaceAll('+', '')}&text=${Uri.encodeFull(message)}");
+
+    try {
+      if (!await launchUrl(whatsappUri, mode: LaunchMode.externalApplication)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Could not launch WhatsApp'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Could not launch WhatsApp'),
+        const SnackBar(
+          content: Text('WhatsApp is not installed'),
           duration: Duration(seconds: 3),
         ),
       );
@@ -24,9 +38,16 @@ class BirthdayAnniversaryScreen extends StatelessWidget {
   }
 
   String formattedDate(String dateStr) {
-    DateTime date = DateFormat("dd-MM-yyyy").parse(dateStr);
-    String formatted = DateFormat("dd MMM, yyyy").format(date);
-    return formatted;
+    if (dateStr.isEmpty) {
+      return 'No date available';
+    }
+    try {
+      DateTime date = DateFormat("dd-MM-yyyy").parse(dateStr.trim());
+      String formatted = DateFormat("dd MMM, yyyy").format(date);
+      return formatted;
+    } catch (e) {
+      return 'Invalid date';
+    }
   }
 
   @override
@@ -120,14 +141,14 @@ class BirthdayAnniversaryScreen extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  formattedDate(date),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
+                                // const SizedBox(height: 4),
+                                // Text(
+                                //   formattedDate(date),
+                                //   style: const TextStyle(
+                                //     fontSize: 14,
+                                //     color: Colors.grey,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
