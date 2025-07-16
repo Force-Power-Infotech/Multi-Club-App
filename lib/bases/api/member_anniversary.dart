@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 
 class MemberAnniversary {
@@ -44,37 +45,39 @@ class MemberAnniversary {
   }
 
   static Future<List<MemberAnniversary>> fetchAnniversaryData() async {
-    try {
-      Uri url = Uri.parse(
-          "http://club.forcempower.com/member_anniversary_list.php?nickname=madhuban");
-      final request = http.MultipartRequest('POST', url);
+  try {
+    Uri url = Uri.parse(
+        "http://club.forcempower.com/member_anniversary_list.php?nickname=madhuban");
+    final request = http.MultipartRequest('POST', url);
 
-      request.fields.addAll({
-        'anniversary': '2025-07-11',
-      });
+    final today = DateFormat('yyyy-MM-dd').format(DateTime.now()); // current date
 
-      http.StreamedResponse response = await request.send();
-      String responseString = await response.stream.bytesToString();
-      log('Anniversary response received: $responseString');
+    request.fields.addAll({
+      'anniversary': today,
+    });
 
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(responseString);
+    http.StreamedResponse response = await request.send();
+    String responseString = await response.stream.bytesToString();
+    log('Anniversary response received: $responseString');
 
-        if (decoded is List) {
-          return decoded
-              .map((json) => MemberAnniversary.fromJson(json))
-              .toList();
-        } else if (decoded is Map<String, dynamic>) {
-          return [MemberAnniversary.fromJson(decoded)];
-        } else {
-          throw Exception('Unexpected response format');
-        }
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(responseString);
+
+      if (decoded is List) {
+        return decoded
+            .map((json) => MemberAnniversary.fromJson(json))
+            .toList();
+      } else if (decoded is Map<String, dynamic>) {
+        return [MemberAnniversary.fromJson(decoded)];
       } else {
-        throw Exception('Failed to load');
+        throw Exception('Unexpected response format');
       }
-    } catch (e) {
-      log('Error fetching anniversary data: $e');
-      throw Exception('Failed to load anniversary data');
+    } else {
+      throw Exception('Failed to load');
     }
+  } catch (e) {
+    log('Error fetching anniversary data: $e');
+    throw Exception('Failed to load anniversary data');
   }
+}
 }
