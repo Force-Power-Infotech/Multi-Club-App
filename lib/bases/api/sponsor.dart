@@ -47,7 +47,7 @@ class SponsorAPI {
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
-    log('SponsorAPI Response: $responseString');
+    // log('SponsorAPI Response: $responseString');
     return SponsorAPI.fromJson(jsonDecode(responseString));
   }
 }

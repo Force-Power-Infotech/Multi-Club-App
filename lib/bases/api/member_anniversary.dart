@@ -43,29 +43,30 @@ class MemberAnniversary {
     return data;
   }
 
-  static Future<MemberAnniversary> updation(String date) async {
+  static Future<List<MemberAnniversary>> fetchAnniversaryData() async {
     try {
       Uri url = Uri.parse(
           "http://club.forcempower.com/member_anniversary_list.php?nickname=madhuban");
       final request = http.MultipartRequest('POST', url);
 
       request.fields.addAll({
-        'anniversary': date,
+        'anniversary': '2025-07-11',
       });
-      log('Sending anniversary request for date: $date');
-      
+      // log('Sending anniversary request for date: $date');
+
       http.StreamedResponse response = await request.send();
       String responseString = await response.stream.bytesToString();
       log('Anniversary response received: $responseString');
-      
+
       if (response.statusCode == 200) {
-        return MemberAnniversary.fromJson(jsonDecode(responseString));
+        List<dynamic> data = jsonDecode(responseString);
+        return data.map((json) => MemberAnniversary.fromJson(json)).toList();
       } else {
-        throw Exception('Failed to load anniversary data. Status code: ${response.statusCode}');
+        throw Exception('Failed to load');
       }
     } catch (e) {
-      log('Error in anniversary updation: $e');
-      throw Exception('Failed to process anniversary data: $e');
+      log('Error fetching anniversary data: $e');
+      throw Exception('Failed to load anniversary data');
     }
   }
-  }
+}
