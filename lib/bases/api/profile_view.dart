@@ -160,6 +160,10 @@ class Data {
   String? maleImageURL;
   String? femaleImageURL;
   String? email;
+  String? social_media_link1;
+  String? social_media_link2;
+  String? social_media_link3;
+  String? social_media_link4;
 
   Data(
       {this.membershipCode,
@@ -174,6 +178,10 @@ class Data {
       this.maleImageURL,
       this.femaleImageURL,
       this.email,
+      this.social_media_link1,
+      this.social_media_link2,
+      this.social_media_link3,
+      this.social_media_link4,
       this.memberFemaleAge});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -190,6 +198,10 @@ class Data {
     femaleImageURL = json['spouse_image_url'];
     officeAddress = json['office_address'];
     email = json['email'];
+    social_media_link1 = json['social_media_link1'];
+    social_media_link2 = json['social_media_link2'];
+    social_media_link3 = json['social_media_link3'];
+    social_media_link4 = json['social_media_link4'];
   }
 
   Map<String, dynamic> toJson() {
@@ -207,6 +219,10 @@ class Data {
     data['spouse_image_url'] = femaleImageURL;
     data['office_address'] = officeAddress;
     data['email'] = email;
+    data['social_media_link1'] = social_media_link1;
+    data['social_media_link2'] = social_media_link2;
+    data['social_media_link3'] = social_media_link3;
+    data['social_media_link4'] = social_media_link4;
     return data;
   }
 }
