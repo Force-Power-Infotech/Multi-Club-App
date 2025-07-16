@@ -888,37 +888,37 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                         const SizedBox(height: 20),
 
                         // Anniversary Section
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
+                              Text(
                                 'Anniversary Pass',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const MemberAnniversaryScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  'Show more',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppThemes.getBackground(),
-                                  ),
-                                ),
-                              ),
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //         builder: (context) =>
+                              //             const MemberAnniversaryScreen(),
+                              //       ),
+                              //     );
+                              //   },
+                              //   child: Text(
+                              //     'Show more',
+                              //     style: TextStyle(
+                              //       fontSize: 16,
+                              //       fontWeight: FontWeight.w600,
+                              //       color: AppThemes.getBackground(),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -961,10 +961,27 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                 child: Icon(Icons.person)),
                                         title: Text(
                                             member.memberName ?? 'No Name'),
-                                        subtitle: Text(
-                                            'Anniversary: ${member.membeAnniversaryDate ?? ''}'),
-                                        trailing:
-                                            Text(member.memberContact ?? ''),
+                                        // subtitle: Text(
+                                        //     'Anniversary: ${member.membeAnniversaryDate ?? ''}'),
+                                        trailing: PulsatingButton(
+                                          onPressed: () {
+                                            if (member.memberContact!.isEmpty) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'No contact number available'),
+                                                ),
+                                              );
+                                            } else {
+                                              launchWhatsApp(
+                                                context,
+                                                (member.memberContact!),
+                                                "Happy Anniversary!!",
+                                              );
+                                            }
+                                          },
+                                        ),
                                       );
                                     },
                                   );
