@@ -553,6 +553,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Widget _buildSocialButton(String label, VoidCallback onTap) {
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppThemes.getBackground(),
+        foregroundColor: AppThemes.brc_textcolor,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  void _handleSocialLink(BuildContext context, String? link) {
+    if (link == null || link.isEmpty) {
+      _showLinkDialog(context, null);
+    } else {
+      _showLinkDialog(context, link);
+    }
+  }
+
+  void _showLinkDialog(BuildContext context, String? link) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(link != null ? 'Social Media Link' : 'No Link Available'),
+        content: link != null
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    link,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppThemes.brc_tablebooking_dark_text,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final Uri url = Uri.parse(link);
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppThemes.getBackground(),
+                      foregroundColor: AppThemes.brc_textcolor,
+                    ),
+                    child: const Text('Open in Browser'),
+                  ),
+                ],
+              )
+            : const Text(
+                'This social media link is not available.',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppThemes.brc_tablebooking_dark_text,
+                ),
+              ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -577,16 +657,130 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         // centerTitle: true,
         actions: [
+          // Social Media Button
+          FutureBuilder<ProfieviewAPI>(
+            future: _profileData,
+            builder: (context, snapshot) {
+              return IconButton(
+                icon: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Icon(
+                    Icons.share,
+                    size: 18,
+                    color: AppThemes.getBackground(),
+                  ),
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    builder: (context) => Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Social Media Links',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppThemes.brc_tablebooking_dark_text,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          if (snapshot.hasData &&
+                              snapshot.data?.data?.isNotEmpty == true)
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              alignment: WrapAlignment.center,
+                              children: [
+                                if (snapshot.data?.data?.first
+                                        .social_media_link1?.isNotEmpty ??
+                                    false)
+                                  _buildSocialButton(
+                                      'Link 1',
+                                      () => _handleSocialLink(
+                                          context,
+                                          snapshot.data?.data?.first
+                                              .social_media_link1)),
+                                if (snapshot.data?.data?.first
+                                        .social_media_link2?.isNotEmpty ??
+                                    false)
+                                  _buildSocialButton(
+                                      'Link 2',
+                                      () => _handleSocialLink(
+                                          context,
+                                          snapshot.data?.data?.first
+                                              .social_media_link2)),
+                                if (snapshot.data?.data?.first
+                                        .social_media_link3?.isNotEmpty ??
+                                    false)
+                                  _buildSocialButton(
+                                      'Link 3',
+                                      () => _handleSocialLink(
+                                          context,
+                                          snapshot.data?.data?.first
+                                              .social_media_link3)),
+                                if (snapshot.data?.data?.first
+                                        .social_media_link4?.isNotEmpty ??
+                                    false)
+                                  _buildSocialButton(
+                                      'Link 4',
+                                      () => _handleSocialLink(
+                                          context,
+                                          snapshot.data?.data?.first
+                                              .social_media_link4)),
+                              ],
+                            )
+                          else
+                            const Text(
+                              'No social media links available',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+          // Edit Profile Button
           if (widget.memberId == globalmemberID)
             IconButton(
               icon: Container(
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                  color: Colors.white, // Background color for the square
-                  shape: BoxShape.rectangle, // Shape of the container
-                  borderRadius:
-                      BorderRadius.circular(4), // Optional: Rounded corners
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Icon(
                   Icons.edit,
@@ -595,7 +789,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               onPressed: () {
-                // Add onPressed action for the edit profile icon
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => const ProfileEditScreen(),
                 ));
@@ -1217,6 +1410,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           color: AppThemes
                                               .brc_tablebooking_dark_text,
                                         ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Divider(),
+                                // Social Media Links Section
+                                Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Social Media',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Wrap(
+                                        spacing: 8.0,
+                                        runSpacing: 8.0,
+                                        children: [
+                                          if (profileData.social_media_link1
+                                                  ?.isNotEmpty ??
+                                              false)
+                                            _buildSocialButton(
+                                                'Link 1',
+                                                () => _handleSocialLink(
+                                                    context,
+                                                    profileData
+                                                        .social_media_link1)),
+                                          if (profileData.social_media_link2
+                                                  ?.isNotEmpty ??
+                                              false)
+                                            _buildSocialButton(
+                                                'Link 2',
+                                                () => _handleSocialLink(
+                                                    context,
+                                                    profileData
+                                                        .social_media_link2)),
+                                          if (profileData.social_media_link3
+                                                  ?.isNotEmpty ??
+                                              false)
+                                            _buildSocialButton(
+                                                'Link 3',
+                                                () => _handleSocialLink(
+                                                    context,
+                                                    profileData
+                                                        .social_media_link3)),
+                                          if (profileData.social_media_link4
+                                                  ?.isNotEmpty ??
+                                              false)
+                                            _buildSocialButton(
+                                                'Link 4',
+                                                () => _handleSocialLink(
+                                                    context,
+                                                    profileData
+                                                        .social_media_link4)),
+                                        ],
                                       ),
                                     ],
                                   ),
