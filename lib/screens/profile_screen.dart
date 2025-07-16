@@ -583,52 +583,97 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _launchUrl(String urlString) async {
+    try {
+      final Uri url = Uri.parse(urlString);
+      if (!await launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+        webViewConfiguration: const WebViewConfiguration(
+          enableJavaScript: true,
+          enableDomStorage: true,
+        ),
+      )) {
+        throw Exception('Could not launch $urlString');
+      }
+    } catch (e) {
+      debugPrint('Error launching URL: $e');
+      // Show error snackbar
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Could not open the link. Please try again later.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   void _showLinkDialog(BuildContext context, String? link) {
+    if (link == null || link.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No link available'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(link != null ? 'Social Media Link' : 'No Link Available'),
-        content: link != null
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    link,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppThemes.brc_tablebooking_dark_text,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final Uri url = Uri.parse(link);
-                      if (await canLaunchUrl(url)) {
-                        await launchUrl(url);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppThemes.getBackground(),
-                      foregroundColor: AppThemes.brc_textcolor,
-                    ),
-                    child: const Text('Open in Browser'),
-                  ),
-                ],
-              )
-            : const Text(
-                'This social media link is not available.',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppThemes.brc_tablebooking_dark_text,
-                ),
+        title: const Text('Social Media Link'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              link,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppThemes.brc_tablebooking_dark_text,
               ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: link)).then((_) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Link copied to clipboard'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    });
+                  },
+                  icon: const Icon(Icons.copy, size: 20),
+                  label: const Text('Copy'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppThemes.brc_tablebooking_dark_text,
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _launchUrl(link);
+                  },
+                  icon: const Icon(Icons.open_in_new, size: 20),
+                  label: const Text('Open'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppThemes.getBackground(),
+                    foregroundColor: AppThemes.brc_textcolor,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
