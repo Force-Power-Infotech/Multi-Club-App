@@ -539,10 +539,15 @@ class EventDetailsScreen extends StatelessWidget {
 Widget _buildImageWidget(String? imageUrl) {
   try {
     if (imageUrl != null && imageUrl.isNotEmpty) {
-      return Image.network(
-        imageUrl, // URL from the API
+      // Check if the URL is a relative path or already a complete URL
+      final String fullUrl = imageUrl.startsWith('http')
+          ? imageUrl
+          : 'http://club.forcempower.com/$imageUrl';
 
+      return Image.network(
+        fullUrl, // Complete URL
         errorBuilder: (context, error, stackTrace) {
+          print('Error loading image: $error, URL: $fullUrl');
           // If there's an error loading the image, return the placeholder
           return _buildPlaceholderImage();
         },

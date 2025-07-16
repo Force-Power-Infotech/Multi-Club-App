@@ -785,12 +785,18 @@ class home_event_card extends StatelessWidget {
 Widget _buildImageWidget(String? imageUrl) {
   try {
     if (imageUrl != null && imageUrl.isNotEmpty) {
+      // Check if the URL is a relative path or already a complete URL
+      final String fullUrl = imageUrl.startsWith('http')
+          ? imageUrl
+          : 'http://club.forcempower.com/$imageUrl';
+
       return Image.network(
-        imageUrl, // URL from the API
+        fullUrl,
         width: 90, // Adjust width of the image as needed
         height: 90, // Adjust height of the image as needed
         fit: BoxFit.cover, // Adjust fit as needed
         errorBuilder: (context, error, stackTrace) {
+          print('Error loading image: $error, URL: $fullUrl');
           // If there's an error loading the image, return the placeholder
           return _buildPlaceholderImage();
         },

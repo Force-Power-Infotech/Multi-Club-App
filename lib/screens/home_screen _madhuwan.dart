@@ -1,13 +1,17 @@
 import 'dart:developer';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import 'package:multi_club_app/bases/api/birthday_today.dart';
 import 'package:multi_club_app/bases/api/event_details.dart';
+import 'package:multi_club_app/bases/api/member_anniversary.dart';
 import 'package:multi_club_app/bases/api/priviledge.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/api/sponsor.dart';
+import 'package:multi_club_app/screens/member_anniversary_screen.dart';
 import 'package:multi_club_app/bases/api/user_otp.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
@@ -33,6 +37,26 @@ class HomeScreenMadhuwan extends StatefulWidget {
 }
 
 class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
+  Future<List<MemberAnniversary>> fetchAnniversaryData() async {
+    final today = DateTime.now();
+    final formattedDate = DateFormat('yyyy-MM-dd').format(today);
+
+    final response = await http.post(
+      Uri.parse('http://club.forcempower.com/member_anniversary_list.php'),
+      body: {
+        'nickname': 'madhuban',
+        'anniversary': formattedDate,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.map((json) => MemberAnniversary.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load anniversary data');
+    }
+  }
+
   Color _getBorderColor(String? passType) {
     switch (passType) {
       case 'GoldenPass':
@@ -883,6 +907,406 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
 
                         const SizedBox(height: 20),
 
+                        // Anniversary Section
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Anniversary Pass',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MemberAnniversaryScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'Show more',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppThemes.getBackground(),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppThemes.brc_textcolor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            height: 190,
+                            child: FutureBuilder<List<MemberAnniversary>>(
+                              future: fetchAnniversaryData(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                      child: Text('Error: ${snapshot.error}'));
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data!.isEmpty) {
+                                  return const Center(
+                                    child: Text(
+                                      'No anniversaries today',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  );
+                                } else {
+                                  final dataList = snapshot.data!;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: ListView.builder(
+                                      itemCount: dataList.length,
+                                      itemBuilder: (context, index) {
+                                        final anniversary = dataList[index];
+
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Stack(
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor: AppThemes
+                                                        .getLightColor(),
+                                                    radius: 24,
+                                                    child: Text(
+                                                      (anniversary.memberName ??
+                                                                  '')
+                                                              .isNotEmpty
+                                                          ? (anniversary
+                                                                      .memberName ??
+                                                                  'A')[0]
+                                                              .toUpperCase()
+                                                          : 'A',
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    right: -2,
+                                                    bottom: -2,
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
+                                                      decoration: BoxDecoration(
+                                                        color: AppThemes
+                                                            .getBackground(),
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: Colors.white,
+                                                          width: 2,
+                                                        ),
+                                                      ),
+                                                      child: const Icon(
+                                                        Icons.favorite,
+                                                        size: 8,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(width: 16),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      anniversary.memberName ??
+                                                          'Unknown Member',
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      DateFormat(
+                                                              'MMMM dd, yyyy')
+                                                          .format(
+                                                        DateTime.parse(anniversary
+                                                                .membeAnniversaryDate ??
+                                                            DateTime.now()
+                                                                .toString()),
+                                                      ),
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              PulsatingButton(
+                                                onPressed: () {
+                                                  if (anniversary.memberContact
+                                                          ?.isEmpty ??
+                                                      true) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                            'No contact number available'),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    launchWhatsApp(
+                                                      context,
+                                                      anniversary
+                                                          .memberContact!,
+                                                      "Happy Anniversary! 🎉💑",
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        FutureBuilder<List<MemberAnniversary>>(
+                          future: fetchAnniversaryData(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Today's Anniversaries",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppThemes.brc_textcolor,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MemberAnniversaryScreen(),
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            "View All",
+                                            style: TextStyle(
+                                                color:
+                                                    AppThemes.getBackground()),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 160,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.2),
+                                            spreadRadius: 1,
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 12),
+                                        itemCount: snapshot.data!.length,
+                                        itemBuilder: (context, index) {
+                                          final anniversary =
+                                              snapshot.data![index];
+                                          return Container(
+                                            width: 120,
+                                            margin: const EdgeInsets.only(
+                                                right: 16),
+                                            child: Column(
+                                              children: [
+                                                Stack(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: AppThemes
+                                                              .getBackground(),
+                                                          width: 2,
+                                                        ),
+                                                      ),
+                                                      child: CircleAvatar(
+                                                        radius: 36,
+                                                        backgroundColor:
+                                                            AppThemes
+                                                                .getLightColor(),
+                                                        child: Text(
+                                                          (anniversary.memberName ??
+                                                                      '')
+                                                                  .isNotEmpty
+                                                              ? anniversary
+                                                                  .memberName!
+                                                                  .substring(
+                                                                      0, 1)
+                                                                  .toUpperCase()
+                                                              : 'A',
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 24,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      right: 0,
+                                                      bottom: 0,
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: AppThemes
+                                                              .getBackground(),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 2),
+                                                        ),
+                                                        child: const Icon(
+                                                            Icons.favorite,
+                                                            size: 12,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  anniversary.memberName ??
+                                                      'Unknown Member',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                const SizedBox(height: 4),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    launchWhatsApp(
+                                                      context,
+                                                      anniversary
+                                                              .memberContact ??
+                                                          "",
+                                                      'Happy Anniversary dear ${anniversary.memberName ?? "Member"}! 🎉💑',
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 12,
+                                                        vertical: 6),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.green,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Image.asset(
+                                                          'assets/images/wpicon.webp',
+                                                          width: 16,
+                                                          height: 16,
+                                                          color: Colors.white,
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 4),
+                                                        const Text(
+                                                          'Wish',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            return Container();
+                          },
+                        ),
+                        // const SizedBox(height: 20),
+
                         const SizedBox(
                             height:
                                 15), // Add space above the first line of text
@@ -1149,12 +1573,18 @@ class home_event_card extends StatelessWidget {
 Widget _buildImageWidget(String? imageUrl) {
   try {
     if (imageUrl != null && imageUrl.isNotEmpty) {
+      // Check if the URL is a relative path or already a complete URL
+      final String fullUrl = imageUrl.startsWith('http')
+          ? imageUrl
+          : 'http://club.forcempower.com/$imageUrl';
+
       return Image.network(
-        imageUrl, // URL from the API
+        fullUrl,
         width: 90, // Adjust width of the image as needed
         height: 90, // Adjust height of the image as needed
         fit: BoxFit.cover, // Adjust fit as needed
         errorBuilder: (context, error, stackTrace) {
+          print('Error loading image: $error, URL: $fullUrl');
           // If there's an error loading the image, return the placeholder
           return _buildPlaceholderImage();
         },
