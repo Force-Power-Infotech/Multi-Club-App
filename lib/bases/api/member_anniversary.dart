@@ -52,15 +52,23 @@ class MemberAnniversary {
       request.fields.addAll({
         'anniversary': '2025-07-11',
       });
-      // log('Sending anniversary request for date: $date');
 
       http.StreamedResponse response = await request.send();
       String responseString = await response.stream.bytesToString();
       log('Anniversary response received: $responseString');
 
       if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(responseString);
-        return data.map((json) => MemberAnniversary.fromJson(json)).toList();
+        final decoded = jsonDecode(responseString);
+
+        if (decoded is List) {
+          return decoded
+              .map((json) => MemberAnniversary.fromJson(json))
+              .toList();
+        } else if (decoded is Map<String, dynamic>) {
+          return [MemberAnniversary.fromJson(decoded)];
+        } else {
+          throw Exception('Unexpected response format');
+        }
       } else {
         throw Exception('Failed to load');
       }
