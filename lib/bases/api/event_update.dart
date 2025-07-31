@@ -57,6 +57,14 @@ class EventUpdateAPI {
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
     print(responseString);
-    return EventUpdateAPI.fromJson(jsonDecode(responseString));
+    if (responseString.isNotEmpty) {
+      return EventUpdateAPI.fromJson(jsonDecode(responseString));
+    } else {
+      // Return an empty/default EventUpdateAPI or handle as needed
+      return EventUpdateAPI(
+        processStatus: 'error',
+        processMessage: 'Empty response from server',
+      );
+    }
   }
 }

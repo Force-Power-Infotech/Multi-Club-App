@@ -182,17 +182,6 @@ class _EventsScreenState extends State<EventsScreen> {
                               .map((event) => eventCards(event: event))
                               .toList(),
                         ),
-                      if (Webservice.appNickname != 'madhuwan')
-                        if (selectedOption == 'Club')
-                          Column(
-                            children: snapshot.data!.eventDetails!
-                                .map((event) => eventCards(event: event))
-                                .toList(),
-                          ),
-                      if (Webservice.appNickname != 'madhuwan')
-                        if (selectedOption != 'Club' &&
-                            snapshot.data!.eventDetails!.isNotEmpty)
-                          eventCards(event: snapshot.data!.eventDetails!.first),
                     ],
                     if (snapshot.data == null ||
                         snapshot.data!.eventDetails == null ||
