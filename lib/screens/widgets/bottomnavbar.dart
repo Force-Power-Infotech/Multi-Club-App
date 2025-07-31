@@ -5,7 +5,7 @@ import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/screens/directory.dart';
 import 'package:multi_club_app/screens/events_screen.dart';
 import 'package:multi_club_app/screens/home_screen%20_madhuwan.dart';
-import 'package:multi_club_app/screens/profile_screen.dart';
+// import 'package:multi_club_app/screens/profile_screen.dart';
 import 'package:multi_club_app/screens/profile_screen_v2.dart';
 
 class ModernBottomNavBar extends StatefulWidget {

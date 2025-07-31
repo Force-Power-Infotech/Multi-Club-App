@@ -6,7 +6,7 @@ import 'package:multi_club_app/screens/contact_us.dart';
 import 'package:multi_club_app/screens/directory.dart';
 import 'package:multi_club_app/screens/helpdesk_screen.dart';
 import 'package:multi_club_app/screens/notification_screen.dart';
-import 'package:multi_club_app/screens/profile_screen.dart';
+// import 'package:multi_club_app/screens/profile_screen.dart';
 import 'package:multi_club_app/screens/rowing_booking.dart';
 import 'package:multi_club_app/screens/side_menu.dart';
 import 'package:multi_club_app/screens/sports_booking.dart';
@@ -465,11 +465,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 wheretoGo: () =>
                     const Directory(), // Wrap ProfileScreen inside a function
               ),
-              HomeScreenBottomIcon(
-                asset: 'assets/images/profilelogo.png',
-                label: 'profile',
-                wheretoGo: () => ProfileScreen(memberId: '', gender: 'male'),
-              ),
+              // HomeScreenBottomIcon(
+              //   asset: 'assets/images/profilelogo.png',
+              //   label: 'profile',
+              //   // wheretoGo: () => ProfileScreen(memberId: '', gender: 'male'),
+              // ),
             ],
           ),
         ),

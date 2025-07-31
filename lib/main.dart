@@ -3,12 +3,12 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/home_screen%20_madhuwan.dart';
-import 'package:multi_club_app/screens/home_screen%20_millenniummams.dart';
+// import 'package:multi_club_app/screens/home_screen%20_millenniummams.dart';
 import 'package:multi_club_app/screens/home_screen_BRC.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
 import 'package:multi_club_app/screens/splash_screen_brc.dart';
 import 'package:multi_club_app/screens/splash_screen_madhuban.dart';
-import 'package:multi_club_app/screens/splash_screen_millenniumMams.dart';
+// import 'package:multi_club_app/screens/splash_screen_millenniumMams.dart';
 import 'package:multi_club_app/screens/table_booking.dart';
 
 void main() async {
@@ -31,7 +31,6 @@ class _MyAppState extends State<MyApp> {
     'BRC': const SplashScreenBRC(),
     'stardb': const SplashScreenMadhuban(),
     'madhuban': const SplashScreenMadhuban(),
-    'milleniumMams': const SplashScreenmillenniumMams(),
   };
   final Map<String, String> appName = {
     'madhuban': 'Madhuwan',

@@ -4,87 +4,6 @@ import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:http/http.dart' as http;
 
-// class ProfieviewAPI {
-//   String? processStatus;
-//   String? processMessage;
-//   String? memberId;
-//   String? memberName;
-//   String? memberPhone;
-//   String? memberEmail;
-//   String? address;
-//   String? memberDoj;
-//   String? memberDob;
-//   String? memberImageUrl;
-
-//   ProfieviewAPI(
-//       {this.processStatus,
-//       this.processMessage,
-//       this.memberId,
-//       this.memberName,
-//       this.memberPhone,
-//       this.memberEmail,
-//       this.address,
-//       this.memberDoj,
-//       this.memberDob,
-//       this.memberImageUrl});
-
-//   ProfieviewAPI.fromJson(Map<String, dynamic> json) {
-//     processStatus = json['process_status'];
-//     processMessage = json['process_message'];
-//     memberId = json['member_id'];
-//     memberName = json['member_name'];
-//     memberPhone = json['member_phone'];
-//     memberEmail = json['member_email'];
-//     address = json['address'];
-//     memberDoj = json['member_doj'];
-//     memberDob = json['member_dob'];
-//     memberImageUrl = json['member_image_url'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['process_status'] = this.processStatus;
-//     data['process_message'] = this.processMessage;
-//     data['member_id'] = this.memberId;
-//     data['member_name'] = this.memberName;
-//     data['member_phone'] = this.memberPhone;
-//     data['member_email'] = this.memberEmail;
-//     data['address'] = this.address;
-//     data['member_doj'] = this.memberDoj;
-//     data['member_dob'] = this.memberDob;
-//     data['member_image_url'] = this.memberImageUrl;
-//     return data;
-//   }
-
-//   static Future<ProfieviewAPI> list({String? memberId}) async {
-//     Uri url = Uri.parse(
-//         "${Webservice.rootURL}${Webservice.profileView}?nickname=${Webservice.appNickname}");
-//     final request = http.MultipartRequest('POST', url);
-
-//     if (memberId != null) {
-//       request.fields.addAll({
-//         'erp_member_id': memberId,
-//         'organization_id': Webservice.appNickname
-//       });
-//     } else {
-//       String? localMemberID = await UserDataRepository.getMemberID();
-//       if (localMemberID != null) {
-//         request.fields.addAll({
-//           'erp_member_id': localMemberID,
-//           'organization_id': Webservice.appNickname
-//         });
-//       } else {
-//         print('Access code not found');
-//         // Handle the case where local member ID is not available
-//       }
-//     }
-//     print(request.fields);
-//     http.StreamedResponse response = await request.send();
-//     String responseString = await response.stream.bytesToString();
-//     print(responseString);
-//     return ProfieviewAPI.fromJson(jsonDecode(responseString));
-//   }
-// }
 class ProfieviewAPI {
   String? processStatus;
   String? processMessage;
@@ -156,14 +75,19 @@ class Data {
   String? memberFemalePhone;
   String? memberFemaleDob;
   String? memberFemaleAge;
-  String? officeAddress;
-  String? maleImageURL;
-  String? femaleImageURL;
   String? email;
-  String? social_media_link1;
-  String? social_media_link2;
-  String? social_media_link3;
-  String? social_media_link4;
+  String? officeAddress;
+  String? memberImageUrl;
+  Null? spouseImageUrl;
+  Null? spouseEmail;
+  String? facebook;
+  String? twitter;
+  String? linkedin;
+  String? instagram;
+  String? spouseFacebook;
+  String? spouseTwitter;
+  String? spouseInstagram;
+  String? spouseLinkedin;
 
   Data(
       {this.membershipCode,
@@ -174,55 +98,70 @@ class Data {
       this.memberNameFemale,
       this.memberFemalePhone,
       this.memberFemaleDob,
-      this.officeAddress,
-      this.maleImageURL,
-      this.femaleImageURL,
+      this.memberFemaleAge,
       this.email,
-      this.social_media_link1,
-      this.social_media_link2,
-      this.social_media_link3,
-      this.social_media_link4,
-      this.memberFemaleAge});
+      this.officeAddress,
+      this.memberImageUrl,
+      this.spouseImageUrl,
+      this.spouseEmail,
+      this.facebook,
+      this.twitter,
+      this.linkedin,
+      this.instagram,
+      this.spouseFacebook,
+      this.spouseTwitter,
+      this.spouseInstagram,
+      this.spouseLinkedin});
 
   Data.fromJson(Map<String, dynamic> json) {
     membershipCode = json['membership_code'];
-    memberNameMale = json['member_name_male'].toString();
+    memberNameMale = json['member_name_male'];
     memberMalePhone = json['member_male_phone'];
     memberMaleDob = json['member_male_dob'];
     memberMaleAge = json['member_male_age'];
-    memberNameFemale = json['member_name_female'].toString();
+    memberNameFemale = json['member_name_female'];
     memberFemalePhone = json['member_female_phone'];
     memberFemaleDob = json['member_female_dob'];
     memberFemaleAge = json['member_female_age'];
-    maleImageURL = json['member_image_url'];
-    femaleImageURL = json['spouse_image_url'];
-    officeAddress = json['office_address'];
     email = json['email'];
-    social_media_link1 = json['social_media_link1'];
-    social_media_link2 = json['social_media_link2'];
-    social_media_link3 = json['social_media_link3'];
-    social_media_link4 = json['social_media_link4'];
+    officeAddress = json['office_address'];
+    memberImageUrl = json['member_image_url'];
+    spouseImageUrl = json['spouse_image_url'];
+    spouseEmail = json['spouse_email'];
+    facebook = json['facebook'];
+    twitter = json['twitter'];
+    linkedin = json['linkedin'];
+    instagram = json['instagram'];
+    spouseFacebook = json['spouse_facebook'];
+    spouseTwitter = json['spouse_twitter'];
+    spouseInstagram = json['spouse_instagram'];
+    spouseLinkedin = json['spouse_linkedin'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['membership_code'] = membershipCode;
-    data['member_name_male'] = memberNameMale;
-    data['member_male_phone'] = memberMalePhone;
-    data['member_male_dob'] = memberMaleDob;
-    data['member_male_age'] = memberMaleAge;
-    data['member_name_female'] = memberNameFemale;
-    data['member_female_phone'] = memberFemalePhone;
-    data['member_female_dob'] = memberFemaleDob;
-    data['member_female_age'] = memberFemaleAge;
-    data['member_image_url'] = maleImageURL;
-    data['spouse_image_url'] = femaleImageURL;
-    data['office_address'] = officeAddress;
-    data['email'] = email;
-    data['social_media_link1'] = social_media_link1;
-    data['social_media_link2'] = social_media_link2;
-    data['social_media_link3'] = social_media_link3;
-    data['social_media_link4'] = social_media_link4;
+    data['membership_code'] = this.membershipCode;
+    data['member_name_male'] = this.memberNameMale;
+    data['member_male_phone'] = this.memberMalePhone;
+    data['member_male_dob'] = this.memberMaleDob;
+    data['member_male_age'] = this.memberMaleAge;
+    data['member_name_female'] = this.memberNameFemale;
+    data['member_female_phone'] = this.memberFemalePhone;
+    data['member_female_dob'] = this.memberFemaleDob;
+    data['member_female_age'] = this.memberFemaleAge;
+    data['email'] = this.email;
+    data['office_address'] = this.officeAddress;
+    data['member_image_url'] = this.memberImageUrl;
+    data['spouse_image_url'] = this.spouseImageUrl;
+    data['spouse_email'] = this.spouseEmail;
+    data['facebook'] = this.facebook;
+    data['twitter'] = this.twitter;
+    data['linkedin'] = this.linkedin;
+    data['instagram'] = this.instagram;
+    data['spouse_facebook'] = this.spouseFacebook;
+    data['spouse_twitter'] = this.spouseTwitter;
+    data['spouse_instagram'] = this.spouseInstagram;
+    data['spouse_linkedin'] = this.spouseLinkedin;
     return data;
   }
 }

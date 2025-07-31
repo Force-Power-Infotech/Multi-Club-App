@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_club_app/bases/api/birthday_today.dart';
 import 'package:multi_club_app/bases/themes.dart';
-import 'package:multi_club_app/screens/profile_screen.dart';
+// import 'package:multi_club_app/screens/profile_screen.dart';
 import 'package:multi_club_app/screens/profile_screen_v2.dart';
 import 'package:multi_club_app/screens/widgets/PulsatingButton.dart';
 import 'package:url_launcher/url_launcher.dart';

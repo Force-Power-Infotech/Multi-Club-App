@@ -23,7 +23,7 @@ import 'package:multi_club_app/screens/directory.dart';
 import 'package:multi_club_app/screens/event_details_screen.dart';
 import 'package:multi_club_app/screens/events_screen.dart';
 import 'package:multi_club_app/screens/notification_screen.dart';
-import 'package:multi_club_app/screens/profile_screen.dart';
+// import 'package:multi_club_app/screens/profile_screen.dart';
 import 'package:multi_club_app/screens/side_menu.dart';
 import 'package:multi_club_app/screens/widgets/CaroselSponsor.dart';
 import 'package:multi_club_app/screens/widgets/CarouselWidget.dart';
@@ -442,8 +442,9 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
               return const Center(child: Text('No profile data available'));
             }
 
-            String imageUrl = profileData.maleImageURL ??
-                ''; // Placeholder, replace with actual logic
+            String? imageUrl = profileData.memberImageUrl ??
+                profileData
+                    .spouseImageUrl; // Placeholder, replace with actual logic
             print(imageUrl);
             return ListView(
               children: [
@@ -507,7 +508,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                           ),
                                         ],
                                       ),
-                                      child: imageUrl.isNotEmpty
+                                      child: imageUrl!.isNotEmpty
                                           ? Image.network(
                                               imageUrl,
                                               fit: BoxFit.cover,
@@ -896,7 +897,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Anniversary Pass',
+                                'Anniversary Sparkle',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -1091,10 +1092,10 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
-                  border: Border.all(
-                    color: const Color(0xFF3B82F6),
-                    width: 2,
-                  ),
+                  // border: Border.all(
+                  //   color: const Color(0xFF3B82F6),
+                  //   width: 2,
+                  // ),
                   boxShadow: [
                     BoxShadow(
                       color: AppThemes.brc_blocked_color.withOpacity(0.3),
@@ -1105,9 +1106,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                 ),
                 child: ClipOval(
                   child: Image.asset(
-                    _showQRAnimation
-                        ? 'assets/images/qrlogo2.gif'
-                        : 'assets/images/togetherpass.gif',
+                    'assets/images/togetherpass.gif',
                     fit: BoxFit.cover,
                     width: 64,
                     height: 64,

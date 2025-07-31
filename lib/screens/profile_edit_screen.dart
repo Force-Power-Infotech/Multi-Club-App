@@ -59,7 +59,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           _membershipController.text = profile.membershipCode ?? '';
           _dobController.text = profile.memberMaleDob ?? '';
           _phoneController.text = profile.memberMalePhone ?? '';
-          _imageController.text = profile.maleImageURL ?? '';
+          _imageController.text = profile.memberImageUrl ?? '';
           _emailController.text = profile.memberMalePhone ??
               ''; // Assuming this is the correct field
           _addressController.text =
@@ -128,7 +128,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ''; // Placeholder, update with actual email if available
             _addressController.text =
                 ''; // Placeholder, update with actual address if available
-            _imageController.text = profile.maleImageURL ?? '';
+            _imageController.text = profile.memberImageUrl ?? '';
 
             return ListView(
               children: [
@@ -193,7 +193,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                   )
                                                 : ClipOval(
                                                     child: Image.network(
-                                                      "${profile.maleImageURL}",
+                                                      "${profile.memberImageUrl}",
                                                       fit: BoxFit.cover,
                                                       width: 100,
                                                       height: 100,
