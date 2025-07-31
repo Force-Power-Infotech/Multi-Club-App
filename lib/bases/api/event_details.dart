@@ -45,9 +45,9 @@ class EventAPI {
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
       // 'theaccesscode': "${accessCode}",
-      'theaccesscode': "BmP1",
-      'the_event_type': 'SPORTS',
-      'filter_type': 'All\tBody'
+      // 'theaccesscode': "BmP1",
+      'the_event_type': 'All',
+      'filter_type': 'All'
     });
 
     http.StreamedResponse response = await request.send();
