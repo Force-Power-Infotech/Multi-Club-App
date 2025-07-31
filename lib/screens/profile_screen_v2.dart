@@ -382,6 +382,8 @@ class _ProfileScreenV2State extends State<ProfileScreenV2> {
   }
 
   Widget _modernProfileHeader(String imageUrl, String name, String? code) {
+    // ...existing code...
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
