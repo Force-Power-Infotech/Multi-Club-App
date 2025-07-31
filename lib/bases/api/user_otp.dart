@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:http/http.dart' as http;
@@ -42,6 +41,7 @@ class UserOtpAPI {
   String? courseHandicapYellow;
   String? courseHandicapRed;
   String? pass;
+  String? login_type;
 
   UserOtpAPI({
     this.processStatus,
@@ -80,6 +80,7 @@ class UserOtpAPI {
     this.courseHandicapWhite,
     this.courseHandicapYellow,
     this.courseHandicapRed,
+    this.login_type,
     this.pass,
   });
 
@@ -128,12 +129,13 @@ class UserOtpAPI {
       // 'course_handicap_yellow': courseHandicapYellow,
       'course_handicap_red': courseHandicapRed,
       'pass': pass,
+      'login_type': login_type,
     };
   }
 
   static Future<UserOtpAPI> login(String username, String otp) async {
     Uri url = Uri.parse(
-        "https://club.forcempower.com/MADHUBAN/ws_member_confirm_otp_v4.php");
+        "https://club.forcempower.com/MADHUBAN/ws_member_confirm_otp_v5.php");
     final request = http.MultipartRequest('POST', url);
     request.fields.addAll({
       'user_name': username,
@@ -188,6 +190,7 @@ class UserOtpAPI {
       courseHandicapYellow: json['course_handicap_yellow'],
       courseHandicapRed: json['course_handicap_red'],
       pass: json['pass'],
+      login_type: json['login_type'],
     );
   }
 }

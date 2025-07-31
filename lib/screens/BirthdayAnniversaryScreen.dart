@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:multi_club_app/bases/api/birthday_today.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/screens/profile_screen.dart';
+import 'package:multi_club_app/screens/profile_screen_v2.dart';
 import 'package:multi_club_app/screens/widgets/PulsatingButton.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -110,7 +111,7 @@ class BirthdayAnniversaryScreen extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => ProfileScreen(
+                          builder: (_) => ProfileScreenV2(
                             memberId: id,
                           ),
                         ));

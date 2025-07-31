@@ -5,7 +5,7 @@ class Webservice {
   // static const String appNickname = "milleniumMams";
 
   static const String userLoginAPI = "ws_member_login_v1.php";
-  static const String userOtpAPI = "ws_member_confirm_otp_v4.php";
+  // static const String userOtpAPI = "ws_member_confirm_otp_v5.php";
   static const String table_booking = "make_table_booking.php";
   static const String locatioForTableBooking =
       "show_location_list_for_table_booking.php";

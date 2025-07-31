@@ -15,6 +15,7 @@ import 'package:multi_club_app/screens/member_anniversary_screen.dart';
 import 'package:multi_club_app/bases/api/user_otp.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
+import 'package:multi_club_app/screens/profile_screen_v2.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:multi_club_app/screens/BirthdayAnniversaryScreen.dart';
 import 'package:multi_club_app/screens/PrivilegeListScreen.dart';
@@ -484,7 +485,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                   onTap: () {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
-                                      builder: (_) => ProfileScreen(
+                                      builder: (_) => ProfileScreenV2(
                                           memberId: '${globalmemberID}',
                                           gender: 'male'),
                                     ));
@@ -757,9 +758,10 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                                 print('${id}');
                                                 Navigator.of(context)
                                                     .push(MaterialPageRoute(
-                                                  builder: (_) => ProfileScreen(
-                                                      memberId: '${id}',
-                                                      gender: 'male'),
+                                                  builder: (_) =>
+                                                      ProfileScreenV2(
+                                                          memberId: '${id}',
+                                                          gender: 'male'),
                                                 ));
                                               },
                                               child: Row(
@@ -1162,7 +1164,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                 HomeScreenBottomIcon(
                   asset: 'assets/images/profilelogo.png',
                   label: 'Profile',
-                  wheretoGo: () => ProfileScreen(
+                  wheretoGo: () => ProfileScreenV2(
                     memberId: globalmemberID,
                     gender: 'male',
                   ),
