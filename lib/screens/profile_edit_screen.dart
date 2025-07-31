@@ -1,20 +1,28 @@
+
 import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/api/profile_edit.dart';
-import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/webservice.dart';
+import 'package:multi_club_app/bases/userdata_hive.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+
+import 'package:multi_club_app/bases/api/profile_view.dart';
+
 class ProfileEditScreen extends StatefulWidget {
-  const ProfileEditScreen({Key? key}) : super(key: key);
+  final Data profileData;
+  final bool showMale;
+  const ProfileEditScreen({Key? key, required this.profileData, required this.showMale}) : super(key: key);
 
   @override
   _ProfileEditScreenState createState() => _ProfileEditScreenState();
 }
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
-  late Future<ProfieviewAPI> _profileData;
+
 
   late TextEditingController _nameController;
   late TextEditingController _membershipController;
@@ -23,6 +31,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   late TextEditingController _emailController;
   late TextEditingController _addressController;
   late TextEditingController _imageController;
+  // Social media controllers
+  late TextEditingController _facebookController;
+  late TextEditingController _twitterController;
+  late TextEditingController _linkedinController;
+  late TextEditingController _instagramController;
   File? _image;
 
   Future<void> _pickImage() async {
@@ -48,28 +61,38 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _emailController = TextEditingController();
     _addressController = TextEditingController();
     _imageController = TextEditingController();
+    _facebookController = TextEditingController();
+    _twitterController = TextEditingController();
+    _linkedinController = TextEditingController();
+    _instagramController = TextEditingController();
 
-    // Fetch profile data from API and update controllers
-    _profileData = ProfieviewAPI.list();
-    _profileData.then((snapshot) {
-      final profile = snapshot.data?.first;
-      if (profile != null) {
-        setState(() {
-          _nameController.text = profile.memberNameMale ?? '';
-          _membershipController.text = profile.membershipCode ?? '';
-          _dobController.text = profile.memberMaleDob ?? '';
-          _phoneController.text = profile.memberMalePhone ?? '';
-          _imageController.text = profile.memberImageUrl ?? '';
-          _emailController.text = profile.memberMalePhone ??
-              ''; // Assuming this is the correct field
-          _addressController.text =
-              profile.officeAddress ?? ''; // Assuming this is the correct field
-        });
-      }
-    }).catchError((error) {
-      print('Error fetching profile data: $error');
-      // Handle the error accordingly
-    });
+    // Prefill controllers from passed profile data
+    final profile = widget.profileData;
+    if (widget.showMale) {
+      _nameController.text = profile.memberNameMale ?? '';
+      _membershipController.text = profile.membershipCode ?? '';
+      _dobController.text = profile.memberMaleDob ?? '';
+      _phoneController.text = profile.memberMalePhone ?? '';
+      _imageController.text = profile.memberImageUrl ?? '';
+      _emailController.text = profile.email ?? '';
+      _addressController.text = profile.officeAddress ?? '';
+      _facebookController.text = profile.facebook ?? '';
+      _twitterController.text = profile.twitter ?? '';
+      _linkedinController.text = profile.linkedin ?? '';
+      _instagramController.text = profile.instagram ?? '';
+    } else {
+      _nameController.text = profile.memberNameFemale ?? '';
+      _membershipController.text = profile.membershipCode ?? '';
+      _dobController.text = profile.memberFemaleDob ?? '';
+      _phoneController.text = profile.memberFemalePhone ?? '';
+      _imageController.text = profile.spouseImageUrl ?? '';
+      _emailController.text = profile.spouseEmail ?? '';
+      _addressController.text = profile.officeAddress ?? '';
+      _facebookController.text = profile.spouseFacebook ?? '';
+      _twitterController.text = profile.spouseTwitter ?? '';
+      _linkedinController.text = profile.spouseLinkedin ?? '';
+      _instagramController.text = profile.spouseInstagram ?? '';
+    }
   }
 
   @override
@@ -81,11 +104,16 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     _emailController.dispose();
     _addressController.dispose();
     _imageController.dispose();
+    _facebookController.dispose();
+    _twitterController.dispose();
+    _linkedinController.dispose();
+    _instagramController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final profile = widget.profileData;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -108,30 +136,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           ),
         ),
       ),
-      body: FutureBuilder<ProfieviewAPI>(
-        future: _profileData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData &&
-              snapshot.data!.data != null &&
-              snapshot.data!.data!.isNotEmpty) {
-            final profile = snapshot.data!.data!.first;
-
-            _nameController.text = profile.memberNameMale ?? '';
-            _membershipController.text = profile.membershipCode ?? '';
-            _dobController.text = profile.memberMaleDob ?? '';
-            _phoneController.text = profile.memberMalePhone ?? '';
-            _emailController.text =
-                ''; // Placeholder, update with actual email if available
-            _addressController.text =
-                ''; // Placeholder, update with actual address if available
-            _imageController.text = profile.memberImageUrl ?? '';
-
-            return ListView(
-              children: [
+      body: ListView(
+        children: [
                 SizedBox(
                   height: 160, // Set a fixed height for the Column
                   child: Column(
@@ -340,8 +346,111 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         ),
                                       ),
                                       Text(
-                                        profile.memberNameMale ??
-                                            'N/A', // Replace with actual member's name
+                                widget.showMale
+                                  ? (profile.memberNameMale ?? 'N/A')
+                                  : (profile.memberNameFemale ?? 'N/A'),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Divider(),
+                                // Social Media Links
+                                Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Facebook',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                      TextField(
+                                        controller: _facebookController,
+                                        decoration: InputDecoration(
+                                          hintText: 'Facebook link',
+                                          border: InputBorder.none,
+                                        ),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Twitter',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                      TextField(
+                                        controller: _twitterController,
+                                        decoration: InputDecoration(
+                                          hintText: 'Twitter link',
+                                          border: InputBorder.none,
+                                        ),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'LinkedIn',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                      TextField(
+                                        controller: _linkedinController,
+                                        decoration: InputDecoration(
+                                          hintText: 'LinkedIn link',
+                                          border: InputBorder.none,
+                                        ),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Instagram',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppThemes
+                                              .brc_tablebooking_dark_text,
+                                        ),
+                                      ),
+                                      TextField(
+                                        controller: _instagramController,
+                                        decoration: InputDecoration(
+                                          hintText: 'Instagram link',
+                                          border: InputBorder.none,
+                                        ),
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
@@ -436,8 +545,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                   4.0), // Adjust border radius as needed
                                             ),
                                             child: Text(
-                                              profile.membershipCode ??
-                                                  'N/A', // Replace with actual membership code
+                        profile.membershipCode ??
+                          'N/A',
                                               style: const TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w400,
@@ -488,11 +597,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                   4.0), // Adjust border radius as needed
                                             ),
                                             child: Text(
-                                              profile.memberMaleDob != null &&
-                                                      profile.memberMaleDob!
-                                                          .isNotEmpty
-                                                  ? '${profile.memberMaleDob}'
-                                                  : 'N/A',
+                        widget.showMale
+                          ? (profile.memberMaleDob != null && profile.memberMaleDob!.isNotEmpty ? profile.memberMaleDob! : 'N/A')
+                          : (profile.memberFemaleDob != null && profile.memberFemaleDob!.isNotEmpty ? profile.memberFemaleDob! : 'N/A'),
                                               style: const TextStyle(
                                                 fontSize:
                                                     16, // Increase font size for highlighted text
@@ -526,8 +633,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         ),
                                       ),
                                       Text(
-                                        profile.memberMalePhone ??
-                                            'N/A', // Replace with actual phone number
+                    widget.showMale
+                      ? (profile.memberMalePhone ?? 'N/A')
+                      : (profile.memberFemalePhone ?? 'N/A'),
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400,
@@ -560,10 +668,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                       TextField(
                                         controller: _emailController,
                                         decoration: InputDecoration(
-                                          hintText: profile.email != null &&
-                                                  profile.email!.isNotEmpty
-                                              ? profile.email
-                                              : 'No email found, enter Your email',
+                      hintText: widget.showMale
+                        ? (profile.email != null && profile.email!.isNotEmpty ? profile.email : 'No email found, enter Your email')
+                        : (profile.spouseEmail != null && profile.spouseEmail!.isNotEmpty ? profile.spouseEmail : 'No email found, enter Your email'),
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none,
@@ -599,7 +706,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                       TextField(
                                         controller: _addressController,
                                         decoration: InputDecoration(
-                                          hintText: '${profile.officeAddress}',
+                                          hintText: profile.officeAddress ?? '',
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none,
@@ -641,23 +748,57 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       bottom: 64.0, left: 32, right: 32, top: 32),
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Retrieve text from controllers
-                      // String email = _emailController.text;
                       String address = _addressController.text.isNotEmpty
                           ? _addressController.text
                           : (profile.officeAddress ?? '');
-                      String email = _emailController.text.isNotEmpty
-                          ? _emailController.text
-                          : (profile.email ?? '');
-                      // Call the API to post data
+            String email = _emailController.text.isNotEmpty
+              ? _emailController.text
+              : (widget.showMale ? (profile.email ?? '') : (profile.spouseEmail ?? ''));
+                      String facebook = _facebookController.text;
+                      String twitter = _twitterController.text;
+                      String linkedin = _linkedinController.text;
+                      String instagram = _instagramController.text;
+
                       try {
-                        ProfileEditAPI response = await ProfileEditAPI.details(
-                            email, address, _image);
-                        // Handle the response here if needed
+                        // Custom API call for social links
+                        Uri url = Uri.parse(
+                            "${Webservice.rootURL}${Webservice.profileEdit}?nickname=${Webservice.appNickname}");
+                        final request = http.MultipartRequest('POST', url);
+                        String? memberID =
+                            await UserDataRepository.getMemberID();
+                        request.fields.addAll({
+                          'organization_id': Webservice.appNickname,
+                          'member_id': '$memberID',
+                          'email': email,
+                          'address': address,
+                          if (!widget.showMale) ...{
+                            'spouse_facebook': facebook,
+                            'spouse_twitter': twitter,
+                            'spouse_linkedin': linkedin,
+                            'spouse_instagram': instagram,
+                          } else ...{
+                            'facebook': facebook,
+                            'twitter': twitter,
+                            'linkedin': linkedin,
+                            'instagram': instagram,
+                          }
+                        });
+                        if (_image != null && _image!.existsSync()) {
+                          request.files.add(await http.MultipartFile.fromBytes(
+                            'member_image',
+                            await _image!.readAsBytes(),
+                            filename: _image!.path.split('/').last,
+                          ));
+                        }
+                        http.StreamedResponse response = await request.send();
+                        String responseString =
+                            await response.stream.bytesToString();
+                        ProfileEditAPI apiResponse =
+                            ProfileEditAPI.fromJson(jsonDecode(responseString));
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              '${response.processMessage}',
+                              '${apiResponse.processMessage}',
                               style: const TextStyle(
                                   color: AppThemes.brc_textcolor),
                             ),
@@ -665,9 +806,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                             behavior: SnackBarBehavior.floating,
                           ),
                         );
-                        print('API response: ${response}');
+                        print('API response: ${apiResponse}');
                       } catch (e) {
-                        // Handle any errors
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -681,8 +821,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         );
                         print('Error posting data: $e');
                       }
-
-                      // Add your update logic here
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppThemes.getLightColor(),
@@ -705,11 +843,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   ),
                 ),
               ],
-            );
-          } else {
-            return const Center(child: Text('No profile data found'));
-          }
-        },
+            
+        
       ),
     );
   }

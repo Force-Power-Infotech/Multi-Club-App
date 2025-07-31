@@ -78,8 +78,8 @@ class Data {
   String? email;
   String? officeAddress;
   String? memberImageUrl;
-  Null? spouseImageUrl;
-  Null? spouseEmail;
+  String? spouseImageUrl;
+  String? spouseEmail;
   String? facebook;
   String? twitter;
   String? linkedin;

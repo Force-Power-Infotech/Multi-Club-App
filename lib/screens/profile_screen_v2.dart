@@ -252,18 +252,6 @@ class _ProfileScreenV2State extends State<ProfileScreenV2> {
         elevation: 0,
         iconTheme: const IconThemeData(color: AppThemes.brc_bottom_icon),
         centerTitle: true,
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.edit, color: AppThemes.brc_bottom_icon),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfileEditScreen(),
-                  ),
-                );
-              })
-        ],
       ),
       body: FutureBuilder<ProfieviewAPI>(
         future: _profileData,
@@ -271,7 +259,7 @@ class _ProfileScreenV2State extends State<ProfileScreenV2> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             final profile = snapshot.data!.data?.first;
             if (profile == null) {
@@ -317,69 +305,77 @@ class _ProfileScreenV2State extends State<ProfileScreenV2> {
             log('[ProfileScreenV2] Showing in Personal Details: $personalLog');
             log('[ProfileScreenV2] Showing in Spouse Details: $spouseLog');
 
-            return Stack(
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(20, 100, 20, 30),
               children: [
-                ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 100, 20, 30),
-                  children: [
-                    _modernProfileHeader(imageUrl ?? '',
-                        displayName ?? 'No Name', profile.membershipCode),
-                    const SizedBox(height: 32),
-                    _modernSectionCard(
-                        'Personal Details',
-                        showMale
-                            ? {
-                                'Name': profile.memberNameMale,
-                                'Phone': profile.memberMalePhone,
-                                'DOB': profile.memberMaleDob,
-                                'Email': profile.email,
-                                'Office Address': profile.officeAddress
-                              }
-                            : {
-                                'Name': profile.memberNameFemale,
-                                'Phone': profile.memberFemalePhone,
-                                'DOB': profile.memberFemaleDob,
-                                'Email': profile.email,
-                                'Office Address': profile.officeAddress
-                              }),
-                    _modernSocialLinksRow(personalLinks),
-                    const SizedBox(height: 20),
-                    _modernSectionCard(
-                        'Spouse Details',
-                        showMale
-                            ? {
-                                'Name': profile.memberNameFemale,
-                                'Phone': profile.memberFemalePhone,
-                                'DOB': profile.memberFemaleDob
-                              }
-                            : {
-                                'Name': profile.memberNameMale,
-                                'Phone': profile.memberMalePhone,
-                                'DOB': profile.memberMaleDob
-                              }),
-                    _modernSocialLinksRow(spouseLinks),
-                  ],
-                ),
-                // Positioned(
-                //   top: 180,
-                //   right: 40,
-                //   child: FloatingActionButton(
-                //     heroTag: 'editProfile',
-                //     backgroundColor: AppThemes.brc_bottom_icon,
-                //     elevation: 6,
-                //     onPressed: () {
-                //       // TODO: Implement profile edit navigation
-                //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                //           content: Text('Edit Profile feature coming soon!')));
-                //     },
-                //     child: const Icon(Icons.edit, color: Colors.white),
-                //   ),
-                // ),
+                _modernProfileHeader(imageUrl ?? '', displayName ?? 'No Name',
+                    profile.membershipCode),
+                const SizedBox(height: 32),
+                _modernSectionCard(
+                    'Personal Details',
+                    showMale
+                        ? {
+                            'Name': profile.memberNameMale,
+                            'Phone': profile.memberMalePhone,
+                            'DOB': profile.memberMaleDob,
+                            'Email': profile.email,
+                            'Office Address': profile.officeAddress
+                          }
+                        : {
+                            'Name': profile.memberNameFemale,
+                            'Phone': profile.memberFemalePhone,
+                            'DOB': profile.memberFemaleDob,
+                            'Email': profile.email,
+                            'Office Address': profile.officeAddress
+                          }),
+                _modernSocialLinksRow(personalLinks),
+                const SizedBox(height: 20),
+                _modernSectionCard(
+                    'Spouse Details',
+                    showMale
+                        ? {
+                            'Name': profile.memberNameFemale,
+                            'Phone': profile.memberFemalePhone,
+                            'DOB': profile.memberFemaleDob
+                          }
+                        : {
+                            'Name': profile.memberNameMale,
+                            'Phone': profile.memberMalePhone,
+                            'DOB': profile.memberMaleDob
+                          }),
+                _modernSocialLinksRow(spouseLinks),
               ],
             );
           } else {
             return const Center(child: Text('No profile data found'));
           }
+        },
+      ),
+      floatingActionButton: FutureBuilder<ProfieviewAPI>(
+        future: _profileData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final profile = snapshot.data!.data?.first;
+            if (profile == null) return SizedBox.shrink();
+            return FloatingActionButton(
+              heroTag: 'editProfile',
+              backgroundColor: AppThemes.brc_bottom_icon,
+              elevation: 6,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileEditScreen(
+                      profileData: profile,
+                      showMale: showMale,
+                    ),
+                  ),
+                );
+              },
+              child: const Icon(Icons.edit, color: Colors.white),
+            );
+          }
+          return SizedBox.shrink();
         },
       ),
     );
