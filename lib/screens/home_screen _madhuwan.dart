@@ -1166,7 +1166,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                   label: 'Profile',
                   wheretoGo: () => ProfileScreenV2(
                     memberId: globalmemberID,
-                    gender: 'male',
+                    gender: '',
                   ),
                 ),
               ],

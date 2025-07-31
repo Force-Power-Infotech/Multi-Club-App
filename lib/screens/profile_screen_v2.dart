@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
@@ -17,14 +19,52 @@ class ProfileScreenV2 extends StatefulWidget {
 class _ProfileScreenV2State extends State<ProfileScreenV2> {
   late Future<ProfieviewAPI> _profileData;
 
+  String? loginType;
+
   @override
   void initState() {
     super.initState();
     _profileData = ProfieviewAPI.list(memberId: widget.memberId);
+    _fetchLoginType();
+  }
+
+  Future<void> _fetchLoginType() async {
+    final userData = await UserDataRepository.getUserData();
+    setState(() {
+      loginType = userData?.login_type;
+      log(userData?.login_type ?? 'No login type found');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Use gender if provided (and not default), else fallback to loginType
+    bool showMale;
+    String genderLog = widget.gender;
+    if (widget.gender.trim().isNotEmpty &&
+        widget.gender != 'male' &&
+        widget.gender != 'female') {
+      // If gender is set to something custom, fallback to loginType
+      if (loginType == 'MEMBER') {
+        showMale = true;
+      } else if (loginType == 'SPOUSE') {
+        showMale = false;
+      } else {
+        showMale = true;
+      }
+    } else if (widget.gender.trim().isNotEmpty) {
+      showMale = widget.gender.toLowerCase() == 'male';
+    } else if (loginType == 'MEMBER') {
+      showMale = true;
+    } else if (loginType == 'SPOUSE') {
+      showMale = false;
+    } else {
+      showMale = true; // default fallback
+    }
+
+    // Log the gender passed to the screen
+    log('[ProfileScreenV2] Gender passed: $genderLog');
+
     return Scaffold(
       backgroundColor: AppThemes.getLightColor(),
       extendBodyBehindAppBar: true,
@@ -46,19 +86,23 @@ class _ProfileScreenV2State extends State<ProfileScreenV2> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: [38;5;9m${snapshot.error}[0m'));
+            return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             final profile = snapshot.data!.data?.first;
             if (profile == null) {
               return const Center(child: Text('No profile data available'));
             }
 
-            // Use widget.gender to determine which details to show
-            final isMale = widget.gender.toLowerCase() == 'male';
             final imageUrl =
-                isMale ? profile.maleImageURL : profile.femaleImageURL;
+                showMale ? profile.maleImageURL : profile.femaleImageURL;
             final displayName =
-                isMale ? profile.memberNameMale : profile.memberNameFemale;
+                showMale ? profile.memberNameMale : profile.memberNameFemale;
+
+            // Log what is shown in personal and spouse details
+            String personalLog = showMale ? 'male' : 'female';
+            String spouseLog = showMale ? 'female' : 'male';
+            log('[ProfileScreenV2] Showing in Personal Details: $personalLog');
+            log('[ProfileScreenV2] Showing in Spouse Details: $spouseLog');
 
             return Stack(
               children: [
@@ -70,7 +114,7 @@ class _ProfileScreenV2State extends State<ProfileScreenV2> {
                     const SizedBox(height: 32),
                     _modernSectionCard(
                         'Personal Details',
-                        isMale
+                        showMale
                             ? {
                                 'Name': profile.memberNameMale,
                                 'Phone': profile.memberMalePhone,
@@ -88,7 +132,7 @@ class _ProfileScreenV2State extends State<ProfileScreenV2> {
                     const SizedBox(height: 20),
                     _modernSectionCard(
                         'Spouse Details',
-                        isMale
+                        showMale
                             ? {
                                 'Name': profile.memberNameFemale,
                                 'Phone': profile.memberFemalePhone,

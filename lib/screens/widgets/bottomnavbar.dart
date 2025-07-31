@@ -60,7 +60,7 @@ class _ModernBottomNavBarState extends State<ModernBottomNavBar>
                 'assets/images/profilelogo.png',
                 'Profile',
                 () =>
-                    ProfileScreenV2(memberId: '$globalmemberID')),
+                    ProfileScreenV2(memberId: '$globalmemberID',gender: '',)),
           ],
         ),
       ),
