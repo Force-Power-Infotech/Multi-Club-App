@@ -47,10 +47,11 @@ class EventUpdateAPI {
     } else {
       print('Access code not found');
     }
+    String? memberId = await UserDataRepository.getMemberID();
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
-      'theaccesscode': "${accessCode}",
-      'member_id': 'TESTMJ',
+      // 'theaccesscode': "${accessCode}",
+      'member_id': memberId ?? '',
       'event_id': eventid,
       'attainding_status': attainding_status
     });
