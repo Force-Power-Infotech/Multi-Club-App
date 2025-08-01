@@ -25,7 +25,20 @@ class ProfileEditAPI {
   }
 
   static Future<ProfileEditAPI> details(
-      String email, String address, File? imageFile) async {
+    String email,
+    String address,
+    File? imageFile, {
+    String? facebook,
+    String? twitter,
+    String? linkedin,
+    String? instagram,
+    String? spouseEmail,
+    String? spouseFacebook,
+    String? spouseTwitter,
+    String? spouseLinkedin,
+    String? spouseInstagram,
+    bool showMale = true,
+  }) async {
     Uri url = Uri.parse(
         "${Webservice.rootURL}${Webservice.profileEdit}?nickname=${Webservice.appNickname}");
     final request = http.MultipartRequest('POST', url);
@@ -35,18 +48,37 @@ class ProfileEditAPI {
     } else {
       print('Member ID not found');
     }
+    // Add base fields
     request.fields.addAll({
       'organization_id': Webservice.appNickname,
       'member_id': '$memberID',
       'email': email,
-      'address': address
+      'address': address,
     });
+    // Add social fields
+    if (showMale) {
+      if (facebook != null) request.fields['facebook'] = facebook;
+      if (twitter != null) request.fields['twitter'] = twitter;
+      if (linkedin != null) request.fields['linkedin'] = linkedin;
+      if (instagram != null) request.fields['instagram'] = instagram;
+    } else {
+      if (spouseEmail != null) request.fields['spouse_email'] = spouseEmail;
+      if (spouseFacebook != null)
+        request.fields['spouse_facebook'] = spouseFacebook;
+      if (spouseTwitter != null)
+        request.fields['spouse_twitter'] = spouseTwitter;
+      if (spouseLinkedin != null)
+        request.fields['spouse_linkedin'] = spouseLinkedin;
+      if (spouseInstagram != null)
+        request.fields['spouse_instagram'] = spouseInstagram;
+    }
+    print('Request fields:');
+    request.fields.forEach((k, v) => print('$k: $v'));
     print('Image path: ${imageFile?.path}');
 
     // Add the image file to the request if it exists
     if (imageFile != null && imageFile.existsSync()) {
       print('Image File: ${imageFile.path}');
-
       request.files.add(await http.MultipartFile.fromBytes(
         'member_image',
         await imageFile.readAsBytes(),
@@ -58,6 +90,7 @@ class ProfileEditAPI {
 
     http.StreamedResponse response = await request.send();
     String responseString = await response.stream.bytesToString();
+    print('API Raw Response: $responseString');
     return ProfileEditAPI.fromJson(jsonDecode(responseString));
   }
 }
