@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:multi_club_app/bases/api/profile_view.dart';
+import 'package:multi_club_app/bases/api/deleteprofile.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   final Data profileData;
@@ -716,100 +717,160 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(
-                bottom: 64.0, left: 32, right: 32, top: 32),
-            child: ElevatedButton(
-              onPressed: () async {
-                String address = _addressController.text.isNotEmpty
-                    ? _addressController.text
-                    : (profile.officeAddress ?? '');
-                String email = _emailController.text.isNotEmpty
-                    ? _emailController.text
-                    : (widget.showMale
-                        ? (profile.email ?? '')
-                        : (profile.spouseEmail ?? ''));
-                String facebook = _facebookController.text;
-                String twitter = _twitterController.text;
-                String linkedin = _linkedinController.text;
-                String instagram = _instagramController.text;
-                String spouseEmail = profile.spouseEmail ?? '';
-                String spouseFacebook = profile.spouseFacebook ?? '';
-                String spouseTwitter = profile.spouseTwitter ?? '';
-                String spouseLinkedin = profile.spouseLinkedin ?? '';
-                String spouseInstagram = profile.spouseInstagram ?? '';
+                bottom: 16.0, left: 32, right: 32, top: 32),
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    String address = _addressController.text.isNotEmpty
+                        ? _addressController.text
+                        : (profile.officeAddress ?? '');
+                    String email = _emailController.text.isNotEmpty
+                        ? _emailController.text
+                        : (widget.showMale
+                            ? (profile.email ?? '')
+                            : (profile.spouseEmail ?? ''));
+                    String facebook = _facebookController.text;
+                    String twitter = _twitterController.text;
+                    String linkedin = _linkedinController.text;
+                    String instagram = _instagramController.text;
+                    String spouseEmail = profile.spouseEmail ?? '';
+                    String spouseFacebook = profile.spouseFacebook ?? '';
+                    String spouseTwitter = profile.spouseTwitter ?? '';
+                    String spouseLinkedin = profile.spouseLinkedin ?? '';
+                    String spouseInstagram = profile.spouseInstagram ?? '';
 
-                // Debug print what will be sent
-                print('Sending to API:');
-                print('email: $email');
-                print('address: $address');
-                print('facebook: $facebook');
-                print('twitter: $twitter');
-                print('linkedin: $linkedin');
-                print('instagram: $instagram');
-                print('spouseEmail: $spouseEmail');
-                print('spouseFacebook: $spouseFacebook');
-                print('spouseTwitter: $spouseTwitter');
-                print('spouseLinkedin: $spouseLinkedin');
-                print('spouseInstagram: $spouseInstagram');
-                print('image: ${_image?.path}');
+                    // Debug print what will be sent
+                    print('Sending to API:');
+                    print('email: $email');
+                    print('address: $address');
+                    print('facebook: $facebook');
+                    print('twitter: $twitter');
+                    print('linkedin: $linkedin');
+                    print('instagram: $instagram');
+                    print('spouseEmail: $spouseEmail');
+                    print('spouseFacebook: $spouseFacebook');
+                    print('spouseTwitter: $spouseTwitter');
+                    print('spouseLinkedin: $spouseLinkedin');
+                    print('spouseInstagram: $spouseInstagram');
+                    print('image: ${_image?.path}');
 
-                try {
-                  // Use ProfileEditAPI.details for posting
-                  ProfileEditAPI apiResponse = await ProfileEditAPI.details(
-                    email,
-                    address,
-                    _image,
-                    facebook: facebook,
-                    twitter: twitter,
-                    linkedin: linkedin,
-                    instagram: instagram,
-                    spouseEmail: spouseEmail,
-                    spouseFacebook: spouseFacebook,
-                    spouseTwitter: spouseTwitter,
-                    spouseLinkedin: spouseLinkedin,
-                    spouseInstagram: spouseInstagram,
-                    showMale: widget.showMale,
-                  );
-                  print('API response: ${apiResponse.toJson()}');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        '${apiResponse.processMessage}',
-                        style: const TextStyle(color: AppThemes.brc_textcolor),
-                      ),
-                      backgroundColor: AppThemes.brc_otp_success,
-                      behavior: SnackBarBehavior.floating,
+                    try {
+                      // Use ProfileEditAPI.details for posting
+                      ProfileEditAPI apiResponse = await ProfileEditAPI.details(
+                        email,
+                        address,
+                        _image,
+                        facebook: facebook,
+                        twitter: twitter,
+                        linkedin: linkedin,
+                        instagram: instagram,
+                        spouseEmail: spouseEmail,
+                        spouseFacebook: spouseFacebook,
+                        spouseTwitter: spouseTwitter,
+                        spouseLinkedin: spouseLinkedin,
+                        spouseInstagram: spouseInstagram,
+                        showMale: widget.showMale,
+                      );
+                      print('API response: ${apiResponse.toJson()}');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            '${apiResponse.processMessage}',
+                            style:
+                                const TextStyle(color: AppThemes.brc_textcolor),
+                          ),
+                          backgroundColor: AppThemes.brc_otp_success,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            '$e',
+                            style:
+                                const TextStyle(color: AppThemes.brc_textcolor),
+                          ),
+                          backgroundColor: AppThemes.brc_otp_error,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                      print('Error posting data: $e');
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppThemes.getLightColor(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        '$e',
-                        style: const TextStyle(color: AppThemes.brc_textcolor),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: const Center(
+                      child: Text(
+                        'UPDATE',
+                        style: TextStyle(fontSize: 16.0),
                       ),
-                      backgroundColor: AppThemes.brc_otp_error,
-                      behavior: SnackBarBehavior.floating,
                     ),
-                  );
-                  print('Error posting data: $e');
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppThemes.getLightColor(),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: const Center(
-                  child: Text(
-                    'UPDATE',
-                    style: TextStyle(fontSize: 16.0),
                   ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      final response = await DeleteProfileAPI.directory();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            response.processMessage ?? 'Profile deleted.',
+                            style:
+                                const TextStyle(color: AppThemes.brc_textcolor),
+                          ),
+                          backgroundColor: response.processStatus == 'success'
+                              ? AppThemes.brc_otp_success
+                              : AppThemes.brc_otp_error,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                      // Optionally, navigate away or pop the screen if deleted
+                      // if (response.processStatus == 'success') {
+                      //   Navigator.of(context).pop();
+                      // }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Error deleting profile: $e',
+                            style:
+                                const TextStyle(color: AppThemes.brc_textcolor),
+                          ),
+                          backgroundColor: AppThemes.brc_otp_error,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: const Center(
+                      child: Text(
+                        'DELETE',
+                        style: TextStyle(fontSize: 16.0, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 48),
+              ],
             ),
           ),
         ],

@@ -30,4 +30,5 @@ class Webservice {
   static const String profileEdit = "particular_member_profile_v1.php";
   static const String sponsor = "sponsor_api.php";
   static const String gallery = "gallery_api.php";
+  static const String delete_the_member_details = "delete_the_member_details.php";
 }
