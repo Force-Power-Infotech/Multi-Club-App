@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_club_app/bases/webservice.dart';
 import 'package:multi_club_app/screens/login_input_screen.dart';
 import 'package:multi_club_app/bases/themes.dart'; // Import your themes file
+import 'package:webview_flutter/webview_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -118,32 +119,65 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
               ),
             ),
-            // Login Button
-            SlideTransition(
-              position: _offsetAnimation,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Navigate and replace the current page with login input page
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginInputScreen(),
+            // Login and Register Buttons
+            Column(
+              children: [
+                SlideTransition(
+                  position: _offsetAnimation,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigate and replace the current page with login input page
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginInputScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Webservice.appNickname == 'forcempower'
+                          ? AppThemes.brc_background
+                          : AppThemes.getBackground(),
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Webservice.appNickname == 'forcempower'
-                      ? AppThemes.brc_background
-                      : AppThemes
-                          .getBackground(), // Use custom primary color from light theme
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    child: const Text('Login',
+                        style: TextStyle(color: AppThemes.brc_textcolor)),
                   ),
                 ),
-                child: const Text('Login',
-                    style: TextStyle(color: AppThemes.brc_textcolor)),
-              ),
+                const SizedBox(height: 16), // Add spacing between buttons
+                SlideTransition(
+                  position: _offsetAnimation,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WebViewWidget(
+                            controller: WebViewController()
+                              ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                              ..loadRequest(Uri.parse(
+                                  'https://club.forcempower.com/MADHUBAN/play_along_registration.php')),
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Webservice.appNickname == 'forcempower'
+                          ? AppThemes.brc_background
+                          : AppThemes.getBackground(),
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text('Register',
+                        style: TextStyle(color: AppThemes.brc_textcolor)),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

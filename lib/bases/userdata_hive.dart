@@ -3,6 +3,17 @@ import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/api/user_otp.dart';
 
 class UserDataRepository {
+  /// Deletes all user data from Hive storage
+  static Future<void> deleteUserData() async {
+    try {
+      var box = await Hive.openBox(_boxName);
+      await box.delete('user_data_key');
+      await box.close();
+    } catch (e) {
+      print('Error deleting user data: $e');
+    }
+  }
+
   static const String _boxName = 'UserData';
 
   static Future<String?> getAccessCode() async {

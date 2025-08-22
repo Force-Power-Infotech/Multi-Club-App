@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/api/deleteprofile.dart';
+import 'package:multi_club_app/bases/userdata_hive.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   final Data profileData;
@@ -834,10 +835,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           behavior: SnackBarBehavior.floating,
                         ),
                       );
-                      // Optionally, navigate away or pop the screen if deleted
-                      // if (response.processStatus == 'success') {
-                      //   Navigator.of(context).pop();
-                      // }
+                      if (response.processStatus == 'success') {
+                        // Delete user data and navigate to login
+                        await UserDataRepository.deleteUserData();
+                        // Replace below with your actual login screen route
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/login', (route) => false);
+                      }
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
