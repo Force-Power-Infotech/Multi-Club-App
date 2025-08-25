@@ -40,17 +40,17 @@ class _ProfileScreenV2State extends State<ProfileScreenV2> {
                   final uri = Uri.tryParse(url);
                   if (uri != null) {
                     try {
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri,
-                            mode: LaunchMode.externalApplication);
-                      } else {
-                        _showCopyLinkDialog(context, url, entry.key);
-                      }
+                      // if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri,
+                          mode: LaunchMode.externalApplication);
+                      // } else {
+                      //       _showCopyLinkDialog(context, url, entry.key);
+                      //     }
                     } catch (e) {
                       _showCopyLinkDialog(context, url, entry.key);
                     }
-                  } else {
-                    _showCopyLinkDialog(context, url, entry.key);
+                    // } else {
+                    //   _showCopyLinkDialog(context, url, entry.key);
                   }
                 }
               },
