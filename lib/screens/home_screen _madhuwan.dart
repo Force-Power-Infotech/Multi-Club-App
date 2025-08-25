@@ -614,13 +614,38 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                               // Check if eventAPI or eventAPI.eventDetails is null before accessing it
                               if (eventAPI != null &&
                                   eventAPI.eventDetails != null) {
-                                // Use the event data to populate the home_event_card widgets
-                                List<EventDetails> firstThreeEvents =
-                                    eventAPI.eventDetails!.take(3).toList();
+                                // Get current date without time
+                                final now = DateTime.now();
+                                final today =
+                                    DateTime(now.year, now.month, now.day);
+
+                                // Filter events to get only current and future events
+                                List<EventDetails> upcomingEvents =
+                                    eventAPI.eventDetails!
+                                        .where((event) {
+                                          // Parse the event date (assuming you have a date field in EventDetails)
+                                          final eventDate =
+                                              DateTime.parse(event.date ?? '');
+                                          final eventDay = DateTime(
+                                              eventDate.year,
+                                              eventDate.month,
+                                              eventDate.day);
+                                          // Include events that are today or in the future
+                                          return eventDay.compareTo(today) >= 0;
+                                        })
+                                        .take(3) // Take first 3 upcoming events
+                                        .toList();
+
+                                if (upcomingEvents.isEmpty) {
+                                  return const Center(
+                                    child: Text('No upcoming events'),
+                                  );
+                                }
+
                                 return Padding(
                                   padding: const EdgeInsets.all(15.0),
                                   child: Column(
-                                    children: firstThreeEvents.map((event) {
+                                    children: upcomingEvents.map((event) {
                                       return home_event_card(event: event);
                                     }).toList(),
                                   ),
