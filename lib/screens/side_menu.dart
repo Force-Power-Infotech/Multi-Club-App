@@ -34,24 +34,12 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String facebookUrl = '';
-    String instagramUrl = '';
-    String youtubeUrl = '';
-    String websiteUrl = '';
-
-    if (Webservice.appNickname == 'madhuban') {
-      facebookUrl = 'https://www.facebook.com/madhuwanclubkolkata/';
-      instagramUrl = 'https://www.instagram.com/madhuwanclub/';
-    } else if (Webservice.appNickname == 'milleniumMams') {
-      facebookUrl = 'https://www.facebook.com/millenniummams/';
-      youtubeUrl =
-          'https://www.youtube.com/channel/UCb2vbCFvqnvmzqS74yRxY-w/videos';
-      instagramUrl = 'https://www.instagram.com/millenniummams/';
-
-      websiteUrl = 'https://millenniummams.com/';
-    } else {
-      facebookUrl = ''; // Provide a default or fallback URL if necessary
-    }
+    Uri facebookUrl =
+        Uri.parse('https://www.facebook.com/share/1B154w7o2s/?mibextid=qi2Omg');
+    Uri instagramUrl = Uri.parse(
+        'https://www.instagram.com/madhuwanclub?igsh=MXJwd2Yzbm82MWFjNg==');
+    Uri youtubeUrl = Uri.parse('');
+    Uri websiteUrl = Uri.parse('');
 
     return Drawer(
       child: Container(
@@ -76,7 +64,7 @@ class SideMenu extends StatelessWidget {
           ),
         ),
         child: ListView(
-          padding: EdgeInsets.only(top: 64),
+          padding: const EdgeInsets.only(top: 64),
           children: [
             if (Webservice.appNickname != 'madhuban' &&
                 Webservice.appNickname != 'milleniumMams')
@@ -87,7 +75,7 @@ class SideMenu extends StatelessWidget {
                     dividerColor: Colors.transparent,
                   ),
                   child: ExpansionTile(
-                    title: Text(
+                    title: const Text(
                       'Home',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
@@ -150,7 +138,7 @@ class SideMenu extends StatelessWidget {
                         builder: (_) => const LeadershipScreen(),
                       ));
                     },
-                    child: Text(
+                    child: const Text(
                       'Leadership',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
@@ -169,7 +157,7 @@ class SideMenu extends StatelessWidget {
                           builder: (_) => const ActivitiesScreen(),
                         ));
                       },
-                      child: Text(
+                      child: const Text(
                         'Activities',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -188,7 +176,7 @@ class SideMenu extends StatelessWidget {
                       onTap: () {
                         // Update UI based on item selected from the drawer
                       },
-                      child: Text(
+                      child: const Text(
                         "Member's Directory",
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -210,7 +198,7 @@ class SideMenu extends StatelessWidget {
                           builder: (_) => const ReciprocalClubsScreen(),
                         ));
                       },
-                      child: Text(
+                      child: const Text(
                         'Reciprocal Clubs',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -229,7 +217,7 @@ class SideMenu extends StatelessWidget {
                       onTap: () {
                         // Update UI based on item selected from the drawer
                       },
-                      child: Text(
+                      child: const Text(
                         'Bookings',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -251,7 +239,7 @@ class SideMenu extends StatelessWidget {
                           builder: (_) => const EventsScreen(),
                         ));
                       },
-                      child: Text(
+                      child: const Text(
                         'Club Events',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -272,7 +260,7 @@ class SideMenu extends StatelessWidget {
                         // builder: (_) => const GalleryScreen(),
                       ));
                     },
-                    child: Text(
+                    child: const Text(
                       'Gallery',
                       style: TextStyle(
                         color: AppThemes.brc_bottom_icon,
@@ -288,7 +276,7 @@ class SideMenu extends StatelessWidget {
                       onTap: () {
                         // Update UI based on item selected from the drawer
                       },
-                      child: Text(
+                      child: const Text(
                         'Associate',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -310,7 +298,7 @@ class SideMenu extends StatelessWidget {
                           builder: (_) => const HelpdeskScreen(),
                         ));
                       },
-                      child: Text(
+                      child: const Text(
                         'Contact us',
                         style: TextStyle(
                           color: AppThemes.brc_bottom_icon,
@@ -330,8 +318,8 @@ class SideMenu extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Contact Us'),
-                              content: Text(
+                              title: const Text('Contact Us'),
+                              content: const Text(
                                   'How would you like to provide feedback?'),
                               actions: <Widget>[
                                 TextButton(
@@ -340,7 +328,7 @@ class SideMenu extends StatelessWidget {
                                     _launchURL(context,
                                         'tel:+91 86177 83048'); // Replace with the phone number you want to call
                                   },
-                                  child: Text('Phone'),
+                                  child: const Text('Phone'),
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -348,7 +336,7 @@ class SideMenu extends StatelessWidget {
                                     _launchURL(context,
                                         'mailto:millenniummams@gmail.com?subject=I have a doubt regarding...&body=I have a doubt regarding...'); // Replace with the email address you want to send to
                                   },
-                                  child: Text('Mail'),
+                                  child: const Text('Mail'),
                                 ),
                               ],
                             );
@@ -426,7 +414,7 @@ class SideMenu extends StatelessWidget {
                   ),
                   const Divider(color: AppThemes.brc_bottom_icon, thickness: 1),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -435,20 +423,11 @@ class SideMenu extends StatelessWidget {
                           imagePath: 'assets/images/facebook.png',
                           url: facebookUrl,
                         ),
-                        if (Webservice.appNickname != 'madhuban')
-                          RoundedImageButton(
-                            imagePath: 'assets/images/youtube.png',
-                            url: youtubeUrl,
-                          ),
+
                         RoundedImageButton(
                           imagePath: 'assets/images/insta.png',
                           url: instagramUrl,
                         ),
-                        if (Webservice.appNickname != 'madhuban')
-                          RoundedImageButton(
-                            imagePath: 'assets/images/website.png',
-                            url: websiteUrl,
-                          ),
                       ],
                     ),
                   )
@@ -464,7 +443,7 @@ class SideMenu extends StatelessWidget {
 
 class RoundedImageButton extends StatelessWidget {
   final String imagePath;
-  final String url;
+  final Uri url;
 
   const RoundedImageButton(
       {Key? key, required this.imagePath, required this.url})
@@ -476,11 +455,7 @@ class RoundedImageButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(5),
       child: ElevatedButton(
         onPressed: () async {
-          if (await canLaunch(url)) {
-            await launch(url);
-          } else {
-            throw 'Could not launch $url';
-          }
+          await launchUrl(url);
         },
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
