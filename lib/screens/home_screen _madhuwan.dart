@@ -508,7 +508,8 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                           ),
                                         ],
                                       ),
-                                      child: imageUrl!.isNotEmpty
+                                      child: (imageUrl != null &&
+                                              imageUrl.isNotEmpty)
                                           ? Image.network(
                                               imageUrl,
                                               fit: BoxFit.cover,
