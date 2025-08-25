@@ -1,17 +1,13 @@
 import 'dart:developer';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:multi_club_app/bases/api/birthday_today.dart';
 import 'package:multi_club_app/bases/api/event_details.dart';
 import 'package:multi_club_app/bases/api/member_anniversary.dart';
 import 'package:multi_club_app/bases/api/priviledge.dart';
 import 'package:multi_club_app/bases/api/profile_view.dart';
 import 'package:multi_club_app/bases/api/sponsor.dart';
-import 'package:multi_club_app/screens/member_anniversary_screen.dart';
 import 'package:multi_club_app/bases/api/user_otp.dart';
 import 'package:multi_club_app/bases/themes.dart';
 import 'package:multi_club_app/bases/userdata_hive.dart';
@@ -23,7 +19,6 @@ import 'package:multi_club_app/screens/directory.dart';
 import 'package:multi_club_app/screens/event_details_screen.dart';
 import 'package:multi_club_app/screens/events_screen.dart';
 import 'package:multi_club_app/screens/notification_screen.dart';
-// import 'package:multi_club_app/screens/profile_screen.dart';
 import 'package:multi_club_app/screens/side_menu.dart';
 import 'package:multi_club_app/screens/widgets/CaroselSponsor.dart';
 import 'package:multi_club_app/screens/widgets/CarouselWidget.dart';
@@ -49,29 +44,16 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     }
   }
 
-  String _getPassImage(String? passType) {
-    if (_showQRAnimation) {
-      return 'assets/images/qrlogo2.gif';
-    } else {
-      switch (passType) {
-        case 'GoldenPass':
-          return 'assets/images/goldenpass.gif';
-        case 'TogetherPass':
-          return 'assets/images/togetherpass.gif';
-        default:
-          return 'assets/images/qrlogo.gif'; // still gif for regular users
-      }
-    }
-  }
-
   late Future<ProfieviewAPI> _profileData;
 
   // Define a global variable to store the username
   String? globalUsername;
   String? globalImg;
   String? globalPass;
+  String? logintype;
+  String? membername;
+  String? spousename;
   String? globalmemberID;
-  bool _showQRAnimation = true;
 
 // In your accessMemberIdFromHive method
   Future<void> accessMemberIdFromHive() async {
@@ -117,6 +99,9 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     if (user != null && user.pass != null) {
       log('pass ${user.pass}');
       globalPass = user.pass;
+      logintype = user.login_type;
+      membername = user.firstname;
+      spousename = user.spouse;
     } else {
       log('pass not found');
     }
@@ -131,13 +116,7 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
     memberID();
     getUserData(); // Make sure to call getUserData
     if (globalPass == 'TogetherPass') {
-      Future.delayed(const Duration(seconds: 5), () {
-        if (mounted) {
-          setState(() {
-            _showQRAnimation = false;
-          });
-        }
-      });
+      Future.delayed(const Duration(seconds: 5), () {});
     }
   }
 
@@ -197,15 +176,6 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
         );
       }
     }
-  }
-
-  Future<String?> getFirstName() async {
-    var box = await Hive.openBox('UserData');
-    var userData = box.get('user_data_key');
-    if (userData != null) {
-      return userData['firstname'];
-    }
-    return null;
   }
 
   Future<bool> checkPrivilegeDataExists() async {
@@ -442,9 +412,12 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
               return const Center(child: Text('No profile data available'));
             }
 
-            String? imageUrl = profileData.memberImageUrl ??
-                profileData
-                    .spouseImageUrl; // Placeholder, replace with actual logic
+            String? imageUrl;
+            if (logintype == 'SPOUSE') {
+              imageUrl = profileData.spouseImageUrl;
+            } else {
+              imageUrl = profileData.memberImageUrl;
+            } // Placeholder, replace with actual logic
             print(imageUrl);
             return ListView(
               children: [
@@ -487,8 +460,8 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
                                       builder: (_) => ProfileScreenV2(
-                                          memberId: '${globalmemberID}',
-                                          gender: 'male'),
+                                        memberId: '${globalmemberID}',
+                                      ),
                                     ));
                                   },
                                   child: ClipRRect(
@@ -558,30 +531,18 @@ class _HomeScreenMadhuwanState extends State<HomeScreenMadhuwan> {
 
                                 const SizedBox(height: 10),
                                 // Add space between the profile image and the text
-                                FutureBuilder<String?>(
-                                  future: getFirstName(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const CircularProgressIndicator(); // Show a loading indicator while waiting for data
-                                    } else if (snapshot.hasError) {
-                                      return Text('Error: ${snapshot.error}');
-                                    } else {
-                                      String firstName = snapshot.data ??
-                                          ''; // Get the first name, or an empty string if null
-                                      return Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 6, vertical: 5),
-                                        child: Text(
-                                          'Hi $firstName!',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 5),
+                                  child: Text(
+                                    logintype == 'SPOUSE'
+                                        ? 'Welcome ${spousename}!'
+                                        : 'Hi ${membername}!',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
