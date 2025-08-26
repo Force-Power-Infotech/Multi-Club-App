@@ -1,5 +1,6 @@
 class Webservice {
   static const String rootURL = "https://club.forcempower.com/";
+  static const String api_url = rootURL;
   // static const String appNickname = "forcempower";
   static const String appNickname = "madhuban";
   // static const String appNickname = "milleniumMams";
@@ -30,5 +31,6 @@ class Webservice {
   static const String profileEdit = "particular_member_profile_v1.php";
   static const String sponsor = "sponsor_api.php";
   static const String gallery = "gallery_api.php";
-  static const String delete_the_member_details = "delete_the_member_details.php";
+  static const String delete_the_member_details =
+      "delete_the_member_details.php";
 }

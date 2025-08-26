@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:multi_club_app/bases/api/apiversion.dart';
 import 'package:hive/hive.dart';
 import 'package:multi_club_app/bases/themes.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:multi_club_app/screens/home_screen%20_madhuwan.dart';
 import 'package:multi_club_app/screens/login_screen.dart';
 
@@ -15,7 +18,6 @@ class SplashScreenMadhuban extends StatefulWidget {
 class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
     with SingleTickerProviderStateMixin {
   String? meberID;
-  final _userData = Hive.box('UserData');
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -42,7 +44,7 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
   @override
   void initState() {
     super.initState();
-    accessMemberIdFromHive();
+    _startSplashLogic();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
     _controller = AnimationController(
@@ -56,18 +58,92 @@ class _SplashScreenMadhubanState extends State<SplashScreenMadhuban>
     ));
 
     _controller.repeat();
+  }
 
-    Future.delayed(const Duration(seconds: 3), () {
-      if (meberID != null) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => const HomeScreenMadhuwan(),
-        ));
-      } else {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
-        ));
+  Future<void> _startSplashLogic() async {
+    await accessMemberIdFromHive();
+    // Get current app version
+    final info = await PackageInfo.fromPlatform();
+    final currentVersion = info.version;
+    debugPrint('DEBUG: Current app version: ' + currentVersion);
+    // Determine device type
+    final deviceType =
+        Theme.of(context).platform == TargetPlatform.iOS ? "IOS" : "ANDROID";
+    // Check version from API
+    final updateResult = await AppVersionService.checkUpdate(
+      deviceType: deviceType,
+      currentVersion: currentVersion,
+      memberId: meberID ?? 'guest',
+    );
+    debugPrint('DEBUG: API version: ' + (updateResult.latestVersion ?? 'null'));
+    if (updateResult.updateRequired) {
+      // Show update dialog and block navigation
+      if (mounted) {
+        _showUpdateDialog(updateResult);
       }
-    });
+      return;
+    }
+    // Wait for splash duration
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+    if (meberID != null) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (_) => const HomeScreenMadhuwan(),
+      ));
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (_) => const LoginScreen(),
+      ));
+    }
+  }
+
+  void _showUpdateDialog(UpdateCheckResult result) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          title: Row(
+            children: [
+              Icon(Icons.system_update, color: Colors.deepPurple, size: 32),
+              SizedBox(width: 10),
+              Text("Update Required",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(result.message ??
+                  "A new version of the app is available. Please update to continue."),
+              if (result.latestVersion != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Text("Latest version: ${result.latestVersion}",
+                      style: TextStyle(fontWeight: FontWeight.w500)),
+                ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+                final url = isIOS
+                    ? 'https://apps.apple.com/in/app/madhuwan/id6505052795'
+                    : 'https://play.google.com/store/apps/details?id=com.forcepower.madhuwan&pcampaignid=web_share';
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url),
+                      mode: LaunchMode.externalApplication);
+                }
+              },
+              child: Text("Update Now", style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
